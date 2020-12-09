@@ -1,9 +1,12 @@
-<div id="chat-box">
-
-
-    chat box
-</div>
-
-<div id=text-box>
-    input
+<div id="component">
+    <div id="video-feed" *ngIf="isCameraOpen">
+        Video Feed
+        <div id="webcam-preview">
+            <video autoplay="autoplay" id="video" #video [srcObject]="videoStream">Video stream not available.</video>
+        </div>
+    </div>
+    <button *ngIf="!isCameraOpen" id="camera-button" (click)="openCamera()" routerLink="chat" routerLinkActive="active-link">
+       Open Camera
+    </button>
+    <app-messenger [ngClass]="{'small': isCameraOpen}"></app-messenger>
 </div>
