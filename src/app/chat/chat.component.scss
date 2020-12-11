@@ -3,23 +3,29 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height:100vh;
   width:80vw;
   max-width: 600px;
   margin:auto;
+  box-sizing: border-box;
 }
 
+#canvas {
+  height:50px;
+  width:50px;
+  background-color: green;
+}
 #video-feed  {
   height:40%;
   width:100%;
   position: relative;
   border: 1px solid rgb(128, 128, 128);
   background-color: #ffffff;
+  margin:auto;
 }
 
 app-messenger {
-    margin-top:5%;
-    height:80%;
+    align-self: flex-end;
+    height:70%;
     width: 100%;
 }
 
@@ -29,15 +35,15 @@ app-messenger {
 
 #webcam-preview {
     position: absolute;
-    height:25%;
-    width:25%;
+    height:35%;
+    width:35%;
     bottom:0;
     left:0;
 }
 
 #video {
     height:100%;
-    width:100%;
+    width:auto; 
 }
 
 #camera-button {
