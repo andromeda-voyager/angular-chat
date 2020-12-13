@@ -4,9 +4,10 @@
   justify-content: center;
   align-items: center;
   width:80vw;
-  max-width: 600px;
+  max-width: 700px;
   margin:auto;
   box-sizing: border-box;
+  height:100%;
 }
 
 #canvas {
@@ -25,7 +26,7 @@
 
 app-messenger {
     align-self: flex-end;
-    height:70%;
+    height:90%;
     width: 100%;
 }
 

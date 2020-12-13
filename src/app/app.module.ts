@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { IsFocusedDirective } from './shared/is-focused.directive';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
     MessengerComponent,
     LobbyComponent,
     LoginComponent,
+    IsFocusedDirective,
   ],
   imports: [
     BrowserModule,

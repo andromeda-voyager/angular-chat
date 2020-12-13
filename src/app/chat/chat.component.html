@@ -1,7 +1,6 @@
 <div id="component">
-    <div id="video-feed" *ngIf="isCameraOpen">
+    <!-- <div id="video-feed" *ngIf="isCameraOpen">
         <video autoplay="autoplay" id="video-feed" #videoFeed [srcObject]="videoFeedStream">Video stream not available.</video>
-        <!-- <img id="canvas" [src]="image"> -->
         Video Feed
         <div id="webcam-preview">
             <video autoplay="autoplay" id="video" #video [srcObject]="videoStream">Video stream not available.</video>
@@ -12,6 +11,6 @@
     </button>
     <button id="take-picture" (click)="takePicture()" >
        take picture
-     </button>
-    <!-- <app-messenger></app-messenger> -->
+     </button> -->
+    <app-messenger></app-messenger>
 </div>

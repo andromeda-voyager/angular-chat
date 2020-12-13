@@ -21,3 +21,14 @@
 mat-form-field {
   width: 250px;
 }
+
+#login-button {
+  background-color: rgb(26, 111, 190);
+  color:white;
+  padding:5px 20px 5px 20px;
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.356);
+}
+
+#login-button:hover {
+  opacity: .8;
+}
