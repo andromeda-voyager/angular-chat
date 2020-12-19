@@ -1,4 +1,4 @@
-# Chat
+# Frontend
 Website written using the Angular framework that provides encrypted text communication.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.1.
