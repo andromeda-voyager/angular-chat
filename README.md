@@ -1,2 +1,2 @@
 # Nebula
-Discord clone written in go (backend) and angluar (frontend)
+Discord clone written in Go (backend) and Typescript (frontend)
