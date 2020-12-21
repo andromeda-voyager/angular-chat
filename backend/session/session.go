@@ -1,7 +1,7 @@
 package session
 
 import (
-	"nebulous/util"
+	"nebula/util"
 	"net/http"
 	"time"
 )
@@ -12,8 +12,9 @@ func init() {
 	loggedInUsers = make(map[string]string)
 }
 
+// Add a user
 func Add(email string) http.Cookie {
-	token := util.NewRandomString(32)
+	token := util.NewRandomSecureString(32)
 	loggedInUsers[token] = email
 	cookie := http.Cookie{Name: "Auth", Value: token, Path: "/", Expires: time.Now().Add(24 * time.Hour)}
 	return cookie

@@ -1,20 +1,23 @@
 <div id="component">
 
-<div id="login-card">
-  <mat-form-field appearance="fill">
-    <mat-label>Email</mat-label>
-    <input isFocused matInput [(ngModel)]="email">
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Password</mat-label>
-    <input [type]="hide ? 'password' : 'text'"  matInput [(ngModel)]="password" >
-    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide">
-      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </button>
-  </mat-form-field>
+  <div id="card">
 
-  <button mat-button id="login-button" (click)=login()>Login</button>
-</div>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input isFocused matInput [(ngModel)]="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="password">
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button mat-button id="login-button" (click)=login()>Login</button>
+
+  </div>
 
 </div>

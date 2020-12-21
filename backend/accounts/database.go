@@ -2,13 +2,13 @@ package accounts
 
 import (
 	"database/sql"
-	"nebulous/config"
-	"nebulous/util"
+	"nebula/config"
+	"nebula/util"
 
 	"golang.org/x/crypto/argon2"
 )
 
-func addUser(user User) {
+func Add(user User) {
 	salt := util.GetRandomBytes(32)
 	hashedPassword := argon2.IDKey([]byte(user.Password), salt, 4, 32*1024, 4, 32)
 	//	password64 := base64.RawStdEncoding.EncodeToString(hashedPassword)
@@ -16,13 +16,16 @@ func addUser(user User) {
 	if err != nil {
 		panic(err.Error())
 	}
-	//"localhost:8080/avatars/mp.jpg"
 	rows, err := db.Query("INSERT INTO Users (Email, Name, Password, Salt, AvatarURL) Values (?, ?, ?, ?, ?);", user.Email, user.Name, hashedPassword, salt, user.AvatarURL)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer rows.Close()
 	defer db.Close()
+}
+
+func DoesAccountExist(email string) bool {
+	return false
 }
 
 func getPassword(email string) ([]byte, []byte) {

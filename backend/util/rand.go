@@ -3,6 +3,7 @@ package util
 import (
 	"crypto/rand"
 	"encoding/base64"
+	mrand "math/rand"
 )
 
 // GetRandomBytes Returns a random slice of bytes
@@ -15,8 +16,19 @@ func GetRandomBytes(n int) []byte {
 	return b
 }
 
-// NewRandomString Returns a random string
-func NewRandomString(n int) string {
+// NewRandomSecureString Returns a random cryptographically secure string
+func NewRandomSecureString(n int) string {
 	b := GetRandomBytes(n)
 	return base64.RawStdEncoding.EncodeToString(b)
+}
+
+const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+
+// NewRandomString returns a pseudo random alphanumeric string
+func NewRandomString(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = chars[mrand.Intn(len(chars))]
+	}
+	return string(b)
 }

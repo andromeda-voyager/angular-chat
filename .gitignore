@@ -10,7 +10,7 @@ frontend//out-tsc
 frontend//bazel-out
 
 # config
-config/
+credentials.go
 
 # dependencies
 node_modules/

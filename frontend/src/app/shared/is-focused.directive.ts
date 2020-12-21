@@ -7,7 +7,8 @@ export class IsFocusedDirective {
 
   constructor(private element: ElementRef) { }
 
-  ngAfterViewInit() {
+  //ngAfterViewInit() {
+    ngOnInit() {
     this.element.nativeElement.focus();
   }
 

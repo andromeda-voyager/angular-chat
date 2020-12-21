@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { IsFocusedDirective } from './shared/is-focused.directive';
 import { HttpClientModule } from '@angular/common/http';
+import { CreateAccountComponent } from './create-account/create-account.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     LobbyComponent,
     LoginComponent,
     IsFocusedDirective,
+    CreateAccountComponent,
   ],
   imports: [
     BrowserModule,
