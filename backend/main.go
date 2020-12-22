@@ -17,6 +17,25 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+func saveImage(r *http.Request) string {
+	in, _, err := r.FormFile("image")
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("failed to get formFile")
+
+	}
+	avatarImgPath := "./public/avatars/" + util.NewRandomString(10) + ".jpg"
+	out, err := os.Create(avatarImgPath) //header.Filename
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("failed to open")
+	}
+	defer in.Close()
+	defer out.Close()
+	io.Copy(out, in)
+	return path.Join(config.ServerURL, avatarImgPath)
+}
+
 func main() {
 
 	//	json.NewEncoder(w).Encode(user)
@@ -38,42 +57,16 @@ func main() {
 	})
 
 	post("/create-account", func(w http.ResponseWriter, r *http.Request) {
-		resp, _ := ioutil.ReadAll(r.Body)
+		userStr := []byte(r.FormValue("user"))
 		var user accounts.User
-		if err := json.Unmarshal(resp, &user); err != nil {
-			panic(err)
-		}
-		if accounts.DoesAccountExist(user.Email) {
-			accounts.Add(user)
-		}
+		json.Unmarshal(userStr, &user)
+		user.AvatarURL = saveImage(r)
+		fmt.Println(user)
+		//accounts.Add(user)
 	})
 
-	post("/upload-avatar", func(w http.ResponseWriter, r *http.Request) {
-		in, _, err := r.FormFile("file")
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println("failed to get formFile")
-
-		}
-		defer in.Close()
-		avatarImgPath := "./public/avatars/" + util.NewRandomString(10) + ".jpg"
-		fmt.Println(path.Join(config.ServerURL, avatarImgPath))
-		out, err := os.Create(avatarImgPath) //header.Filename
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println("failed to open")
-		}
-		defer out.Close()
-		io.Copy(out, in)
-
-		// resp, _ := ioutil.ReadAll(r.Body)
-		// var user accounts.User
-		// if err := json.Unmarshal(resp, &user); err != nil {
-		// 	panic(err)
-		// }
-		// if accounts.DoesAccountExist(user.Email) {
-		// 	accounts.Add(user)
-		// }
+	post("/upload-image", func(w http.ResponseWriter, r *http.Request) {
+		saveImage(r)
 	})
 
 	http.HandleFunc("/", router)

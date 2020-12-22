@@ -7,19 +7,19 @@
         </div>
         <mat-form-field  appearance="fill">
             <mat-label>Email</mat-label>
-            <input isFocused matInput [(ngModel)]="email">
+            <input isFocused matInput [(ngModel)]="user.email">
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Username</mat-label>
-            <input  matInput [(ngModel)]="username">
+            <input  matInput [(ngModel)]="user.username">
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Name</mat-label>
-            <input  matInput [(ngModel)]="name">
+            <input  matInput [(ngModel)]="user.name">
         </mat-form-field> 
         <mat-form-field appearance="fill">
             <mat-label>Password</mat-label>
-            <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="password">
+            <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="user.password">
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>

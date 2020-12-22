@@ -16,6 +16,7 @@ func login(username, password string) {
 
 }
 
+// IsPasswordCorrect checks to see if the password in the database matches the password used to login
 func IsPasswordCorrect(c Credentials) bool {
 	storedPasswordHash, salt := getPassword(c.Email)
 	passwordHashToVerify := argon2.IDKey([]byte(c.Password), []byte(salt), 4, 32*1024, 4, 32)

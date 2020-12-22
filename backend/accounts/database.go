@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
+// Add user to the database
 func Add(user User) {
 	salt := util.GetRandomBytes(32)
 	hashedPassword := argon2.IDKey([]byte(user.Password), salt, 4, 32*1024, 4, 32)
@@ -24,6 +25,7 @@ func Add(user User) {
 	defer db.Close()
 }
 
+// DoesAccountExist checks if email is already used for an account
 func DoesAccountExist(email string) bool {
 	return false
 }
@@ -47,12 +49,4 @@ func getPassword(email string) ([]byte, []byte) {
 		return password, salt
 	}
 	return nil, nil
-	// for rows.Next() {
-	// 	var name string
-	// 	if err := rows.Scan(&name); err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	fmt.Println(name)
-	// }
-
 }

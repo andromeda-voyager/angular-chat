@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Login } from './login';
 import { Observable } from 'rxjs';
 import { User } from './user';
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,7 +20,10 @@ const httpOptions2 = {
   withCredentials: true
 };
 
-const loginUrl = "http://localhost:8080/login";
+const createAccountUrl = environment.BaseApiUrl + "/create-account";
+const loginUrl = environment.BaseApiUrl + "/login";
+const uploadImageUrl = environment.BaseApiUrl + "/upload-image";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -34,10 +38,20 @@ export class ChatService {
     return this.http.post<User>(loginUrl, login, httpOptions);
   }
 
-  upload(file: File) {
+  createAccount(file: File, user: User) {
+    const formData = new FormData();
+    formData.append("image", file, file.name);
+    formData.append("user", JSON.stringify(user));
+
+    this.http.post(createAccountUrl, formData).subscribe(() => {
+      console.log("user created");
+    })
+  }
+
+  uploadImage(file: File) {
     const formData = new FormData();
     formData.append("file", file, file.name);
-    this.http.post("http://localhost:8080/upload-avatar", formData).subscribe(() => {
+    this.http.post(uploadImageUrl, formData).subscribe(() => {
       console.log("file uploaded");
     })
 

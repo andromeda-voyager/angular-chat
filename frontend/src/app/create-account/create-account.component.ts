@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
+import { User } from '../shared/user';
 
 @Component({
   selector: 'app-create-account',
@@ -8,10 +9,7 @@ import { ChatService } from '../shared/chat.service';
 })
 export class CreateAccountComponent implements OnInit {
 
-  @Input() password: string = "";
-  @Input() email: string = "";
-  @Input() name: string = "";
-  @Input() username: string = "";
+  @Input() user:User = {password: "", email: "" , name:"", username:""}
   hide = false;
   file!: File;
   avatarURL: string = ""
@@ -21,7 +19,7 @@ export class CreateAccountComponent implements OnInit {
   }
 
   createAccount() {
-
+    this.chatService.createAccount(this.file, this.user);
   }
 
   onUpload() {
@@ -38,7 +36,7 @@ export class CreateAccountComponent implements OnInit {
       this.avatarURL = event.target.result;
     }
     reader.readAsDataURL(event.target.files[0]);
-    this.chatService.upload(this.file);
+  //  this.chatService.uploadImage(this.file);
   }
 
 
