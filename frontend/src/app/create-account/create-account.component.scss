@@ -5,6 +5,9 @@
     height:100%;
   }
 
+  mat-form-field {
+  margin-bottom:10px;
+  }
   #file-select {
     opacity: 0;
     height:100px;
@@ -83,4 +86,8 @@
   
   #create-account-button:hover {
     opacity: .8;
+  }
+
+  mat-hint {
+    color:red;
   }

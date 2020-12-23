@@ -1,21 +1,27 @@
 <div id="component">
     <div id="card">
+
         <div id="avatar">
             <img id="avatar-preview" [src]="avatarURL">
             <span id="avatar-instructions">Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
+
         <mat-form-field  appearance="fill">
             <mat-label>Email</mat-label>
             <input isFocused matInput [(ngModel)]="user.email">
+            <mat-hint *ngIf="showRequired && user.email.length < 5 && user.email.length != 0">Invalid Email</mat-hint>
+            <mat-hint *ngIf="showRequired && user.email.length == 0">Required</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Username</mat-label>
             <input  matInput [(ngModel)]="user.username">
+            <mat-hint *ngIf="showRequired && user.username.length == 0">Required</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Name</mat-label>
             <input  matInput [(ngModel)]="user.name">
+            <mat-hint *ngIf="showRequired && user.name.length == 0">Required</mat-hint>
         </mat-form-field> 
         <mat-form-field appearance="fill">
             <mat-label>Password</mat-label>
@@ -24,6 +30,7 @@
                 [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
+            <mat-hint *ngIf="showRequired && 8 > user.password.length">Password too short</mat-hint>
         </mat-form-field>
         <button mat-button id="create-account-button" (click)=createAccount()>Create Account</button>
     </div>

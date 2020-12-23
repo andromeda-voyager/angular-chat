@@ -71,5 +71,7 @@ func main() {
 
 	http.HandleFunc("/", router)
 
+	fmt.Println("Listening on port 8080")
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
