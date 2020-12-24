@@ -4,7 +4,12 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	mrand "math/rand"
+	"time"
 )
+
+func init() {
+	mrand.Seed(time.Now().UTC().UnixNano())
+}
 
 // GetRandomBytes Returns a random slice of bytes
 func GetRandomBytes(n int) []byte {

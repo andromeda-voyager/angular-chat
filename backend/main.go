@@ -62,7 +62,18 @@ func main() {
 		json.Unmarshal(userStr, &user)
 		user.AvatarURL = saveImage(r)
 		fmt.Println(user)
-		//accounts.Add(user)
+		if session.IsCodeValid(user.Code, user.Email) {
+			//accounts.Add(user)
+		}
+	})
+
+	post("/send-verification", func(w http.ResponseWriter, r *http.Request) {
+		resp, _ := ioutil.ReadAll(r.Body)
+		var user accounts.User
+		if err := json.Unmarshal(resp, &user); err != nil {
+			panic(err)
+		}
+		session.SendCodeToEmail(user.Email)
 	})
 
 	post("/upload-image", func(w http.ResponseWriter, r *http.Request) {

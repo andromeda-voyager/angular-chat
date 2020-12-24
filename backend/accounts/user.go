@@ -7,4 +7,5 @@ type User struct {
 	Password  string `json:"password"`
 	Email     string `json:"email"`
 	AvatarURL string `json:"avatarURL"`
+	Code      string `json:"code"`
 }
