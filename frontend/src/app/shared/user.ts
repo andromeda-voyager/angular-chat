@@ -4,6 +4,7 @@ export interface User {
     email: string
     avatarURL?: string
     name: string
+    code: string
     // icon: string
     // channels: string[]
     // friends: string[]

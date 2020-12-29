@@ -15,24 +15,28 @@ import (
 	"path"
 
 	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/net/websocket"
 )
 
 func saveImage(r *http.Request) string {
 	in, _, err := r.FormFile("image")
+	var avatarImgPath string
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("failed to get formFile")
-
+		fmt.Println("using default profile img")
+		avatarImgPath = "./public/avatars/default-avatar.jpg"
+	} else {
+		avatarImgPath = "./public/avatars/" + util.NewRandomString(10) + ".jpg"
+		out, err := os.Create(avatarImgPath) //header.Filename
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("failed to open")
+			avatarImgPath = "./public/avatars/default-avatar.jpg"
+		} else {
+			defer out.Close()
+			defer in.Close()
+			io.Copy(out, in)
+		}
 	}
-	avatarImgPath := "./public/avatars/" + util.NewRandomString(10) + ".jpg"
-	out, err := os.Create(avatarImgPath) //header.Filename
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("failed to open")
-	}
-	defer in.Close()
-	defer out.Close()
-	io.Copy(out, in)
 	return path.Join(config.ServerURL, avatarImgPath)
 }
 
@@ -63,11 +67,15 @@ func main() {
 		user.AvatarURL = saveImage(r)
 		fmt.Println(user)
 		if session.IsCodeValid(user.Code, user.Email) {
+			fmt.Println("code valid")
 			//accounts.Add(user)
+		} else {
+			fmt.Println("code invalid")
 		}
+
 	})
 
-	post("/send-verification", func(w http.ResponseWriter, r *http.Request) {
+	post("/send-verification-code", func(w http.ResponseWriter, r *http.Request) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var user accounts.User
 		if err := json.Unmarshal(resp, &user); err != nil {
@@ -80,9 +88,29 @@ func main() {
 		saveImage(r)
 	})
 
+	http.Handle("/ws", websocket.Handler(socket))
 	http.HandleFunc("/", router)
 
 	fmt.Println("Listening on port 8080")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+type message struct {
+	Text string `json:"text"`
+}
+
+func socket(ws *websocket.Conn) {
+	for {
+		var m message
+		if err := websocket.JSON.Receive(ws, &m); err != nil {
+			fmt.Println("unable to receive")
+			break
+		}
+		m2 := message{"thanks"}
+		if err := websocket.JSON.Send(ws, m2); err != nil {
+			fmt.Println("unable to send")
+			break
+		}
+	}
 }

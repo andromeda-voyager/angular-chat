@@ -1,7 +1,7 @@
 package message
 
 import (
-	"log"
+	"fmt"
 	"nebula/config"
 	"net/smtp"
 )
@@ -14,6 +14,6 @@ func SendEmail(msg []byte, sendToAddress string) {
 
 	err := smtp.SendMail(hostname+":587", auth, config.EmailAccount, []string{sendToAddress}, msg)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Failed to send email")
 	}
 }

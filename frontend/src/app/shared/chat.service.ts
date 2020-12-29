@@ -23,6 +23,7 @@ const httpOptions2 = {
 const createAccountUrl = environment.BaseApiUrl + "/create-account";
 const loginUrl = environment.BaseApiUrl + "/login";
 const uploadImageUrl = environment.BaseApiUrl + "/upload-image";
+const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 
 @Injectable({
   providedIn: 'root'
@@ -40,10 +41,19 @@ export class ChatService {
 
   createAccount(file: File, user: User) {
     const formData = new FormData();
-    formData.append("image", file, file.name);
+    if (file) {
+      formData.append("image", file, file.name);
+    }
     formData.append("user", JSON.stringify(user));
 
     this.http.post(createAccountUrl, formData).subscribe(() => {
+      console.log("user created");
+    })
+  }
+
+  sendVerificationCode(_email: string) {
+    let email = { email: _email };
+    this.http.post(verificationCodeUrl, email).subscribe(() => {
       console.log("user created");
     })
   }

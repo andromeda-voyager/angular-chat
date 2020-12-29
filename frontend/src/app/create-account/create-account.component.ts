@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
 import { User } from '../shared/user';
 
+const emailRegex = /.+@.+\..+/;
+
 @Component({
   selector: 'app-create-account',
   templateUrl: './create-account.component.html',
@@ -9,19 +11,25 @@ import { User } from '../shared/user';
 })
 export class CreateAccountComponent implements OnInit {
 
-  @Input() user: User = { password: "", email: "", name: "", username: "" }
+  @Input() user: User = { password: "", email: "", name: "", username: "", code: "" }
   hide = false;
-  file!: File;
+  file: File = null!;
   avatarURL: string = "assets/default-avatar.jpg"
   showRequired = false;
+  showFirstCard = true;
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
   }
 
   createAccount() {
-    if (this.userFieldsValid()) {
       this.chatService.createAccount(this.file, this.user);
+  }
+
+  next() {
+    if (this.userFieldsValid()) {
+      this.chatService.sendVerificationCode(this.user.email);
+      this.showFirstCard = false;
     } else this.showRequired = true;
   }
 
@@ -43,10 +51,19 @@ export class CreateAccountComponent implements OnInit {
   }
 
   userFieldsValid() {
-    return (this.user.email.length > 4 &&
+    return (this.isValidEmail() &&
       this.user.name.length > 0 &&
       this.user.username.length > 0 &&
       this.user.password.length > 7)
+  }
+
+  // does a simple check for email syntax (not complete)
+  isValidEmail() {
+    return emailRegex.test(this.user.email)
+  }
+
+  isValidCodeLength() {
+    return this.user.code.length > 4;
   }
 
 
