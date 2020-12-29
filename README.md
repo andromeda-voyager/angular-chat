@@ -1,2 +1,2 @@
 # Nebula
-Discord clone written in Go (backend) and Typescript (frontend)
+Chat application written in Go (backend) and Typescript (frontend)
