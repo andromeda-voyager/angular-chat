@@ -2,6 +2,8 @@ package accounts
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"nebula/config"
 	"nebula/util"
 
@@ -24,6 +26,45 @@ func isValidUser(user User) (bool, string) {
 	return true, ""
 }
 
+func TestQuery() {
+	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
+	if err != nil {
+		panic(err.Error())
+	}
+	rows, err := db.Query("SELECT Email FROM Users")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	defer db.Close()
+
+	if rows.Next() {
+		var user User
+		rows.Scan(&user.Email)
+		fmt.Println(user.Email)
+	}
+}
+
+func Get(email string) (*User, error) {
+	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
+	if err != nil {
+		panic(err.Error())
+	}
+	rows, err := db.Query("SELECT Email, Name, AvatarURL FROM Users WHERE Email=?;", email)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	defer db.Close()
+
+	if rows.Next() {
+		var user User
+		rows.Scan(&user.Email, &user.Name, &user.AvatarURL)
+		return &user, nil
+	}
+	return nil, errors.New("Failed to get user Information")
+}
+
 // Add user to the database
 func Add(user User) {
 	salt := util.GetRandomBytes(32)
@@ -39,22 +80,6 @@ func Add(user User) {
 	}
 	defer rows.Close()
 	defer db.Close()
-}
-
-// IsEmailInUse checks if an email is already used for an account
-func IsEmailInUse(email string) bool {
-	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
-	if err != nil {
-		panic(err.Error())
-	}
-	rows, err := db.Query("SELECT * FROM Users WHERE Email=?;", email)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer rows.Close()
-	defer db.Close()
-
-	return rows.Next()
 }
 
 func getPassword(email string) ([]byte, []byte) {

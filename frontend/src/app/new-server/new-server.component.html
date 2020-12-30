@@ -1,0 +1,18 @@
+<div class="card">
+    <div id="server-image">
+        <img [src]="serverImageUrl">
+        <span id="image-instructions">Select Image</span>
+        <input id="file-select" type="file" (change)="onChange($event)">
+    </div>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Server Name</mat-label>
+        <input isFocused matInput [(ngModel)]="server.name">
+        <mat-hint *ngIf="true">Required</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput [(ngModel)]="server.description">
+    </mat-form-field>
+    <button mat-button class="submit" (click)=createServer()>Create Server</button>
+</div>

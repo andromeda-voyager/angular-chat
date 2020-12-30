@@ -1,8 +1,9 @@
 package session
 
 import (
+	"database/sql"
 	"fmt"
-	"nebula/accounts"
+	"nebula/config"
 	"nebula/message"
 	"nebula/util"
 	"net/http"
@@ -36,7 +37,7 @@ func generateCode(email string) string {
 
 // SendCodeToEmail .
 func SendCodeToEmail(email string) {
-	if accounts.IsEmailInUse(email) {
+	if IsEmailInUse(email) {
 		message.SendEmail([]byte("An account already exists with this email."), email)
 	} else {
 		msg := []byte("Nebula\n\nVerifcation Code:\t" + generateCode(email))
@@ -51,4 +52,20 @@ func Add(email string) http.Cookie {
 	loggedInUsers[token] = email
 	cookie := http.Cookie{Name: "Auth", Value: token, Path: "/", Expires: time.Now().Add(24 * time.Hour)}
 	return cookie
+}
+
+// IsEmailInUse checks if an email is already used for an account
+func IsEmailInUse(email string) bool {
+	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
+	if err != nil {
+		panic(err.Error())
+	}
+	rows, err := db.Query("SELECT * FROM Users WHERE Email=?;", email)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	defer db.Close()
+
+	return rows.Next()
 }

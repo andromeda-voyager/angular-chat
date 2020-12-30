@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func post(path string, callback routeFunction) {
 	}
 }
 
-func router(w http.ResponseWriter, r *http.Request) {
+func Router(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		setHeaders(&w)
 	} else {

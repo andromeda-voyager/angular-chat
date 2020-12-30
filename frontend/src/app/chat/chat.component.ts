@@ -7,6 +7,8 @@ declare var MediaRecorder: any;
 })
 export class ChatComponent implements OnInit {
 
+  dialogOpen: boolean = false;
+
   isCameraOpen: boolean = false;
   videoStream: MediaStream = new MediaStream();
   videoFeedStream: MediaStream = new MediaStream();
@@ -18,6 +20,17 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
 
 
+  }
+
+  closeDialog() {
+      this.dialogOpen =false;
+    
+    console.log("closing dialogs")
+  }
+
+  addServer() {
+    console.log("opening dialogs")
+    this.dialogOpen = true;
   }
 
   takePicture() {

@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { IsFocusedDirective } from './shared/is-focused.directive';
 import { HttpClientModule } from '@angular/common/http';
 import { CreateAccountComponent } from './create-account/create-account.component';
+import { NewServerComponent } from './new-server/new-server.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { CreateAccountComponent } from './create-account/create-account.componen
     LoginComponent,
     IsFocusedDirective,
     CreateAccountComponent,
+    NewServerComponent,
   ],
   imports: [
     BrowserModule,
