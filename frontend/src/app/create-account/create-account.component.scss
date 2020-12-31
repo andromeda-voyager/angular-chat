@@ -19,7 +19,7 @@ mat-form-field {
   border-radius: 50%;
 }
 
-#avatar-instructions {
+#instructions {
   opacity: 0;
   height:100px;
   width:100px;
@@ -28,10 +28,11 @@ mat-form-field {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top:10px;
   background-color: rgba(226, 231, 238, 0.081);
 }
 
-#avatar:hover #avatar-instructions {
+#avatar:hover #instructions {
   font-weight: 500;
   opacity: 1;
   transition: opacity .4s;

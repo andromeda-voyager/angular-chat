@@ -23,7 +23,7 @@ const httpOptions2 = {
 
 const createAccountUrl = environment.BaseApiUrl + "/create-account";
 const loginUrl = environment.BaseApiUrl + "/login";
-const uploadImageUrl = environment.BaseApiUrl + "/upload-image";
+// const uploadImageUrl = environment.BaseApiUrl + "/upload-image";
 const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 const createServerUrl = environment.BaseApiUrl + "/create-server";
 
@@ -41,16 +41,14 @@ export class ChatService {
     return this.http.post<User>(loginUrl, login, httpOptions);
   }
 
-  createAccount(file: File, user: User) {
+  createAccount(file: File, user: User): Observable<User>  {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
     formData.append("user", JSON.stringify(user));
 
-    this.http.post(createAccountUrl, formData).subscribe(() => {
-      console.log("user created");
-    })
+    return this.http.post<User>(createAccountUrl, formData);
   }
 
   createServer(file: File, server: Server) {
@@ -72,12 +70,12 @@ export class ChatService {
     })
   }
 
-  uploadImage(file: File) {
-    const formData = new FormData();
-    formData.append("file", file, file.name);
-    this.http.post(uploadImageUrl, formData).subscribe(() => {
-      console.log("file uploaded");
-    })
+  // uploadImage(file: File) {
+  //   const formData = new FormData();
+  //   formData.append("file", file, file.name);
+  //   this.http.post(uploadImageUrl, formData).subscribe(() => {
+  //     console.log("file uploaded");
+  //   })
 
-  }
+  // }
 }

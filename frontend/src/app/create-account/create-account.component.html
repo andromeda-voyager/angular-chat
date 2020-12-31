@@ -3,7 +3,7 @@
     <div *ngIf="showFirstCard" class="card">
         <div id="avatar">
             <img [src]="avatarURL">
-            <span id="avatar-instructions">Select Image</span>
+            <span id="instructions">Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
 
@@ -17,11 +17,6 @@
             <mat-label>Username</mat-label>
             <input matInput [(ngModel)]="user.username">
             <mat-hint *ngIf="showRequired && user.username.length == 0">Required</mat-hint>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Name</mat-label>
-            <input matInput [(ngModel)]="user.name">
-            <mat-hint *ngIf="showRequired && user.name.length == 0">Required</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>

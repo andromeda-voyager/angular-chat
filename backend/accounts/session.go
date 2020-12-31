@@ -1,4 +1,4 @@
-package session
+package accounts
 
 import (
 	"database/sql"
@@ -19,7 +19,7 @@ func init() {
 }
 
 // IsCodeValid checks to see if code provided matches code sent by email
-func IsCodeValid(code, email string) bool {
+func isCodeValid(code, email string) bool {
 	if codes[email] == code {
 		delete(codes, email)
 		return true
@@ -47,7 +47,7 @@ func SendCodeToEmail(email string) {
 }
 
 // Add a user
-func Add(email string) http.Cookie {
+func addSession(email string) http.Cookie {
 	token := util.NewRandomSecureString(32)
 	loggedInUsers[token] = email
 	cookie := http.Cookie{Name: "Auth", Value: token, Path: "/", Expires: time.Now().Add(24 * time.Hour)}

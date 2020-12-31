@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"nebula/accounts"
-	"nebula/routes"
+	"nebula/router"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -22,8 +22,8 @@ func main() {
 
 	accounts.TestQuery()
 
-	http.Handle("/ws", websocket.Handler(socket))
-	http.HandleFunc("/", routes.Router)
+	//http.Handle("/ws", websocket.Handler(socket))
+	http.HandleFunc("/", router.Route)
 
 	fmt.Println("Listening on port 8080")
 

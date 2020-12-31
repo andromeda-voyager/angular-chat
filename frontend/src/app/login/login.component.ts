@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChatService } from '../shared/chat.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
   @Input() email: string = "";
   isPasswordCorrect = true;
   hide = true;
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
     this.chatService.login({ email: this.email, password: this.password }).subscribe(user => {
       console.log(user.username)
       console.log("password correct");
+      this.router.navigate(['chat']);
     }, error => this.handleError(error));
   }
 

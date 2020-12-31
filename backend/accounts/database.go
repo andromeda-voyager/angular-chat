@@ -10,22 +10,6 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
-func isValidUser(user User) (bool, string) {
-	if len(user.Name) < 1 {
-		return false, "Invalid Name"
-	}
-	if len(user.Email) < 5 {
-		return false, "Invalid Email"
-	}
-	if len(user.Username) < 1 {
-		return false, "Invalid Username"
-	}
-	if len(user.Password) < 8 {
-		return false, "Invalid Password"
-	}
-	return true, ""
-}
-
 func TestQuery() {
 	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
 	if err != nil {
@@ -45,12 +29,12 @@ func TestQuery() {
 	}
 }
 
-func Get(email string) (*User, error) {
+func getUser(email string) (*User, error) {
 	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
 	if err != nil {
 		panic(err.Error())
 	}
-	rows, err := db.Query("SELECT Email, Name, AvatarURL FROM Users WHERE Email=?;", email)
+	rows, err := db.Query("SELECT Email, Username, AvatarURL FROM Users WHERE Email=?;", email)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -59,14 +43,14 @@ func Get(email string) (*User, error) {
 
 	if rows.Next() {
 		var user User
-		rows.Scan(&user.Email, &user.Name, &user.AvatarURL)
+		rows.Scan(&user.Email, &user.Username, &user.AvatarURL)
 		return &user, nil
 	}
 	return nil, errors.New("Failed to get user Information")
 }
 
-// Add user to the database
-func Add(user User) {
+// newUser user to the database
+func addUser(user User) {
 	salt := util.GetRandomBytes(32)
 	hashedPassword := argon2.IDKey([]byte(user.Password), salt, 4, 32*1024, 4, 32)
 	//	password64 := base64.RawStdEncoding.EncodeToString(hashedPassword)
@@ -74,7 +58,7 @@ func Add(user User) {
 	if err != nil {
 		panic(err.Error())
 	}
-	rows, err := db.Query("INSERT INTO Users (Email, Name, Password, Salt, AvatarURL) Values (?, ?, ?, ?, ?);", user.Email, user.Name, hashedPassword, salt, user.AvatarURL)
+	rows, err := db.Query("INSERT INTO Users (Email, Username, Password, Salt, AvatarURL) Values (?, ?, ?, ?, ?);", user.Email, user.Username, hashedPassword, salt, user.AvatarURL)
 	if err != nil {
 		panic(err.Error())
 	}

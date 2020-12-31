@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChatService } from '../shared/chat.service';
 import { User } from '../shared/user';
 
@@ -11,19 +12,22 @@ const emailRegex = /.+@.+\..+/;
 })
 export class CreateAccountComponent implements OnInit {
 
-  @Input() user: User = { password: "", email: "", name: "", username: "", code: "" }
+  @Input() user: User = { password: "", email: "", username: "", code: "" }
   hide = false;
   file: File = null!;
   avatarURL: string = "assets/default-avatar.jpg"
   showRequired = false;
   showFirstCard = true;
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService,  private router: Router) { }
 
   ngOnInit(): void {
   }
 
   createAccount() {
-      this.chatService.createAccount(this.file, this.user);
+      this.chatService.createAccount(this.file, this.user).subscribe(user => {
+        console.log(user);
+        this.router.navigate(['chat']);
+      })
   }
 
   next() {
@@ -52,7 +56,6 @@ export class CreateAccountComponent implements OnInit {
 
   userFieldsValid() {
     return (this.isValidEmail() &&
-      this.user.name.length > 0 &&
       this.user.username.length > 0 &&
       this.user.password.length > 7)
   }

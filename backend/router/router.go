@@ -1,4 +1,4 @@
-package routes
+package router
 
 import (
 	"fmt"
@@ -22,14 +22,14 @@ func setHeaders(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
 }
 
-func post(path string, callback routeFunction) {
+func Post(path string, callback routeFunction) {
 	routes[path] = route{
 		method:   "POST",
 		callback: callback,
 	}
 }
 
-func Router(w http.ResponseWriter, r *http.Request) {
+func Route(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		setHeaders(&w)
 	} else {
