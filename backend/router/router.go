@@ -22,6 +22,7 @@ func setHeaders(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
 }
 
+// Post registers a callback function for the provided path
 func Post(path string, callback routeFunction) {
 	routes[path] = route{
 		method:   "POST",
@@ -29,7 +30,8 @@ func Post(path string, callback routeFunction) {
 	}
 }
 
-func Route(w http.ResponseWriter, r *http.Request) {
+// Handler is the router handler function to route paths to functions registered with the router
+func Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		setHeaders(&w)
 	} else {

@@ -1,20 +1,17 @@
-package accounts
+package main
 
 import (
-	"database/sql"
+	"bytes"
 	"fmt"
-	"nebula/config"
 	"nebula/message"
 	"nebula/util"
-	"net/http"
-	"time"
+
+	"golang.org/x/crypto/argon2"
 )
 
-var loggedInUsers map[string]string
 var codes map[string]string
 
 func init() {
-	loggedInUsers = make(map[string]string)
 	codes = make(map[string]string)
 }
 
@@ -46,26 +43,19 @@ func SendCodeToEmail(email string) {
 	}
 }
 
-// Add a user
-func addSession(email string) http.Cookie {
-	token := util.NewRandomSecureString(32)
-	loggedInUsers[token] = email
-	cookie := http.Cookie{Name: "Auth", Value: token, Path: "/", Expires: time.Now().Add(24 * time.Hour)}
-	return cookie
+// Credentials holds the fields needed to authorize a user for login
+type Credentials struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-// IsEmailInUse checks if an email is already used for an account
-func IsEmailInUse(email string) bool {
-	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
-	if err != nil {
-		panic(err.Error())
-	}
-	rows, err := db.Query("SELECT * FROM Users WHERE Email=?;", email)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer rows.Close()
-	defer db.Close()
+func login(username, password string) {
 
-	return rows.Next()
+}
+
+// IsPasswordCorrect checks to see if the password in the database matches the password used to login
+func IsPasswordCorrect(c Credentials) bool {
+	storedPasswordHash, salt := getPassword(c.Email)
+	passwordHashToVerify := argon2.IDKey([]byte(c.Password), []byte(salt), 4, 32*1024, 4, 32)
+	return bytes.Compare(storedPasswordHash, passwordHashToVerify) == 0
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"nebula/accounts"
+	"nebula/database"
 	"nebula/router"
 	"net/http"
 
@@ -13,38 +13,48 @@ import (
 
 func main() {
 
-	//	json.NewEncoder(w).Encode(user)
-	//cookieR, err := r.Cookie("NUser")
+	//testQuery()
 
-	// post("/upload-image", func(w http.ResponseWriter, r *http.Request) {
-	// 	saveImage(r)
-	// })
+	http.Handle("/ws", websocket.Handler(socket))
 
-	accounts.TestQuery()
-
-	//http.Handle("/ws", websocket.Handler(socket))
-	http.HandleFunc("/", router.Route)
+	http.HandleFunc("/", router.Handler)
 
 	fmt.Println("Listening on port 8080")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-type message struct {
+type text struct {
 	Text string `json:"text"`
 }
 
 func socket(ws *websocket.Conn) {
 	for {
-		var m message
+		var m text
 		if err := websocket.JSON.Receive(ws, &m); err != nil {
 			fmt.Println("unable to receive")
 			break
 		}
-		m2 := message{"thanks"}
+		m2 := text{"thanks"}
 		if err := websocket.JSON.Send(ws, m2); err != nil {
 			fmt.Println("unable to send")
 			break
 		}
+	}
+}
+
+func testQuery() {
+
+	var args []interface{}
+	rows, err := database.Query("SELECT Email FROM Users", args)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		var a Account
+		rows.Scan(&a.Email)
+		fmt.Println(a.Email)
 	}
 }
