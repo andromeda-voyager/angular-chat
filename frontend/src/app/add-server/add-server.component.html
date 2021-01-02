@@ -8,7 +8,8 @@
     <mat-form-field appearance="outline">
         <mat-label>Server Name</mat-label>
         <input isFocused matInput [(ngModel)]="server.name">
-        <mat-hint *ngIf="true">Required</mat-hint>
+        <mat-hint *ngIf="server.name.length < 1 && showRequired">Required</mat-hint>
+        <mat-hint  *ngIf="server.name.length < 4 && server.name.length > 0 && showRequired">Server name not long enough</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>

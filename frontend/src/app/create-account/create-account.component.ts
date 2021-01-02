@@ -18,7 +18,7 @@ export class CreateAccountComponent implements OnInit {
   avatarURL: string = "assets/default-avatar.jpg"
   showRequired = false;
   showFirstCard = true;
-  constructor(private chatService: ChatService,  private router: Router) { }
+  constructor(private chatService: ChatService, private router: Router) { }
 
   ngOnInit(): void {
   }

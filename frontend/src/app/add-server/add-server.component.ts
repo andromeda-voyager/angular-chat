@@ -3,14 +3,15 @@ import { ChatService } from '../shared/chat.service';
 import { Server } from '../shared/server';
 
 @Component({
-  selector: 'app-new-server',
-  templateUrl: './new-server.component.html',
-  styleUrls: ['./new-server.component.scss']
+  selector: 'app-add-server',
+  templateUrl: './add-server.component.html',
+  styleUrls: ['./add-server.component.scss']
 })
-export class NewServerComponent implements OnInit {
+export class AddServerComponent implements OnInit {
   @Input() server: Server = { name: "", description: "", serverImageUrl: "" }
   file: File = null!;
-  serverImageUrl: string = "assets/default-server.jpg"
+  serverImageUrl: string = "assets/default-avatar.jpg"
+  showRequired = false;
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
@@ -28,8 +29,12 @@ export class NewServerComponent implements OnInit {
   }
 
   createServer() {
-    this.chatService.createServer(this.file, this.server);
-
+    if (this.server.name.length > 3) {
+      this.chatService.createServer(this.file, this.server);
+    }
+    else {
+      this.showRequired = true;
+    }
   }
 
 }
