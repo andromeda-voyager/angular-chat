@@ -30,3 +30,7 @@ func Exec(stmt string, args []interface{}) (int, error) {
 	defer db.Close()
 	return int(serverID), nil
 }
+
+func GetServerFromInvite(code string) {
+
+}

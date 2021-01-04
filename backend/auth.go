@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"nebula/message"
+	"nebula/account"
 	"nebula/util"
 
 	"golang.org/x/crypto/argon2"
@@ -34,12 +34,12 @@ func generateCode(email string) string {
 
 // SendCodeToEmail .
 func SendCodeToEmail(email string) {
-	if IsEmailInUse(email) {
-		message.SendEmail([]byte("An account already exists with this email."), email)
+	if account.IsEmailInUse(email) {
+		account.SendEmail([]byte("An account already exists with this email."), email)
 	} else {
 		msg := []byte("Nebula\n\nVerifcation Code:\t" + generateCode(email))
 		fmt.Println(msg)
-		message.SendEmail(msg, email)
+		account.SendEmail(msg, email)
 	}
 }
 

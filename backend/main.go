@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"nebula/account"
 	"nebula/database"
 	"nebula/router"
 	"net/http"
@@ -53,7 +54,7 @@ func testQuery() {
 	defer rows.Close()
 
 	if rows.Next() {
-		var a Account
+		var a account.Account
 		rows.Scan(&a.Email)
 		fmt.Println(a.Email)
 	}

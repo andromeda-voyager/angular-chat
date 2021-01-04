@@ -2,6 +2,7 @@ package permissions
 
 const (
 	Full = 255
+	None = 0
 )
 
 // i := int64(255)

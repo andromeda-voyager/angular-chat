@@ -2,13 +2,14 @@ package main
 
 import (
 	"errors"
+	"nebula/account"
 	"nebula/database"
 	"nebula/util"
 
 	"golang.org/x/crypto/argon2"
 )
 
-func getUser(email string) (*Account, error) {
+func getAccount(email string) (*account.Account, error) {
 	var args []interface{}
 	args = append(args, email)
 	rows, err := database.Query("SELECT Email, Username, AvatarURL FROM Users WHERE Email=?;", args)
@@ -18,7 +19,7 @@ func getUser(email string) (*Account, error) {
 	defer rows.Close()
 
 	if rows.Next() {
-		var a Account
+		var a account.Account
 		rows.Scan(&a.Email, &a.Username, &a.AvatarURL)
 		return &a, nil
 	}
@@ -26,7 +27,7 @@ func getUser(email string) (*Account, error) {
 }
 
 // addAccount user to the database
-func addAccount(a Account) {
+func addAccount(a account.Account) {
 	salt := util.GetRandomBytes(32)
 	hashedPassword := argon2.IDKey([]byte(a.Password), salt, 4, 32*1024, 4, 32)
 	var args []interface{}
