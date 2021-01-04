@@ -15,6 +15,7 @@
   width:50px;
   background-color: green;
 }
+
 #video-feed  {
   height:40%;
   width:100%;
@@ -25,26 +26,26 @@
 }
 
 app-messenger {
-    align-self: flex-end;
-    height:90%;
-    width: 100%;
+  align-self: flex-end;
+  height:90%;
+  width: 100%;
 }
 
 .small {
-    height:50%;
+  height:50%;
 }
 
 #webcam-preview {
-    position: absolute;
-    height:35%;
-    width:35%;
-    bottom:0;
-    left:0;
+  position: absolute;
+  height:35%;
+  width:35%;
+  bottom:0;
+  left:0;
 }
 
 #video {
-    height:100%;
-    width:auto; 
+  height:100%;
+  width:auto; 
 }
 
 #camera-button {
@@ -57,9 +58,9 @@ app-messenger {
 }
 
 #camera-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px rgba(4, 57, 138, 0.35);
-    color: #125699;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(4, 57, 138, 0.35);
+  color: #125699;
 }
 
 #servers {
@@ -73,14 +74,14 @@ app-messenger {
   opacity: .2;
 }
 
-#create-server-button {
+#add-server-button {
   cursor: pointer;
   color:white;
   padding:10px;
   border-radius: 6px;
-    border: 3px solid  rgb(55, 58, 61);
-    background-color:  rgb(55, 58, 61);
-    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
+  border: 3px solid  rgb(55, 58, 61);
+  background-color:  rgb(55, 58, 61);
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
 }
 
 button:hover {
@@ -107,7 +108,7 @@ button:hover {
   height:100%;
 }
 
-app-new-server {
+app-add-server {
   margin:auto;
   z-index: 2;
 }

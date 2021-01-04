@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
-import { Server } from '../shared/server';
+import { Server, Invite } from '../shared/server';
 
 @Component({
   selector: 'app-add-server',
@@ -9,14 +9,29 @@ import { Server } from '../shared/server';
 })
 export class AddServerComponent implements OnInit {
   @Input() server: Server = { name: "", description: "", serverImageUrl: "" }
+  @Input() invite: Invite = {code:""}
   file: File = null!;
   serverImageUrl: string = "assets/default-avatar.jpg"
   showRequired = false;
+  showCreateServer = false;
+  showAddServer = false;
+  
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
   }
 
+  joinServer() {
+    if (this.invite.code.length > 7) {
+      this.chatService.joinServer(this.invite).subscribe(server => {
+
+      })
+    }
+    else {
+      this.showRequired = true;
+    }
+  
+  }
 
   onChange(event: any) {
     this.file = event.target.files[0];

@@ -1,6 +1,6 @@
 <div [ngClass]="{'dim': dialogOpen}" id="component">
 
-    <div id="servers"> <button id="create-server-button" (click)="addServer()">Add Server</button></div>
+    <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button></div>
     <!-- <div id="video-feed" *ngIf="isCameraOpen">
         <video autoplay="autoplay" id="video-feed" #videoFeed [srcObject]="videoFeedStream">Video stream not available.</video>
         Video Feed
@@ -17,6 +17,6 @@
     <app-messenger></app-messenger>
 </div>
 <div id="dialog-container" *ngIf="dialogOpen">
-    <div (click)="closeDialog()" id="overlay" ></div>
+    <div (click)="closeDialog()" id="overlay"></div>
     <app-add-server></app-add-server>
 </div>

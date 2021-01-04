@@ -4,7 +4,7 @@ import { Login } from './login';
 import { Observable } from 'rxjs';
 import { User } from './user';
 import { environment } from 'src/environments/environment';
-import { Server } from '../shared/server';
+import { Server, Invite } from '../shared/server';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -23,9 +23,9 @@ const httpOptions2 = {
 
 const createAccountUrl = environment.BaseApiUrl + "/create-account";
 const loginUrl = environment.BaseApiUrl + "/login";
-// const uploadImageUrl = environment.BaseApiUrl + "/upload-image";
 const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 const createServerUrl = environment.BaseApiUrl + "/create-server";
+const joinServerUrl = environment.BaseApiUrl + "/join-server";
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,10 @@ export class ChatService {
     this.http.post(createServerUrl, formData).subscribe(() => {
       console.log("server created");
     })
+  }
+
+  joinServer(invite: Invite): Observable<Server> {
+    return this.http.post<Server>(joinServerUrl, invite);
   }
 
   sendVerificationCode(_email: string) {

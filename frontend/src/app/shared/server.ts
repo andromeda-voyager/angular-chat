@@ -3,3 +3,8 @@ export interface Server {
     description: string
     serverImageUrl: string
 }
+
+export interface Invite {
+    code: string
+    serverID?: number
+}

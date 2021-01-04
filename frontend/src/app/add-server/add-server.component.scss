@@ -1,100 +1,126 @@
 #component {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:100%;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:100%;
+  z-index: 99;
+  background-color: white;
+}
   
-  mat-form-field {
-    margin-bottom:2px;
-  }
+mat-form-field {
+  margin-bottom:2px;
+}
   
-  #file-select {
-    opacity: 0;
-    height:100px;
-    width:100px;
-    cursor: pointer;
-    position: absolute;
-    background-color: green;
-    border-radius: 50%;
-  }
+#file-select {
+  opacity: 0;
+  height:100px;
+  width:100px;
+  cursor: pointer;
+  position: absolute;
+  border-radius: 50%;
+}
   
-  #image-instructions {
-    opacity: 0;
-    height:100px;
-    width:100px;
-    position: absolute;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(226, 231, 238, 0.081);
-  }
+#image-instructions {
+  opacity: 0;
+  height:100px;
+  width:100px;
+  position: absolute;
+  border-radius: 50%;
+  margin-top:10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(226, 231, 238, 0.081);
+}
   
-  #server-image:hover #image-instructions {
-    font-weight: 500;
-    opacity: 1;
-    transition: opacity .4s;
-  }
+#server-image:hover #image-instructions {
+  font-weight: 500;
+  opacity: 1;
+  transition: opacity .4s;
+}
   
-  #server-image {
-    position: relative;
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-style: solid;
-    border-color:rgb(24, 113, 187);
-    border-width: 4px;
-    border-radius: 50%;
-  }
+#server-image {
+  position: relative;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color:rgb(24, 113, 187);
+  border-width: 4px;
+  border-radius: 50%;
+}
   
-  #server-image img {
-    height:100px;
-    width:100px;
-    border-radius: 50%;
-  }
+#server-image img {
+  height:100px;
+  width:100px;
+  border-radius: 50%;
+}
   
-  // border-color:rgb(121, 12, 57);
-  #server-image:hover img {
-    opacity: .4;
-    transition: opacity .4s;
-  }
+#server-image:hover img {
+  opacity: .4;
+  transition: opacity .4s;
+}
   
-  .card {
-    max-width:320px;
-    text-align: center;
-    height:fit-content;
-    padding:40px;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.356);
-  }
+.card {
+  max-width:320px;
+  text-align: center;
+  height:fit-content;
+  padding:40px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.356);
+}
   
-  mat-form-field {
-    width: 250px;
-  }
+mat-form-field {
+  width: 250px;
+}
   
-  .submit {
-    background-color: rgb(26, 111, 190);
-    color:white;
-    padding:5px 20px 5px 20px;
-    box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.356);
-  }
+.submit {
+  background-color: rgb(26, 111, 190);
+  color:white;
+  padding:5px 25px 5px 25px;
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.356);
+}
   
-  .submit:hover {
-    opacity: .8;
-  }
+.submit:hover {
+  opacity: .8;
+}
   
-  mat-hint {
-    color:red;
-  }
+mat-hint {
+  color:red;
+}
   
-  span {
-    margin-bottom:10px;
-  }
+span {
+  margin-bottom:10px;
+}
+
+#buttons-container {
+  height:180px;
+  width:240px;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+//rgb(61, 187, 236);
+.option {
+  font-size: larger;
+  color:white;
+  padding:5px 20px 5px 20px;
+  border-radius: 6px;
+  border: 1px solid  rgb(141, 141, 141);
+  background-color:  rgb(86, 91, 95);
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
+  width:145px;
+  height:70px;
+}
+
+.option:hover {
+  opacity: .75;
+}

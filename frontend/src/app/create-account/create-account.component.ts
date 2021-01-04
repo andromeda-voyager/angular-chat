@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ChatService } from '../shared/chat.service';
 import { User } from '../shared/user';
 
-const emailRegex = /.+@.+\..+/;
+const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 
 @Component({
   selector: 'app-create-account',
