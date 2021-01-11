@@ -9,11 +9,11 @@ import (
 )
 
 var loggedInUsers map[string]*account.Account
-var serverConnections map[string]map[string]server.Connection
+var serverConnections map[int]map[string]server.Connection
 
 func init() {
 	loggedInUsers = make(map[string]*account.Account)
-	serverConnections = make(map[string]map[string]server.Connection)
+	serverConnections = make(map[int]map[string]server.Connection)
 }
 
 // Add .
@@ -31,5 +31,10 @@ func Get(token string) *account.Account {
 
 // Post .
 func Post(a *account.Account, post server.Post) {
-	// send post to open connections
+	post.TimePosted = time.Now().UTC()
+	post.UserID = a.ID
+	connectionsToServer := serverConnections[post.ServerID]
+	for _, connection := range connectionsToServer {
+		connection.Send(post)
+	}
 }

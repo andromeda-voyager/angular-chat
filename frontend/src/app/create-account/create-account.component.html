@@ -9,32 +9,32 @@
 
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input isFocused matInput [(ngModel)]="user.email">
-            <mat-hint *ngIf="!isValidEmail() && user.email.length != 0">Invalid Email</mat-hint>
-            <mat-hint *ngIf="showRequired && user.email.length == 0">Required</mat-hint>
+            <input isFocused matInput [(ngModel)]="account.email">
+            <mat-hint *ngIf="!isValidEmail() && account.email.length != 0">Invalid Email</mat-hint>
+            <mat-hint *ngIf="showRequired && account.email.length == 0">Required</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Username</mat-label>
-            <input matInput [(ngModel)]="user.username">
-            <mat-hint *ngIf="showRequired && user.username.length == 0">Required</mat-hint>
+            <input matInput [(ngModel)]="account.username">
+            <mat-hint *ngIf="showRequired && account.username.length == 0">Required</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
-            <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="user.password">
+            <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="account.password">
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
-            <mat-hint *ngIf="showRequired && 8 > user.password.length">Password too short</mat-hint>
+            <mat-hint *ngIf="showRequired && 8 > account.password.length">Password too short</mat-hint>
         </mat-form-field>
         <button mat-button class="submit" (click)=next()>Next</button>
     </div>
 
     <div *ngIf="!showFirstCard" class="card">
-        <span>Enter the verification code sent to {{user.email}}</span>
+        <span>Enter the verification code sent to {{account.email}}</span>
         <mat-form-field appearance="outline">
             <mat-label>Code</mat-label>
-            <input matInput [(ngModel)]="user.code">
+            <input matInput [(ngModel)]="account.code">
             <mat-hint *ngIf="!isValidCodeLength()">Required</mat-hint>
         </mat-form-field>
         <button mat-button class="submit" (click)=createAccount()>Create Account</button>

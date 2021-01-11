@@ -2,9 +2,10 @@ package server
 
 // Server .
 type Server struct {
-	ID             int
-	Name           string `json:"name"`
-	ServerImageURL string `json:"serverImageURL"`
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	ImageURL string `json:"imageURL"`
+	Posts    []Post `json:"posts"`
 }
 
 // Invite .

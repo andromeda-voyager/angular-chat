@@ -1,4 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { ChatService } from '../shared/chat.service';
+import { Connection, Server } from '../shared/server';
+import { Account } from '../shared/account';
+
 declare var MediaRecorder: any;
 @Component({
   selector: 'app-chat',
@@ -13,19 +17,30 @@ export class ChatComponent implements OnInit {
   videoStream: MediaStream = new MediaStream();
   videoFeedStream: MediaStream = new MediaStream();
   mediaSource: MediaSource = new MediaSource();
+  connections: Connection[] = []
   image: string = "";
+ 
   //videoFeedStream = URL.createObjectURL(this.mediaSource);
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
-
-
+    let account = this.chatService.getUserData()
+    this.connections = account.connections;
+    console.log(this.connections[0].server.imageURL)
+    
   }
 
   closeDialog() {
-      this.dialogOpen =false;
-    
+    this.dialogOpen = false;
+
     console.log("closing dialogs")
+  }
+
+  onNewConnection(connection: Connection) {
+    if (this.connections == null) {
+      this.connections = [];
+    }
+    this.connections.push(connection);
   }
 
   addServer() {
@@ -34,7 +49,7 @@ export class ChatComponent implements OnInit {
   }
 
   takePicture() {
-   var track = this.videoStream.getVideoTracks()[0];
+    var track = this.videoStream.getVideoTracks()[0];
     this.videoFeedStream.addTrack(track);
     //this.image = new ImageCapture(this.track);
   }

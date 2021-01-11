@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
   @Input() email: string = "";
   isPasswordCorrect = true;
   hide = true;
+  loginFailed = false;
   constructor(private chatService: ChatService, private router: Router) { }
 
   ngOnInit(): void {
@@ -20,13 +21,16 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.chatService.login({ email: this.email, password: this.password }).subscribe(user => {
-      console.log(user.username)
+      console.log(user)
+      console.log(":")
       console.log("password correct");
+      this.chatService.addUserData(user)
       this.router.navigate(['chat']);
     }, error => this.handleError(error));
   }
 
   handleError(error: any) {
+    this.loginFailed = true;
     console.log(error);
   }
 

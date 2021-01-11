@@ -2,6 +2,7 @@ package account
 
 import (
 	"database/sql"
+	"fmt"
 	"nebula/config"
 	"nebula/database"
 	"nebula/server"
@@ -9,19 +10,19 @@ import (
 
 // Account holds all the values stored for each user in the database. Used to unmarshal json sent during account creation.
 type Account struct {
-	Username    string               `json:"username"`
-	Password    string               `json:"password"`
-	Email       string               `json:"email"`
-	AvatarURL   string               `json:"avatarURL"`
-	Code        string               `json:"code"`
-	Connections []*server.Connection `json:"connections"`
-	id          int
+	Username    string              `json:"username"`
+	Password    string              `json:"password"`
+	Email       string              `json:"email"`
+	AvatarURL   string              `json:"avatarURL"`
+	Code        string              `json:"code"`
+	Connections []server.Connection `json:"connections"`
+	ID          int                 `json:"id"`
 }
 
 // GetConnection .
 func (a *Account) GetConnection(index int) *server.Connection {
 	if len(a.Connections) > index {
-		return a.Connections[index]
+		return &a.Connections[index]
 	}
 	return nil
 }
@@ -42,16 +43,15 @@ func (a *Account) hasValidFields() bool {
 // AddConnection adds a connection to a user
 func (a *Account) AddConnection(serverID int, permissions uint8) {
 	var args []interface{}
-	args = append(args, serverID, a.id, a.Username, permissions)
-	_, err := database.Exec("INSERT INTO Connections (ServerID, UserID, Alias, Permissions) Values (?, ?, ?, ?);", args)
+	fmt.Println(a.ID)
+	fmt.Println(a.Username)
+	fmt.Println(permissions)
+	fmt.Println(serverID)
+	args = append(args, serverID, a.ID, a.Username, permissions)
+	_, err := database.Exec("INSERT INTO Connections (ServerID, AccountID, Alias, Permissions) Values (?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
-}
-
-// ID returns the id of the account
-func (a *Account) ID() int {
-	return a.id
 }
 
 // IsEmailInUse checks if an email is already used for an account
@@ -60,7 +60,7 @@ func IsEmailInUse(email string) bool {
 	if err != nil {
 		panic(err.Error())
 	}
-	rows, err := db.Query("SELECT * FROM Users WHERE Email=?;", email)
+	rows, err := db.Query("SELECT * FROM Accounts WHERE Email=?;", email)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -71,9 +71,9 @@ func IsEmailInUse(email string) bool {
 }
 
 // GetServerID .
-func (a *Account) GetServerID(index int) int {
-	if len(a.Connections) > index {
-		return a.Connections[index].ServerID
-	}
-	return -1
-}
+// func (a *Account) GetServerID(index int) int {
+// 	if len(a.Connections) > index {
+// 		return a.Connections[index].ServerID
+// 	}
+// 	return -1
+// }

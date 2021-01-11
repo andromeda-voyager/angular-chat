@@ -7,6 +7,7 @@ import (
 	"nebula/database"
 	"nebula/router"
 	"net/http"
+	"path/filepath"
 
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/net/websocket"
@@ -16,9 +17,18 @@ func main() {
 
 	//testQuery()
 
-	http.Handle("/ws", websocket.Handler(socket))
+	//http.Handle("/ws", websocket.Handler(socket))
+	publicFolder, err := filepath.Abs("./public")
+	if err != nil {
 
+	}
+	fs := http.FileServer(http.Dir(publicFolder))
+	fmt.Println(publicFolder)
 	http.HandleFunc("/", router.Handler)
+
+	http.Handle("/static/", http.StripPrefix("/static", fs))
+
+	//http.HandleFunc("/", router.Handler)
 
 	fmt.Println("Listening on port 8080")
 

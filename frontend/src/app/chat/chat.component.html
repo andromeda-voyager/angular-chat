@@ -1,6 +1,12 @@
 <div [ngClass]="{'dim': dialogOpen}" id="component">
-
-    <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button></div>
+   
+    <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button>
+        <a class="server"
+        *ngFor="let connection of connections">
+            <img class="server-image" [src]="connection.server.imageURL">
+            <!-- <img class="server-image" src="http://localhost:8080/static/avatars/default-avatar.jpg"> -->
+        </a>
+    </div>
     <!-- <div id="video-feed" *ngIf="isCameraOpen">
         <video autoplay="autoplay" id="video-feed" #videoFeed [srcObject]="videoFeedStream">Video stream not available.</video>
         Video Feed
@@ -18,5 +24,6 @@
 </div>
 <div id="dialog-container" *ngIf="dialogOpen">
     <div (click)="closeDialog()" id="overlay"></div>
-    <app-add-server></app-add-server>
+    <app-add-server (newConnection)="onNewConnection($event)">
+        ></app-add-server>
 </div>

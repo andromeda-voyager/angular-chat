@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
-import { Server, Invite } from '../shared/server';
+import { Server, Invite, NewServer, Connection } from '../shared/server';
 
 @Component({
   selector: 'app-add-server',
@@ -8,14 +8,15 @@ import { Server, Invite } from '../shared/server';
   styleUrls: ['./add-server.component.scss']
 })
 export class AddServerComponent implements OnInit {
-  @Input() server: Server = { name: "", description: "", serverImageUrl: "" }
-  @Input() invite: Invite = {code:""}
+  @Input() server: NewServer = { name: "", description: "", imageURL: "" }
+  @Input() invite: Invite = { code: "" }
+  @Output() newConnection = new EventEmitter<Connection>();
   file: File = null!;
   serverImageUrl: string = "assets/default-avatar.jpg"
   showRequired = false;
   showCreateServer = false;
   showAddServer = false;
-  
+
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
@@ -23,14 +24,14 @@ export class AddServerComponent implements OnInit {
 
   joinServer() {
     if (this.invite.code.length > 7) {
-      this.chatService.joinServer(this.invite).subscribe(server => {
-
+      this.chatService.joinServer(this.invite).subscribe(connection => {
+      //  this.newConnection.emit(connection);
       })
     }
     else {
       this.showRequired = true;
     }
-  
+
   }
 
   onChange(event: any) {
@@ -45,7 +46,10 @@ export class AddServerComponent implements OnInit {
 
   createServer() {
     if (this.server.name.length > 3) {
-      this.chatService.createServer(this.file, this.server);
+      console.log(this.server.name);
+      this.chatService.createServer(this.file, this.server).subscribe(connection => {
+        this.newConnection.emit(connection);
+      })
     }
     else {
       this.showRequired = true;

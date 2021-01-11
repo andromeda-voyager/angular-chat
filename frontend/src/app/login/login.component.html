@@ -14,6 +14,7 @@
         [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
+      <mat-hint *ngIf="loginFailed">Email or Password is incorrect</mat-hint>
     </mat-form-field>
 
     <button mat-button id="login-button" (click)=login()>Login</button>

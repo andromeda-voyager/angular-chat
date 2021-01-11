@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatService } from '../shared/chat.service';
-import { User } from '../shared/user';
+import { Account, NewAccount } from '../shared/account';
 
 const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 
@@ -12,7 +12,7 @@ const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 })
 export class CreateAccountComponent implements OnInit {
 
-  @Input() user: User = { password: "", email: "", username: "", code: "" }
+  @Input() account: NewAccount = { password: "", email: "", username: "", code: "" }
   hide = false;
   file: File = null!;
   avatarURL: string = "assets/default-avatar.jpg"
@@ -24,7 +24,7 @@ export class CreateAccountComponent implements OnInit {
   }
 
   createAccount() {
-      this.chatService.createAccount(this.file, this.user).subscribe(user => {
+      this.chatService.createAccount(this.file, this.account).subscribe(user => {
         console.log(user);
         this.router.navigate(['chat']);
       })
@@ -32,7 +32,7 @@ export class CreateAccountComponent implements OnInit {
 
   next() {
     if (this.userFieldsValid()) {
-      this.chatService.sendVerificationCode(this.user.email);
+      this.chatService.sendVerificationCode(this.account.email);
       this.showFirstCard = false;
     } else this.showRequired = true;
   }
@@ -56,17 +56,17 @@ export class CreateAccountComponent implements OnInit {
 
   userFieldsValid() {
     return (this.isValidEmail() &&
-      this.user.username.length > 0 &&
-      this.user.password.length > 7)
+      this.account.username.length > 0 &&
+      this.account.password.length > 7)
   }
 
   // does a simple check for email syntax (not complete)
   isValidEmail() {
-    return emailRegex.test(this.user.email)
+    return emailRegex.test(this.account.email)
   }
 
   isValidCodeLength() {
-    return this.user.code.length > 4;
+    return this.account.code.length > 4;
   }
 
 

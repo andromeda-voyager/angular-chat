@@ -26,6 +26,8 @@ func init() {
 			fmt.Println("added user")
 			addAccount(account)
 			account.Password = ""
+			cookie := session.Add(&account)
+			http.SetCookie(w, &cookie)
 			json.NewEncoder(w).Encode(account)
 		} else {
 			fmt.Println("code invalid")
@@ -41,12 +43,14 @@ func init() {
 		if IsPasswordCorrect(credentials) {
 			account, err := getAccount(credentials.Email)
 			cookie := session.Add(account)
+
 			fmt.Println("user logged in")
 			if err != nil {
 				fmt.Println("Failed to get user")
 			}
-			json.NewEncoder(w).Encode(account)
 			http.SetCookie(w, &cookie)
+			fmt.Println(account.Username)
+			json.NewEncoder(w).Encode(account)
 		} else {
 			w.WriteHeader(http.StatusUnauthorized)
 		}
@@ -65,10 +69,11 @@ func init() {
 		serverStr := []byte(r.FormValue("server"))
 		var server server.Server
 		json.Unmarshal(serverStr, &server)
-		server.ServerImageURL = util.SaveImage(r)
+		server.ImageURL = util.SaveImage(r)
 		var args []interface{}
-		args = append(args, server.Name, server.ServerImageURL)
-		serverID, err := database.Exec("INSERT INTO Servers (Name, ServerImageURL) Values (?, ?);", args)
+		args = append(args, server.Name, server.ImageURL)
+		fmt.Println(server.Name)
+		serverID, err := database.Exec("INSERT INTO Servers (Name, ImageURL) Values (?, ?);", args)
 		if err != nil {
 			fmt.Println("failed to add server")
 		}
@@ -107,10 +112,26 @@ func init() {
 		}
 		session.Post(a, post)
 		var args []interface{}
-		args = append(args, a.GetServerID(post.ConnectionIndex), a.ID(), post.Text, post.MediaURL)
+		args = append(args, post.ServerID, a.ID, post.Text, post.MediaURL)
 		_, err := database.Exec("INSERT INTO Posts (ServerID, UserID, Text, MediaURL) Values (?, ?, ?, ?);", args)
 		if err != nil {
 			panic(err.Error())
+		}
+	})
+
+	router.AuthGet("/posts", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
+		queryValues := r.URL.Query()
+		//fmt.Println(queryValues.ServerID)
+		var args []interface{}
+		args = append(args, queryValues)
+		rows, err := database.Query("SELECT ServerID, UserID, MediaURL, Text, TimePosted FROM Posts WHERE ServerID=?", args)
+		if err != nil {
+			panic(err.Error())
+		}
+		if rows.Next() {
+			var text int
+			rows.Scan(&text)
+			fmt.Println(text)
 		}
 	})
 

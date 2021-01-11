@@ -2,20 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Login } from './login';
 import { Observable } from 'rxjs';
-import { User } from './user';
+import { Account, NewAccount } from './account';
 import { environment } from 'src/environments/environment';
-import { Server, Invite } from '../shared/server';
+import { NewServer, Server, Invite, Connection } from '../shared/server';
 
-const httpOptions = {
+const jsonOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
     'accept': 'application/json',
   }), credentials: 'same-origin',
   withCredentials: true
 };
-const httpOptions2 = {
+const formOptions = {
   headers: new HttpHeaders({
-    'Content-Type': 'multipart/form-data',
     'accept': 'application/json',
   }), credentials: 'same-origin',
   withCredentials: true
@@ -26,45 +25,56 @@ const loginUrl = environment.BaseApiUrl + "/login";
 const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 const createServerUrl = environment.BaseApiUrl + "/create-server";
 const joinServerUrl = environment.BaseApiUrl + "/join-server";
+const getPostsURL = environment.BaseApiUrl + "/posts";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ChatService {
-
+  account!: Account;
   constructor(private http: HttpClient) { }
 
-  login(login: Login): Observable<User> {
+  login(login: Login): Observable<Account> {
     let k = { Username: "matt" };
     console.log(k);
-    return this.http.post<User>(loginUrl, login, httpOptions);
+    return this.http.post<Account>(loginUrl, login, jsonOptions);
   }
 
-  createAccount(file: File, user: User): Observable<User>  {
+  addUserData(account: Account) {
+    this.account = account;
+  }
+
+  getUserData(): Account {
+    return this.account;
+  }
+
+  createAccount(file: File, user: NewAccount): Observable<Account>  {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
     formData.append("user", JSON.stringify(user));
 
-    return this.http.post<User>(createAccountUrl, formData);
+    return this.http.post<Account>(createAccountUrl, formData);
   }
 
-  createServer(file: File, server: Server) {
+  createServer(file: File, server: NewServer): Observable<Connection> {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
     formData.append("server", JSON.stringify(server));
 
-    this.http.post(createServerUrl, formData).subscribe(() => {
-      console.log("server created");
-    })
+    return this.http.post<Connection>(createServerUrl, formData, formOptions);
   }
 
   joinServer(invite: Invite): Observable<Server> {
     return this.http.post<Server>(joinServerUrl, invite);
+  }
+
+  getPosts(serverID: number): Observable<Server> {
+    return this.http.get<Server>(getPostsURL + "?serverID="+serverID, formOptions);
   }
 
   sendVerificationCode(_email: string) {
