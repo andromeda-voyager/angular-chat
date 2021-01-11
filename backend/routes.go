@@ -40,8 +40,10 @@ func init() {
 		if err := json.Unmarshal(resp, &credentials); err != nil {
 			panic(err)
 		}
+		fmt.Println(credentials)
 		if IsPasswordCorrect(credentials) {
 			account, err := getAccount(credentials.Email)
+			fmt.Println(account)
 			cookie := session.Add(account)
 
 			fmt.Println("user logged in")
@@ -54,6 +56,12 @@ func init() {
 		} else {
 			w.WriteHeader(http.StatusUnauthorized)
 		}
+	})
+
+	router.AuthPost("/login", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
+
+		json.NewEncoder(w).Encode(a)
+
 	})
 
 	router.Post("/send-verification-code", func(w http.ResponseWriter, r *http.Request) {
