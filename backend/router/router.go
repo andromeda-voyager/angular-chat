@@ -5,7 +5,6 @@ import (
 	"nebula/account"
 	"nebula/session"
 	"net/http"
-	"strings"
 )
 
 type route struct {
@@ -25,21 +24,17 @@ type routeFunction func(w http.ResponseWriter, r *http.Request)
 type authRouteFunction func(w http.ResponseWriter, r *http.Request, a *account.Account)
 
 func setHeaders(w *http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.String())
-	if strings.HasPrefix(r.URL.String(), "/avatars/") {
-		(*w).Header().Set("Content-Type", "image/jpeg")
-		fmt.Println("1")
-	} else {
-		(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
-		(*w).Header().Set("Access-Control-Allow-Headers", "withCredentials, Origin, Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	// fmt.Println(r.URL.String())
+	// if strings.HasPrefix(r.URL.String(), "/avatars/") {
+	// 	(*w).Header().Set("Content-Type", "image/jpeg")
+	// 	fmt.Println("1")
+	// } else {
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+	(*w).Header().Set("Access-Control-Allow-Headers", "withCredentials, Origin, Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	(*w).Header().Set("Content-Type", "application/json")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
 
-		fmt.Println("2")
-
-		(*w).Header().Set("Content-Type", "application/json")
-
-		(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		(*w).Header().Set("Access-Control-Allow-Credentials", "true")
-	}
 }
 
 // Post registers a callback function for the provided path
@@ -81,20 +76,29 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "OPTIONS" {
 
-		//fmt.Println(r.URL.String())
+		fmt.Println(r.URL.String())
 
 		a := authenticate(r)
 		if a != nil {
-			authRoute, ok := authRoutes[r.URL.String()]
-			if ok {
-				authRoute.callback(w, r, a)
-			}
+			callAuthRoute(w, r, a)
 		} else {
-			route, ok := routes[r.URL.String()]
-			if ok {
-				route.callback(w, r)
-			}
-
+			callRoute(w, r)
 		}
+	}
+}
+
+func callAuthRoute(w http.ResponseWriter, r *http.Request, a *account.Account) {
+	authRoute, ok := authRoutes[r.URL.String()]
+	if ok {
+		authRoute.callback(w, r, a)
+	} else {
+		callRoute(w, r)
+	}
+}
+
+func callRoute(w http.ResponseWriter, r *http.Request) {
+	route, ok := routes[r.URL.String()]
+	if ok {
+		route.callback(w, r)
 	}
 }

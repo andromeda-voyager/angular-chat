@@ -14,9 +14,19 @@ export class LoginComponent implements OnInit {
   isPasswordCorrect = true;
   hide = true;
   loginFailed = false;
-  constructor(private chatService: ChatService, private router: Router) { }
+  constructor(private chatService: ChatService, private router: Router) { 
+    
+  }
 
   ngOnInit(): void {
+    this.chatService.loginWithCookie().subscribe(user => {
+      if (user != null) {
+        console.log(user)
+        this.chatService.addUserData(user)
+        this.router.navigate(['chat']);
+      }
+  
+    }, error => this.handleError(error));
   }
 
   login() {

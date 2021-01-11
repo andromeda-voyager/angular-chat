@@ -58,10 +58,8 @@ func init() {
 		}
 	})
 
-	router.AuthPost("/login", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
-
+	router.AuthGet("/login-with-cookie", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
 		json.NewEncoder(w).Encode(a)
-
 	})
 
 	router.Post("/send-verification-code", func(w http.ResponseWriter, r *http.Request) {

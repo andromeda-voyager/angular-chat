@@ -26,6 +26,7 @@ const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 const createServerUrl = environment.BaseApiUrl + "/create-server";
 const joinServerUrl = environment.BaseApiUrl + "/join-server";
 const getPostsURL = environment.BaseApiUrl + "/posts";
+const loginWithCookieURL = environment.BaseApiUrl + "/login-with-cookie";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,10 @@ export class ChatService {
     let k = { Username: "matt" };
     console.log(k);
     return this.http.post<Account>(loginUrl, login, jsonOptions);
+  }
+
+  loginWithCookie(): Observable<Account> {
+    return this.http.get<Account>(loginWithCookieURL, jsonOptions);
   }
 
   addUserData(account: Account) {
