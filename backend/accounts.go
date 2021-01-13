@@ -29,7 +29,7 @@ func getAccount(email string) (*account.Account, error) {
 	return nil, errors.New("Failed to get user Information")
 }
 
-func getServer(serverID int) server.Server {
+func getServer(serverID int) *server.Server {
 	var args []interface{}
 	args = append(args, serverID)
 	rows, err := database.Query("SELECT ServerID, Name, ImageURL FROM Servers WHERE ServerID=?;", args)
@@ -42,7 +42,7 @@ func getServer(serverID int) server.Server {
 		rows.Scan(&s.ID, &s.Name, &s.ImageURL)
 		s.Posts = getPosts(s.ID)
 	}
-	return s
+	return &s
 }
 
 func getPosts(serverID int) []server.Post {

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
 import { Connection, Server } from '../shared/server';
 import { Account } from '../shared/account';
+import { LoginService } from '../shared/login.service';
 
 declare var MediaRecorder: any;
 @Component({
@@ -21,10 +22,10 @@ export class ChatComponent implements OnInit {
   image: string = "";
  
   //videoFeedStream = URL.createObjectURL(this.mediaSource);
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService, private loginService: LoginService) { }
 
   ngOnInit(): void {
-    let account = this.chatService.getUserData()
+    let account = this.loginService.getUserData()
     this.connections = account.connections;
     console.log(this.connections[0].server.imageURL)
     

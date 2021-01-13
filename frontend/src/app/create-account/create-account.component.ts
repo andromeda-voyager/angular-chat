@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ChatService } from '../shared/chat.service';
-import { Account, NewAccount } from '../shared/account';
+import { NewAccount } from '../shared/account';
+import { AccountService } from '../shared/account.service';
 
 const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 
@@ -18,13 +18,13 @@ export class CreateAccountComponent implements OnInit {
   avatarURL: string = "assets/default-avatar.jpg"
   showRequired = false;
   showFirstCard = true;
-  constructor(private chatService: ChatService, private router: Router) { }
+  constructor(private accountService: AccountService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   createAccount() {
-      this.chatService.createAccount(this.file, this.account).subscribe(user => {
+      this.accountService.createAccount(this.file, this.account).subscribe(user => {
         console.log(user);
         this.router.navigate(['chat']);
       })
@@ -32,7 +32,7 @@ export class CreateAccountComponent implements OnInit {
 
   next() {
     if (this.userFieldsValid()) {
-      this.chatService.sendVerificationCode(this.account.email);
+      this.accountService.sendVerificationCode(this.account.email);
       this.showFirstCard = false;
     } else this.showRequired = true;
   }
@@ -46,23 +46,34 @@ export class CreateAccountComponent implements OnInit {
 
   onChange(event: any) {
     this.file = event.target.files[0];
+    this.isValidImage()
     var reader = new FileReader();
     reader.onload = (event: any) => {
       this.avatarURL = event.target.result;
     }
+  
     reader.readAsDataURL(event.target.files[0]);
-    //  this.chatService.uploadImage(this.file);
   }
 
   userFieldsValid() {
     return (this.isValidEmail() &&
       this.account.username.length > 0 &&
-      this.account.password.length > 7)
+      this.account.password.length > 7 &&
+      this.isValidImage())
+
   }
 
   // does a simple check for email syntax (not complete)
   isValidEmail() {
     return emailRegex.test(this.account.email)
+  }
+
+  isValidImage() {
+    if (this.file) {
+      console.log(this.file.size/1000000)
+      return this.file.size/1000000 <= 1; 
+    }
+    return true; // null is valid since default image will be used on the server
   }
 
   isValidCodeLength() {

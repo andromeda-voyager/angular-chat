@@ -2,10 +2,11 @@ package account
 
 import (
 	"database/sql"
-	"fmt"
 	"nebula/config"
 	"nebula/database"
 	"nebula/server"
+
+	"golang.org/x/net/websocket"
 )
 
 // Account holds all the values stored for each user in the database. Used to unmarshal json sent during account creation.
@@ -17,6 +18,7 @@ type Account struct {
 	Code        string              `json:"code"`
 	Connections []server.Connection `json:"connections"`
 	ID          int                 `json:"id"`
+	ws          *websocket.Conn
 }
 
 // GetConnection .
@@ -41,17 +43,14 @@ func (a *Account) hasValidFields() bool {
 }
 
 // AddConnection adds a connection to a user
-func (a *Account) AddConnection(serverID int, permissions uint8) {
+func (a *Account) AddConnection(s server.Server, permissions uint8) {
 	var args []interface{}
-	fmt.Println(a.ID)
-	fmt.Println(a.Username)
-	fmt.Println(permissions)
-	fmt.Println(serverID)
-	args = append(args, serverID, a.ID, a.Username, permissions)
+	args = append(args, s.ID, a.ID, a.Username, permissions)
 	_, err := database.Exec("INSERT INTO Connections (ServerID, AccountID, Alias, Permissions) Values (?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
+	s.CreateConnection(a.ID, a.Username, permissions, a.ws)
 }
 
 // IsEmailInUse checks if an email is already used for an account

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ChatService } from '../shared/chat.service';
+import { LoginService } from '../shared/login.service';
 
 @Component({
   selector: 'app-login',
@@ -14,27 +14,22 @@ export class LoginComponent implements OnInit {
   isPasswordCorrect = true;
   hide = true;
   loginFailed = false;
-  constructor(private chatService: ChatService, private router: Router) { 
-    
+  constructor(private loginService: LoginService, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.chatService.loginWithCookie().subscribe(user => {
-      if (user != null) {
-        console.log(user)
-        this.chatService.addUserData(user)
-        this.router.navigate(['chat']);
-      }
-  
-    }, error => this.handleError(error));
+    this.loginService.loginWithCookie().subscribe(user => {
+
+      this.router.navigate(['chat']);
+
+    }, error => { });
   }
 
   login() {
-    this.chatService.login({ email: this.email, password: this.password }).subscribe(user => {
+    this.loginService.login({ email: this.email, password: this.password }).subscribe(user => {
       console.log(user)
       console.log(":")
       console.log("password correct");
-      this.chatService.addUserData(user)
       this.router.navigate(['chat']);
     }, error => this.handleError(error));
   }

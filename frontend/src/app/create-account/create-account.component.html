@@ -6,6 +6,7 @@
             <span id="instructions">Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
+        <span [ngClass]="{'hidden': !this.file && isValidImage()}" class="hint">Image too large. File size limit is 1 MB.</span>
 
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>

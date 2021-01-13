@@ -40,7 +40,7 @@ mat-form-field {
 
 #avatar {
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -61,6 +61,11 @@ mat-form-field {
 #avatar:hover img {
   opacity: .4;
   transition: opacity .4s;
+}
+
+.hint {
+  color:red;
+  font-size: small;
 }
 
 .card {
@@ -98,4 +103,8 @@ mat-hint {
 
 span {
   margin-bottom:10px;
+}
+
+.hidden {
+  visibility: hidden;
 }

@@ -24,6 +24,14 @@ func Add(a *account.Account) http.Cookie {
 	return cookie
 }
 
+// Remove .
+func Remove(token string) {
+	_, ok := loggedInUsers[token]
+	if ok {
+		delete(loggedInUsers, token)
+	}
+}
+
 // Get .
 func Get(token string) *account.Account {
 	return loggedInUsers[token]

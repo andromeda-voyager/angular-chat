@@ -9,8 +9,8 @@ import (
 	"path"
 )
 
-const avatarFolder = "./public/avatars/"
-const avatarBaseURL = config.ServerURL + "/static/avatars/"
+const avatarFolder = "./public/images/"
+const avatarBaseURL = config.ServerURL + "/static/images/"
 
 func SaveImage(r *http.Request) string {
 	in, _, err := r.FormFile("image")

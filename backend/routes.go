@@ -16,6 +16,11 @@ import (
 
 func init() {
 
+	// router.AuthPost("/ws", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
+	// 	s := websocket.Handler(socket)
+	// 	s.ServeHTTP(w, r)
+	// })
+
 	router.Post("/create-account", func(w http.ResponseWriter, r *http.Request) {
 		accountStr := []byte(r.FormValue("user"))
 		var account account.Account
@@ -40,21 +45,28 @@ func init() {
 		if err := json.Unmarshal(resp, &credentials); err != nil {
 			panic(err)
 		}
-		fmt.Println(credentials)
 		if IsPasswordCorrect(credentials) {
 			account, err := getAccount(credentials.Email)
-			fmt.Println(account)
 			cookie := session.Add(account)
-
 			fmt.Println("user logged in")
 			if err != nil {
 				fmt.Println("Failed to get user")
 			}
 			http.SetCookie(w, &cookie)
-			fmt.Println(account.Username)
 			json.NewEncoder(w).Encode(account)
 		} else {
 			w.WriteHeader(http.StatusUnauthorized)
+		}
+	})
+
+	router.AuthPost("/logout", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
+		cookie, err := r.Cookie("Auth")
+		fmt.Println("logout")
+		if err != nil {
+			fmt.Println("no cookie")
+		} else {
+			fmt.Println("removing session")
+			session.Remove(cookie.Value)
 		}
 	})
 
@@ -72,18 +84,8 @@ func init() {
 	})
 
 	router.AuthPost("/create-server", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
-		serverStr := []byte(r.FormValue("server"))
-		var server server.Server
-		json.Unmarshal(serverStr, &server)
-		server.ImageURL = util.SaveImage(r)
-		var args []interface{}
-		args = append(args, server.Name, server.ImageURL)
-		fmt.Println(server.Name)
-		serverID, err := database.Exec("INSERT INTO Servers (Name, ImageURL) Values (?, ?);", args)
-		if err != nil {
-			fmt.Println("failed to add server")
-		}
-		a.AddConnection(serverID, permissions.Full)
+		server := server.Add(r)
+		a.AddConnection(server, permissions.Full)
 	})
 
 	router.AuthPost("/join-server", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
@@ -92,7 +94,7 @@ func init() {
 		if err := json.Unmarshal(resp, &invite); err != nil {
 			panic(err)
 		}
-		fmt.Println(invite.Code)
+		fmt.Println("invite code:", invite.Code)
 		var args []interface{}
 		args = append(args, invite.Code)
 		rows, err := database.Query("SELECT ServerID FROM Invites WHERE Code=?;", args)
@@ -104,7 +106,7 @@ func init() {
 		if rows.Next() {
 			var serverID int
 			rows.Scan(&serverID)
-			a.AddConnection(serverID, permissions.None)
+			//	a.AddConnection(serverID, permissions.None)
 		}
 
 	})

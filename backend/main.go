@@ -17,7 +17,6 @@ func main() {
 
 	//testQuery()
 
-	//http.Handle("/ws", websocket.Handler(socket))
 	publicFolder, err := filepath.Abs("./public")
 	if err != nil {
 
@@ -40,6 +39,7 @@ type text struct {
 }
 
 func socket(ws *websocket.Conn) {
+	defer ws.Close()
 	for {
 		var m text
 		if err := websocket.JSON.Receive(ws, &m); err != nil {
