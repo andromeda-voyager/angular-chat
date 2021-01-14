@@ -5,7 +5,7 @@ export interface Account {
     username: string
     password: string
     email: string
-    avatarURL?: string
+    avatarURL: string
     connections: Connection[]
     // friends: string[]
 }
@@ -15,7 +15,6 @@ export interface NewAccount {
     username: string
     password: string
     email: string
-    avatarURL?: string
     code: string
 }
 

@@ -84,8 +84,19 @@ func init() {
 	})
 
 	router.AuthPost("/create-server", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
-		server := server.Add(r)
-		a.AddConnection(server, permissions.Full)
+		server := server.New(r)
+		a.CreateConnection(server, permissions.Full)
+	})
+
+	router.AuthPost("/delete-server", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
+		resp, _ := ioutil.ReadAll(r.Body)
+		var serverID int
+		if err := json.Unmarshal(resp, &serverID); err != nil {
+			panic(err)
+		}
+		ok := a.DeleteServer(serverID)
+		fmt.Println("server deleted?", ok)
+
 	})
 
 	router.AuthPost("/join-server", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
@@ -97,7 +108,7 @@ func init() {
 		fmt.Println("invite code:", invite.Code)
 		var args []interface{}
 		args = append(args, invite.Code)
-		rows, err := database.Query("SELECT ServerID FROM Invites WHERE Code=?;", args)
+		rows, err := database.Query("SELECT server_id FROM invite WHERE code=?;", args)
 		if err != nil {
 			panic(err)
 		}
@@ -118,12 +129,15 @@ func init() {
 		if err := json.Unmarshal(resp, &post); err != nil {
 			panic(err)
 		}
-		session.Post(a, post)
-		var args []interface{}
-		args = append(args, post.ServerID, a.ID, post.Text, post.MediaURL)
-		_, err := database.Exec("INSERT INTO Posts (ServerID, UserID, Text, MediaURL) Values (?, ?, ?, ?);", args)
-		if err != nil {
-			panic(err.Error())
+
+		if a.CanPostToServer(post.ServerID) {
+			session.Post(a, post)
+			var args []interface{}
+			args = append(args, post.ServerID, a.ID, post.Text, post.MediaURL)
+			_, err := database.Exec("INSERT INTO post (server_id, account_id, text, media) Values (?, ?, ?, ?);", args)
+			if err != nil {
+				panic(err.Error())
+			}
 		}
 	})
 
@@ -132,7 +146,7 @@ func init() {
 		//fmt.Println(queryValues.ServerID)
 		var args []interface{}
 		args = append(args, queryValues)
-		rows, err := database.Query("SELECT ServerID, UserID, MediaURL, Text, TimePosted FROM Posts WHERE ServerID=?", args)
+		rows, err := database.Query("SELECT server_id, account_id, media, text, time_posted FROM post WHERE server_id=?", args)
 		if err != nil {
 			panic(err.Error())
 		}

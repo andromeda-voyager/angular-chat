@@ -1,0 +1,16 @@
+#component {
+    display:flex;
+    flex-direction: column;
+    height:100%;
+    width:100%;
+    border-radius: 2%;
+    background-color:  rgb(68, 70, 71);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
+}
+
+#delete-server-button {
+    color:white;
+    background-color: red;
+    width:200px;
+    cursor: pointer;
+}

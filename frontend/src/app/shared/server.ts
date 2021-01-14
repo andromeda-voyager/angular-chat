@@ -31,3 +31,9 @@ export interface Post {
     medialURL: string
     timePosted: Date
 }
+
+export interface NewPost {
+    serverID: number
+    text: string
+    mediaURL: string
+}

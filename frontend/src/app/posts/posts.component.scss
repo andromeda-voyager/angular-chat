@@ -1,0 +1,29 @@
+#chat-box {
+    overflow-y:scroll;
+    display:flex;
+    flex-direction: column;
+    border-radius: 6px;
+    height: 100%;
+    border: 3px solid  rgb(47, 48, 49);
+    background-color:  rgb(47, 48, 49);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
+    scrollbar-width: none;
+}
+
+#chat-box::-webkit-scrollbar {
+    display: none;
+}
+
+.post {
+    padding:20px;
+}
+
+.post:hover {
+    background-color: rgb(58, 63, 68);
+}
+
+.text {
+    word-wrap: break-word;
+    font-size: max(1vw, 15px);
+    color:white;
+}

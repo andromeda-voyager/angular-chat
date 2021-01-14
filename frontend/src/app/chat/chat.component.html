@@ -1,29 +1,32 @@
-<div [ngClass]="{'dim': dialogOpen}" id="component">
-   
+<div *ngIf="account" [ngClass]="{'dim': dialogOpen || showAdminPanel}" id="component">
+
     <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button>
-        <a class="server"
-        *ngFor="let connection of connections">
+        <a class="server" (click)="changeConnection(i)" *ngFor="let connection of account.connections; let i = index">
             <img class="server-image" [src]="connection.server.imageURL">
             <!-- <img class="server-image" src="http://localhost:8080/static/avatars/default-avatar.jpg"> -->
         </a>
     </div>
-    <!-- <div id="video-feed" *ngIf="isCameraOpen">
-        <video autoplay="autoplay" id="video-feed" #videoFeed [srcObject]="videoFeedStream">Video stream not available.</video>
-        Video Feed
-        <div id="webcam-preview">
-            <video autoplay="autoplay" id="video" #video [srcObject]="videoStream">Video stream not available.</video>
-        </div>
+
+    <div *ngIf="currentConnection" id="server">
+        <span >{{currentConnection.server.name}}</span>
+
+        <button id="admin-button" (click)="openAdminPanel()">
+            <img src="assets/icons/settings-gear.svg">
+        </button>
     </div>
-    <button *ngIf="!isCameraOpen" id="camera-button" (click)="openCamera()">
-       Open Camera
-    </button>
-    <button id="take-picture" (click)="takePicture()" >
-       take picture
-     </button> -->
-    <app-messenger></app-messenger>
+
+    <div *ngIf="currentConnection" id="center-components">
+        <app-posts [posts]="currentConnection.server.posts" id="messages"></app-posts>
+        <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
+    </div>
 </div>
-<div id="dialog-container" *ngIf="dialogOpen">
-    <div (click)="closeDialog()" id="overlay"></div>
-    <app-add-server (newConnection)="onNewConnection($event)">
-        ></app-add-server>
+<div class="dialog-container" *ngIf="dialogOpen">
+    <div (click)="closeDialog()" class="overlay"></div>
+    <app-add-server (newConnection)="onNewConnection($event)"> </app-add-server>
+</div>
+
+<div class="dialog-container" *ngIf="showAdminPanel && currentConnection">
+    <div (click)="closeAdminPanel()" class="overlay"></div>
+    <app-admin [connection]="currentConnection" id="admin">
+    </app-admin>
 </div>

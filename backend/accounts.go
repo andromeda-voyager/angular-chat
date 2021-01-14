@@ -13,7 +13,7 @@ import (
 func getAccount(email string) (*account.Account, error) {
 	var args []interface{}
 	args = append(args, email)
-	rows, err := database.Query("SELECT AccountID, Email, Username, AvatarURL FROM Accounts WHERE Email=?;", args)
+	rows, err := database.Query("SELECT id, email, username, avatar FROM account WHERE email=?;", args)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -32,7 +32,7 @@ func getAccount(email string) (*account.Account, error) {
 func getServer(serverID int) *server.Server {
 	var args []interface{}
 	args = append(args, serverID)
-	rows, err := database.Query("SELECT ServerID, Name, ImageURL FROM Servers WHERE ServerID=?;", args)
+	rows, err := database.Query("SELECT id, name, image FROM server WHERE id=?;", args)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -48,7 +48,7 @@ func getServer(serverID int) *server.Server {
 func getPosts(serverID int) []server.Post {
 	var args []interface{}
 	args = append(args, serverID)
-	rows, err := database.Query("SELECT Text, MediaURL, TimePosted, AccountID FROM Posts WHERE ServerID=?;", args)
+	rows, err := database.Query("SELECT text, media, time_posted, account_id FROM post WHERE server_id=?;", args)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -63,21 +63,21 @@ func getPosts(serverID int) []server.Post {
 	return posts
 }
 
-func getConnections(accountID int) []server.Connection {
+func getConnections(accountID int) []*server.Connection {
 	var args []interface{}
 	args = append(args, accountID)
-	rows, err := database.Query("SELECT ServerID, Alias, Permissions FROM Connections WHERE AccountID=?;", args)
+	rows, err := database.Query("SELECT server_id, alias, permissions FROM connection WHERE account_id=?;", args)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer rows.Close()
-	var connections []server.Connection
+	var connections []*server.Connection
 	for rows.Next() {
 		var c server.Connection
 		var serverID int
 		rows.Scan(&serverID, &c.Alias, &c.Permissions)
 		c.Server = getServer(serverID)
-		connections = append(connections, c)
+		connections = append(connections, &c)
 	}
 	return connections
 }
@@ -88,7 +88,7 @@ func addAccount(a account.Account) {
 	hashedPassword := argon2.IDKey([]byte(a.Password), salt, 4, 32*1024, 4, 32)
 	var args []interface{}
 	args = append(args, a.Email, a.Username, hashedPassword, salt, a.AvatarURL)
-	rows, err := database.Query("INSERT INTO Accounts (Email, Username, Password, Salt, AvatarURL) Values (?, ?, ?, ?, ?);", args)
+	rows, err := database.Query("INSERT INTO account (email, username, password, salt, avatar) Values (?, ?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -99,7 +99,7 @@ func getPassword(email string) ([]byte, []byte) {
 
 	var args []interface{}
 	args = append(args, email)
-	rows, err := database.Query("SELECT Password, Salt FROM Accounts WHERE Email=?;", args)
+	rows, err := database.Query("SELECT password, salt FROM account WHERE email=?;", args)
 	if err != nil {
 		panic(err.Error())
 	}

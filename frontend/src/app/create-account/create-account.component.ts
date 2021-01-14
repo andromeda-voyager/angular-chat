@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { NewAccount } from '../shared/account';
+import { Account, NewAccount } from '../shared/account';
 import { AccountService } from '../shared/account.service';
 
 const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
@@ -12,7 +12,7 @@ const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 })
 export class CreateAccountComponent implements OnInit {
 
-  @Input() account: NewAccount = { password: "", email: "", username: "", code: "" }
+  @Input() account: NewAccount = { password: "", email: "", username: "", code:""}
   hide = false;
   file: File = null!;
   avatarURL: string = "assets/default-avatar.jpg"

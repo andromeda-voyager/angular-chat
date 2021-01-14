@@ -21,12 +21,12 @@ export class AccountService {
 
   constructor(private http: HttpClient) { }
 
-  createAccount(file: File, user: NewAccount): Observable<Account>  {
+  createAccount(file: File, account: NewAccount): Observable<Account>  {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
-    formData.append("user", JSON.stringify(user));
+    formData.append("user", JSON.stringify(account));
 
     return this.http.post<Account>(createAccountUrl, formData);
   }

@@ -1,9 +1,0 @@
-<div id="component">
-    <div id="chat-box" #scroll [scrollTop]="scroll.scrollHeight">
-        <div class="text" [ngClass]="{'left': message.isIncomming,'right': !message.isIncomming}"
-            *ngFor="let message of messages; let i = index">
-            {{message.text}}
-        </div>
-    </div>
-    <input (keyup.enter)="sendText()" isFocused [(ngModel)]="inputText" id="text-input">
-</div>

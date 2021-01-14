@@ -4,7 +4,7 @@
   align-items: center;
   height:100%;
   z-index: 99;
-  background-color: white;
+  background-color: rgba(46, 48, 48, 0.212);
 }
   
 mat-form-field {
@@ -114,8 +114,7 @@ span {
   color:white;
   padding:5px 20px 5px 20px;
   border-radius: 6px;
-  border: 1px solid  rgb(141, 141, 141);
-  background-color:  rgb(86, 91, 95);
+  background-color:  rgb(74, 76, 77);
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
   width:145px;
   height:70px;

@@ -5,6 +5,7 @@ import (
 	"log"
 	"nebula/account"
 	"nebula/database"
+	"nebula/permissions"
 	"nebula/router"
 	"net/http"
 	"path/filepath"
@@ -17,6 +18,7 @@ func main() {
 
 	//testQuery()
 
+	fmt.Println(permissions.CanDeleteServer(192))
 	publicFolder, err := filepath.Abs("./public")
 	if err != nil {
 

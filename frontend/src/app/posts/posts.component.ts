@@ -1,16 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../shared/message';
+import { Connection, Post } from '../shared/server';
 
 @Component({
-  selector: 'app-messenger',
-  templateUrl: './messenger.component.html',
-  styleUrls: ['./messenger.component.scss']
+  selector: 'app-posts',
+  templateUrl: './posts.component.html',
+  styleUrls: ['./posts.component.scss']
 })
-export class MessengerComponent implements OnInit {
+export class PostsComponent implements OnInit {
   // Create WebSocket connection.
 //  socket = new WebSocket('ws://localhost:8080/ws');
-  messages: Message[] = [];
-  @Input() inputText: string = "";
+  @Input() posts: Post[] = [];
+
   constructor() {
   }
 
@@ -29,12 +30,5 @@ export class MessengerComponent implements OnInit {
 
   }
 
-  sendText() {
-    console.log(this.inputText);
-    let message = { text: this.inputText, isIncomming: false };
-    this.messages.push(message)
-    this.inputText = "";
-  //  this.socket.send(JSON.stringify(message));
-  }
 
 }

@@ -1,0 +1,6 @@
+<div id="chat-box" #scroll [scrollTop]="scroll.scrollHeight">
+    <div class="post" *ngFor="let post of posts; let i = index">
+        <!-- [ngClass]="{'left': message.isIncomming,'right': !message.isIncomming}" -->
+        <div class="text">{{post.text}}</div>
+    </div>
+</div>

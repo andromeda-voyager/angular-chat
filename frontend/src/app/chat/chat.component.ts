@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
-import { Connection, Server } from '../shared/server';
+import { Connection, Server, Post } from '../shared/server';
 import { Account } from '../shared/account';
 import { LoginService } from '../shared/login.service';
 
@@ -12,23 +12,23 @@ declare var MediaRecorder: any;
 })
 export class ChatComponent implements OnInit {
 
+  account!: Account;
   dialogOpen: boolean = false;
-
-  isCameraOpen: boolean = false;
-  videoStream: MediaStream = new MediaStream();
-  videoFeedStream: MediaStream = new MediaStream();
-  mediaSource: MediaSource = new MediaSource();
-  connections: Connection[] = []
+  currentConnection!: Connection;
   image: string = "";
- 
-  //videoFeedStream = URL.createObjectURL(this.mediaSource);
+  showAdminPanel = false;
+  @Input() postText: string = "";
+
   constructor(private chatService: ChatService, private loginService: LoginService) { }
 
   ngOnInit(): void {
-    let account = this.loginService.getUserData()
-    this.connections = account.connections;
-    console.log(this.connections[0].server.imageURL)
-    
+    this.account = this.loginService.getUserData();
+    if (this.account) {
+      if (this.account.connections && this.account.connections.length > 0) {
+        this.currentConnection = this.account.connections[0];
+      } else this.account.connections = [];
+    }
+
   }
 
   closeDialog() {
@@ -37,11 +37,15 @@ export class ChatComponent implements OnInit {
     console.log("closing dialogs")
   }
 
+  changeConnection(index: number) {
+    this.currentConnection = this.account.connections[index];
+  }
+
   onNewConnection(connection: Connection) {
-    if (this.connections == null) {
-      this.connections = [];
+    if (this.account.connections == null) {
+      this.account.connections = [];
     }
-    this.connections.push(connection);
+    this.account.connections.push(connection);
   }
 
   addServer() {
@@ -49,22 +53,17 @@ export class ChatComponent implements OnInit {
     this.dialogOpen = true;
   }
 
-  takePicture() {
-    var track = this.videoStream.getVideoTracks()[0];
-    this.videoFeedStream.addTrack(track);
-    //this.image = new ImageCapture(this.track);
+  post() {
+    this.chatService.post({ serverID: this.currentConnection.server.id, text: this.postText, mediaURL: "" });
+    this.postText = "";
+    //  this.socket.send(JSON.stringify(message));
   }
 
-  openCamera() {
-    this.isCameraOpen = true;
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-      .then((stream) => {
-        this.videoStream = stream;
-        //this.video.play();
-      })
-      .catch(function (err) {
-        console.log("An error occurred: " + err);
-      });
+  openAdminPanel() {
+    this.showAdminPanel = true;
   }
 
+  closeAdminPanel() {
+    this.showAdminPanel = false;
+  }
 }

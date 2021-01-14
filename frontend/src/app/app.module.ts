@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
-import { MessengerComponent } from './messenger/messenger.component';
+import { PostsComponent } from './posts/posts.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,16 +15,18 @@ import { IsFocusedDirective } from './shared/is-focused.directive';
 import { HttpClientModule } from '@angular/common/http';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { AddServerComponent } from './add-server/add-server.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    MessengerComponent,
+    PostsComponent,
     LoginComponent,
     IsFocusedDirective,
     CreateAccountComponent,
     AddServerComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
