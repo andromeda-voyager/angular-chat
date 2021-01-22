@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { NewServer, Server, Invite, Connection, NewPost } from '../shared/server';
+import { Server, Invite, NewPost } from '../shared/server';
 
 const formOptions = {
   headers: new HttpHeaders({
@@ -32,14 +32,14 @@ const deleteServerURL = environment.BaseApiUrl + "/delete-server";
 export class ChatService {
   constructor(private http: HttpClient) { }
 
-  createServer(file: File, server: NewServer): Observable<Connection> {
+  createServer(file: File, server: Server): Observable<Server> {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
     formData.append("server", JSON.stringify(server));
 
-    return this.http.post<Connection>(createServerUrl, formData, formOptions);
+    return this.http.post<Server>(createServerUrl, formData, formOptions);
   }
 
   deleteServer(serverID: number): Observable<Server> {

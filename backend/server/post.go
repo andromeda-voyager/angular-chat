@@ -7,8 +7,8 @@ import (
 // Post .
 type Post struct {
 	Text       string    `json:"text"`
-	MediaURL   string    `json:"mediaURL"`
-	ServerID   int       `json:"serverID"`
+	Media      string    `json:"Media"`
 	TimePosted time.Time `json:"timePosted"`
-	UserID     int       `json:"userID"`
+	AccountID  int       `json:"accountID"`
+	// User       user.User `json:"user"`
 }

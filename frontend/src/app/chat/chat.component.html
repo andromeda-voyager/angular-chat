@@ -1,32 +1,31 @@
-<div *ngIf="account" [ngClass]="{'dim': dialogOpen || showAdminPanel}" id="component">
+<div [ngClass]="{'dim': dialogOpen || showAdminPanel}" id="component">
 
     <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button>
-        <a class="server" (click)="changeConnection(i)" *ngFor="let connection of account.connections; let i = index">
-            <img class="server-image" [src]="connection.server.imageURL">
+        <a class="server" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
+            <img class="server-image" [src]="server.image">
             <!-- <img class="server-image" src="http://localhost:8080/static/avatars/default-avatar.jpg"> -->
         </a>
     </div>
 
-    <div *ngIf="currentConnection" id="server">
-        <span >{{currentConnection.server.name}}</span>
+    <div *ngIf="currentServer" id="server">
+        <span>{{currentServer.name}}</span>
 
         <button id="admin-button" (click)="openAdminPanel()">
             <img src="assets/icons/settings-gear.svg">
         </button>
     </div>
-
-    <div *ngIf="currentConnection" id="center-components">
-        <app-posts [posts]="currentConnection.server.posts" id="messages"></app-posts>
+    <!-- <div *ngIf="currentChannel" id="center-components">
+        <app-posts [posts]="channel.posts" id="messages"></app-posts>
         <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
-    </div>
+    </div> -->
 </div>
 <div class="dialog-container" *ngIf="dialogOpen">
     <div (click)="closeDialog()" class="overlay"></div>
-    <app-add-server (newConnection)="onNewConnection($event)"> </app-add-server>
+    <app-add-server (newServer)="onNewServer($event)"> </app-add-server>
 </div>
 
-<div class="dialog-container" *ngIf="showAdminPanel && currentConnection">
+<div class="dialog-container" *ngIf="showAdminPanel && currentServer">
     <div (click)="closeAdminPanel()" class="overlay"></div>
-    <app-admin [connection]="currentConnection" id="admin">
+    <app-admin [server]="currentServer" id="admin">
     </app-admin>
 </div>

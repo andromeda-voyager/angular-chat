@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Account } from './account';
+import { Account, LoginResponse } from './user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Credentials } from './credentials';
 import { Observable } from 'rxjs';
@@ -23,7 +23,7 @@ const logoutURL = environment.BaseApiUrl + "/logout";
 })
 
 export class LoginService {
-  account!: Account;
+  loginResponse!: LoginResponse;
   private isLoggedIn: boolean = false;
   constructor(private http: HttpClient) {
   }
@@ -32,8 +32,8 @@ export class LoginService {
     return this.isLoggedIn;
   }
 
-  getUserData(): Account {
-    return this.account;
+  getLoginResponse(): LoginResponse {
+    return this.loginResponse;
   }
 
   logout() {
@@ -41,19 +41,20 @@ export class LoginService {
     return this.http.post(logoutURL, null, jsonOptions).subscribe();
   }
 
-  login(credentials: Credentials): Observable<Account> {
-    return this.http.post<Account>(loginUrl, credentials, jsonOptions).pipe(tap(account => {
-      this.account = account;
-      if(account.email)
-      {this.isLoggedIn = true;}
+  login(credentials: Credentials): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(loginUrl, credentials, jsonOptions).pipe(tap(loginResponse => {
+      this.loginResponse = loginResponse;
+      if (loginResponse.user) {
+        this.isLoggedIn = true; 
+        console.log("logged in");
+      } else console.log("not logged in");
     }));
   }
 
-  loginWithCookie(): Observable<Account> {
-    return this.http.get<Account>(loginWithCookieURL, jsonOptions).pipe(tap(account => {
-      this.account = account;
-      if(account.email)
-      {this.isLoggedIn = true;}
+  loginWithCookie(): Observable<LoginResponse> {
+    return this.http.get<LoginResponse>(loginWithCookieURL, jsonOptions).pipe(tap(loginResponse => {
+      this.loginResponse = loginResponse;
+      if (loginResponse.user) { this.isLoggedIn = true; }
     }));
   }
 }

@@ -31,6 +31,18 @@ func Exec(stmt string, args []interface{}) (int, error) {
 	return int(serverID), nil
 }
 
+func exec(stmt string) {
+	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
+	if err != nil {
+		panic(err.Error())
+	}
+	_, err = db.Exec(stmt)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+}
+
 func GetServerFromInvite(code string) {
 
 }

@@ -11,6 +11,7 @@ frontend//bazel-out
 
 # config
 credentials.go
+reset.go
 
 # dependencies
 node_modules/

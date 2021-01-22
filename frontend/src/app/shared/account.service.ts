@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Account, NewAccount } from './account';
+import { User, Account } from './user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -21,14 +21,14 @@ export class AccountService {
 
   constructor(private http: HttpClient) { }
 
-  createAccount(file: File, account: NewAccount): Observable<Account>  {
+  createAccount(file: File, account: Account): Observable<User>  {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
     formData.append("user", JSON.stringify(account));
 
-    return this.http.post<Account>(createAccountUrl, formData);
+    return this.http.post<User>(createAccountUrl, formData);
   }
 
   sendVerificationCode(_email: string) {

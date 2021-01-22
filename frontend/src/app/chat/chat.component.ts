@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ChatService } from '../shared/chat.service';
-import { Connection, Server, Post } from '../shared/server';
-import { Account } from '../shared/account';
+import { Server, Post } from '../shared/server';
+import { User } from '../shared/user';
 import { LoginService } from '../shared/login.service';
 
 declare var MediaRecorder: any;
@@ -12,9 +12,11 @@ declare var MediaRecorder: any;
 })
 export class ChatComponent implements OnInit {
 
-  account!: Account;
+  user!: User;
+  servers: Server[] = []
   dialogOpen: boolean = false;
-  currentConnection!: Connection;
+  currentServer!: Server;
+  currentChannel!: Server;
   image: string = "";
   showAdminPanel = false;
   @Input() postText: string = "";
@@ -22,13 +24,13 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService, private loginService: LoginService) { }
 
   ngOnInit(): void {
-    this.account = this.loginService.getUserData();
-    if (this.account) {
-      if (this.account.connections && this.account.connections.length > 0) {
-        this.currentConnection = this.account.connections[0];
-      } else this.account.connections = [];
+    let loginData = this.loginService.getLoginResponse();
+    console.log(loginData);
+    this.user = loginData.user;
+    if (loginData.servers) {
+      this.servers = loginData.servers;
+      this.currentServer = this.servers[0];
     }
-
   }
 
   closeDialog() {
@@ -37,15 +39,15 @@ export class ChatComponent implements OnInit {
     console.log("closing dialogs")
   }
 
-  changeConnection(index: number) {
-    this.currentConnection = this.account.connections[index];
+  changeServer(index: number) {
+    this.currentServer = this.servers[index];
   }
 
-  onNewConnection(connection: Connection) {
-    if (this.account.connections == null) {
-      this.account.connections = [];
-    }
-    this.account.connections.push(connection);
+  onNewServer(server: Server) {
+    // if (this.servers == null) {
+    //   this.account.connections = [];
+    // }
+    this.servers.push(server);
   }
 
   addServer() {
@@ -54,7 +56,7 @@ export class ChatComponent implements OnInit {
   }
 
   post() {
-    this.chatService.post({ serverID: this.currentConnection.server.id, text: this.postText, mediaURL: "" });
+    // this.chatService.post({ serverID: this.currentConnection.serverID, text: this.postText, media: "" });
     this.postText = "";
     //  this.socket.send(JSON.stringify(message));
   }

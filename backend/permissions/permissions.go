@@ -12,5 +12,5 @@ const (
 // fmt.Printf("%b", i)
 
 func CanDeleteServer(permissions uint8) bool {
-	return (permissions & DeleteServer) == DeleteServer
+	return (permissions & uint8(DeleteServer)) == DeleteServer
 }

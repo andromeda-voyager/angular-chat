@@ -2,38 +2,36 @@ export interface Server {
     id: number
     name: string
     description: string
-    imageURL: string
+    image: string
     posts: Post[]
 }
 
-export interface NewServer {
-    name: string
-    description: string
-    imageURL: string
+export interface Channel {
+	id:          number
+	name:        string  
+	permissions: number   
+	posts:      Post[] 
 }
 
-export interface Connection {
-    server: Server
-    userID: number
-    alias: string
-    permissions: number
+export interface Role {
+	// id:          number
+	name:        string  
+	serverPermissions: number   
 }
 
 export interface Invite {
     code: string
-    serverID?: number
 }
 
 export interface Post {
-    serverID: number
-    userID: number
+    accountID: number
     text: string
-    medialURL: string
+    media: string
     timePosted: Date
 }
 
 export interface NewPost {
-    serverID: number
+    channelID: number
     text: string
-    mediaURL: string
+    media: string
 }

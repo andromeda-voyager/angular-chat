@@ -2,8 +2,8 @@ package router
 
 import (
 	"fmt"
-	"nebula/account"
 	"nebula/session"
+	"nebula/user"
 	"net/http"
 )
 
@@ -21,7 +21,7 @@ var routes = make(map[string]route)
 var authRoutes = make(map[string]authRoute)
 
 type routeFunction func(w http.ResponseWriter, r *http.Request)
-type authRouteFunction func(w http.ResponseWriter, r *http.Request, a *account.Account)
+type authRouteFunction func(w http.ResponseWriter, r *http.Request, a *user.User)
 
 func setHeaders(w *http.ResponseWriter, r *http.Request) {
 	// fmt.Println(r.URL.String())
@@ -61,7 +61,7 @@ func AuthGet(path string, callback authRouteFunction) {
 	}
 }
 
-func authenticate(r *http.Request) *account.Account {
+func authenticate(r *http.Request) *user.User {
 	cookie, err := r.Cookie("Auth")
 	if err != nil {
 		fmt.Println("no cookie")
@@ -78,19 +78,19 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(r.URL.String())
 
-		a := authenticate(r)
-		if a != nil {
-			callAuthRoute(w, r, a)
+		u := authenticate(r)
+		if u != nil {
+			callAuthRoute(w, r, u)
 		} else {
 			callRoute(w, r)
 		}
 	}
 }
 
-func callAuthRoute(w http.ResponseWriter, r *http.Request, a *account.Account) {
+func callAuthRoute(w http.ResponseWriter, r *http.Request, u *user.User) {
 	authRoute, ok := authRoutes[r.URL.String()]
 	if ok {
-		authRoute.callback(w, r, a)
+		authRoute.callback(w, r, u)
 	} else {
 		callRoute(w, r)
 	}

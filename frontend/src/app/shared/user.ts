@@ -1,20 +1,24 @@
-import { Connection, Server } from "./server";
+import { Server } from "./server";
 
-export interface Account {
+export interface User {
     id: number
     username: string
     password: string
     email: string
     avatarURL: string
-    connections: Connection[]
     // friends: string[]
 }
 
 
-export interface NewAccount {
+export interface Account {
     username: string
     password: string
     email: string
     code: string
+}
+
+export interface LoginResponse {
+    servers: Server[]
+    user: User
 }
 
