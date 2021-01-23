@@ -17,6 +17,7 @@ type Server struct {
 	Description string     `json:"description"`
 	Image       string     `json:"image"`
 	Role        *Role      `json:"role"`
+	Roles       []*Role    `json:"roles"`
 	Alias       string     `json:"alias"`
 	Channels    []*Channel `json:"channels"`
 }
@@ -65,8 +66,22 @@ func (s *Server) NewRole(name string, permissions uint8) {
 	if err != nil {
 		panic(err.Error())
 	}
-	role := &Role{ID: roleID, Name: name, ServerPermissions: permissions}
+	role := &Role{ID: roleID, Name: name}
 	s.Role = role
+}
+
+// NewChannel .
+func (s *Server) NewChannel(c *Channel, channelPermissions []ChannelPermissions) {
+	var args []interface{}
+	args = append(args, s.ID, c.Name)
+	channelID, err := database.Exec("INSERT INTO Channel (server_id, name) Values (?, ?);", args)
+	if err != nil {
+		panic(err.Error())
+	}
+	c.ID = channelID
+	for _, p := range channelPermissions {
+		c.AddChannelPermissions(p)
+	}
 }
 
 // Delete .
@@ -94,7 +109,7 @@ func (s *Server) GetChannels() {
 	defer rows.Close()
 	for rows.Next() {
 		var c *Channel
-		rows.Scan(&c.Permissions, &c.ID, &c.Name)
+		rows.Scan(&c.ID, &c.Name)
 		s.Channels = append(s.Channels, c)
 	}
 }

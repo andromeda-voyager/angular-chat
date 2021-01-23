@@ -98,6 +98,13 @@ func init() {
 		json.NewEncoder(w).Encode(server)
 	})
 
+	router.AuthPost("/create-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+		serverJSON := []byte(r.FormValue("server"))
+		fmt.Println(serverJSON)
+		server := server.New(u, r)
+		json.NewEncoder(w).Encode(server)
+	})
+
 	router.AuthPost("/delete-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var serverID int

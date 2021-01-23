@@ -4,10 +4,15 @@ import "nebula/database"
 
 // Channel .
 type Channel struct {
-	ID          int     `json:"id"`
-	Name        string  `json:"name"`
-	Permissions uint8   `json:"permissions"`
-	Posts       []*Post `json:"posts"`
+	ID                 int                  `json:"id"`
+	Name               string               `json:"name"`
+	Posts              []*Post              `json:"posts"`
+	ChannelPermissions []ChannelPermissions `json:"channelPermissions"`
+}
+
+type ChannelPermissions struct {
+	RoleID      int   `json:"roleID"`
+	Permissions uint8 `json:"permissions"`
 }
 
 // getChannels .
@@ -26,5 +31,15 @@ func (c *Channel) getPosts() {
 		var p *Post
 		rows.Scan(&p.Text, p.Media, p.TimePosted, p.AccountID)
 		c.Posts = append(c.Posts, p)
+	}
+}
+
+// AddChannelPermissions .
+func (c *Channel) AddChannelPermissions(channelPermissions ChannelPermissions) {
+	var args []interface{}
+	args = append(args, channelPermissions.RoleID, c.ID, channelPermissions.Permissions)
+	_, err := database.Exec("INSERT INTO ChannelPermissions (role_id, channel_id, permissions) Values (?, ?, ?);", args)
+	if err != nil {
+		panic(err.Error())
 	}
 }
