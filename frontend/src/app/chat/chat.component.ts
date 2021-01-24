@@ -14,7 +14,7 @@ export class ChatComponent implements OnInit {
 
   user!: User;
   servers: Server[] = []
-  dialogOpen: boolean = false;
+  showAddServer: boolean = false;
   currentServer!: Server;
   currentChannel!: Server;
   image: string = "";
@@ -34,7 +34,7 @@ export class ChatComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialogOpen = false;
+    this.showAddServer = false;
 
     console.log("closing dialogs")
   }
@@ -48,11 +48,12 @@ export class ChatComponent implements OnInit {
     //   this.account.connections = [];
     // }
     this.servers.push(server);
+    this.showAddServer = false;
   }
 
   addServer() {
     console.log("opening dialogs")
-    this.dialogOpen = true;
+    this.showAddServer = true;
   }
 
   post() {

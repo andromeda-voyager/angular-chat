@@ -1,4 +1,4 @@
-<div [ngClass]="{'dim': dialogOpen || showAdminPanel}" id="component">
+<div [ngClass]="{'dim': showAddServer || showAdminPanel}" id="component">
 
     <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button>
         <a class="server" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
@@ -19,7 +19,7 @@
         <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
     </div> -->
 </div>
-<div class="dialog-container" *ngIf="dialogOpen">
+<div class="dialog-container" *ngIf="showAddServer">
     <div (click)="closeDialog()" class="overlay"></div>
     <app-add-server (newServer)="onNewServer($event)"> </app-add-server>
 </div>
