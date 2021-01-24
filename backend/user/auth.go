@@ -2,8 +2,7 @@ package user
 
 import (
 	"fmt"
-	"nebula/database"
-	"nebula/util"
+	"nebula/random"
 )
 
 // Credentials holds the fields needed to authorize a user for login
@@ -18,23 +17,12 @@ func init() {
 	codes = make(map[string]string)
 }
 
-func getPassword(email string) ([]byte, []byte) {
-	var args []interface{}
-	args = append(args, email)
-	rows, err := database.Query("SELECT password, salt FROM account WHERE email=?;", args)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer rows.Close()
-
-	if rows.Next() {
-		var password []byte
-		var salt = make([]byte, 32)
-		rows.Scan(&password, &salt)
-		return password, salt
-	}
-	return nil, nil
-}
+// // IsPasswordCorrect checks to see if the password in the database matches the password used to login
+// func isPasswordCorrect(salt, hashedPassword []byte, passwordAttempt string) bool {
+// 	//storedPasswordHash, salt := getPassword(c.Email)
+// 	hash := argon2.IDKey([]byte(passwordAttempt), []byte(salt), 4, 32*1024, 4, 32)
+// 	return bytes.Compare(hashedPassword, hash) == 0
+// }
 
 // IsCodeValid checks to see if code provided matches code sent by email
 func IsCodeValid(code, email string) bool {
@@ -47,7 +35,7 @@ func IsCodeValid(code, email string) bool {
 
 // GenerateCode creates a code and stores it for later validation
 func generateCode(email string) string {
-	code := util.NewRandomString(5)
+	code := random.NewSecureString(5)
 	codes[email] = code
 	fmt.Println(code)
 	return code

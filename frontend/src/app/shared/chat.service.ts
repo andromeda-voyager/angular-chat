@@ -42,8 +42,8 @@ export class ChatService {
     return this.http.post<Server>(createServerUrl, formData, formOptions);
   }
 
-  deleteServer(serverID: number): Observable<Server> {
-    return this.http.post<Server>(deleteServerURL, serverID, jsonOptions);
+  deleteServer(server: Server): Observable<Server> {
+    return this.http.post<Server>(deleteServerURL, server, jsonOptions);
   }
 
   joinServer(invite: Invite): Observable<Server> {

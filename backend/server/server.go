@@ -85,13 +85,14 @@ func (s *Server) NewChannel(c *Channel, channelPermissions []ChannelPermissions)
 }
 
 // Delete .
-func (s *Server) Delete() {
+func (s *Server) Delete() bool {
 	var args []interface{}
 	args = append(args, s.ID)
-	_, err := database.Exec("DELETE FROM server WHERE id=?", args)
+	_, err := database.Exec("DELETE FROM Server WHERE id=?", args)
 	if err != nil {
-		panic(err)
+		return false
 	}
+	return true
 }
 
 // GetChannels .

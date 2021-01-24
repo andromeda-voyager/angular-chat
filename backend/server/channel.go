@@ -10,6 +10,7 @@ type Channel struct {
 	ChannelPermissions []ChannelPermissions `json:"channelPermissions"`
 }
 
+// ChannelPermissions .
 type ChannelPermissions struct {
 	RoleID      int   `json:"roleID"`
 	Permissions uint8 `json:"permissions"`

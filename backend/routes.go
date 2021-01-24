@@ -13,6 +13,7 @@ import (
 	"net/http"
 )
 
+// LoginResponse .
 type LoginResponse struct {
 	User    *user.User       `json:"user"`
 	Servers []*server.Server `json:"servers"`
@@ -49,19 +50,16 @@ func init() {
 		if err := json.Unmarshal(resp, &credentials); err != nil {
 			panic(err)
 		}
-		user, err := user.Get(credentials.Email)
+		user, err := user.Get(credentials)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-		}
-		if user.IsPasswordCorrect(credentials.Password) {
+		} else {
 			fmt.Println("user logged in")
 			servers := getServers(user.ID)
 			loginResponse := &LoginResponse{User: user, Servers: servers}
 			cookie := session.Add(user)
 			http.SetCookie(w, cookie)
 			json.NewEncoder(w).Encode(loginResponse)
-		} else {
-			w.WriteHeader(http.StatusUnauthorized)
 		}
 	})
 
@@ -107,13 +105,17 @@ func init() {
 
 	router.AuthPost("/delete-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
-		var serverID int
-		if err := json.Unmarshal(resp, &serverID); err != nil {
+		var s *server.Server
+		if err := json.Unmarshal(resp, &s); err != nil {
 			panic(err)
 		}
-		ok := u.DeleteServer(serverID)
-		fmt.Println("server deleted?", ok)
-
+		fmt.Println(u.ID)
+		if u.HasDeletePermissions(s.ID) {
+			ok := s.Delete()
+			fmt.Println("server deleted?", ok)
+		} else {
+			fmt.Println("no delete permissions")
+		}
 	})
 
 	router.AuthPost("/join-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
