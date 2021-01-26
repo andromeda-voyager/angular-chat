@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"nebula/database"
-	"nebula/permissions"
 	"nebula/random"
 
 	"golang.org/x/crypto/argon2"
@@ -75,8 +74,8 @@ func Add(a Account) *User {
 	return &User{Username: a.Username, Email: a.Email, Avatar: a.Avatar}
 }
 
-// HasDeletePermissions .
-func (u *User) HasDeletePermissions(serverID int) bool {
+// HasPermission .
+func (u *User) HasPermission(permission, serverID int) bool {
 	var args []interface{}
 	args = append(args, u.ID)
 	rows, err := database.Query(
@@ -89,10 +88,10 @@ func (u *User) HasDeletePermissions(serverID int) bool {
 	}
 	defer rows.Close()
 	if rows.Next() {
-		var p uint8
+		var p int
 		rows.Scan(&p)
 		fmt.Println(p)
-		return permissions.CanDeleteServer(p)
+		return p&permission == permission
 	}
 	return false
 }

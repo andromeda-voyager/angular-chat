@@ -1,11 +1,4 @@
-#component {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height:100%;
-  z-index: 99;
-  background-color: rgba(46, 48, 48, 0.212);
-}
+
   
 mat-form-field {
   margin-bottom:2px;
@@ -73,7 +66,7 @@ mat-form-field {
   align-items: center;
   justify-content: center;
   border-radius: 5px;
-  background-color: rgb(255, 255, 255);
+  background-color:  rgb(68, 70, 71);
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.356);
 }
   
@@ -111,10 +104,10 @@ span {
 //rgb(61, 187, 236);
 .option {
   font-size: larger;
-  color:white;
+  color:rgb(255, 255, 255);
   padding:5px 20px 5px 20px;
   border-radius: 6px;
-  background-color:  rgb(74, 76, 77);
+  background-color:  rgb(39, 125, 224);
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
   width:145px;
   height:70px;

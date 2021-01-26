@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Account } from '../shared/user';
-import { AccountService } from '../shared/account.service';
+import { Account } from '../shared/models/user';
+import { AccountService } from '../shared/services/account.service';
 
 const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 

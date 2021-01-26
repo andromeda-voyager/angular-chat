@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Account, LoginResponse } from './user';
+import { Account, LoginResponse } from '../models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Credentials } from './credentials';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { Credentials } from '../models/credentials';
 
 const jsonOptions = {
   headers: new HttpHeaders({
@@ -24,12 +24,11 @@ const logoutURL = environment.BaseApiUrl + "/logout";
 
 export class LoginService {
   loginResponse!: LoginResponse;
-  private isLoggedIn: boolean = false;
   constructor(private http: HttpClient) {
   }
 
-  isUserLoggedIn() {
-    return this.isLoggedIn;
+  isUserLoggedIn(): boolean {
+    return (sessionStorage.getItem("loginData") != null);
   }
 
   getLoginResponse(): LoginResponse {
@@ -37,24 +36,24 @@ export class LoginService {
   }
 
   logout() {
-    this.isLoggedIn = false;
-    return this.http.post(logoutURL, null, jsonOptions).subscribe();
+     sessionStorage.removeItem("loginData");
+     this.http.post(logoutURL, null, jsonOptions).subscribe();
   }
 
   login(credentials: Credentials): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(loginUrl, credentials, jsonOptions).pipe(tap(loginResponse => {
-      this.loginResponse = loginResponse;
       if (loginResponse.user) {
-        this.isLoggedIn = true; 
-        console.log("logged in");
+        sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
       } else console.log("not logged in");
     }));
   }
 
   loginWithCookie(): Observable<LoginResponse> {
     return this.http.get<LoginResponse>(loginWithCookieURL, jsonOptions).pipe(tap(loginResponse => {
-      this.loginResponse = loginResponse;
-      if (loginResponse.user) { this.isLoggedIn = true; }
+      if (loginResponse.user) {
+
+        sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
+      }
     }));
   }
 }

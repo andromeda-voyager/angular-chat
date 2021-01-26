@@ -1,0 +1,63 @@
+#component {
+    padding-bottom:3px;
+    width:100%;
+}
+
+label {
+    color:rgb(231, 231, 231);
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    left:12px;
+    pointer-events: none;
+}
+
+label.focused {
+    transform: none;
+    position:absolute;
+    top:-2px;
+    left:12px;
+    pointer-events: none;
+    font-size:x-small;
+    color: rgb(46, 171, 255);
+    transition: all .2s;
+}
+  input {
+      color:white;
+      height:25px;
+      width:100%;
+      margin:auto;
+      background-color: transparent;
+      border: none;
+  }
+
+  .input-wrapper {
+      width:100%;
+      box-sizing: border-box;
+      position: relative;
+      padding:12px;
+      background-color: rgb(83, 84, 85);
+      border: .5px solid white;
+      border-radius: 3px;
+  }
+
+.input-wrapper.focused  {
+    border-color: rgb(46, 171, 255);
+}
+
+.input-wrapper.red {
+    border-color:red;
+}
+
+#hint {
+    text-align: left;
+    margin-left:5px;
+    height:15px;
+    color:rgb(255, 41, 41);
+    font-size: small;
+    visibility: hidden;
+}
+
+#hint.visible {
+    visibility: visible;
+}

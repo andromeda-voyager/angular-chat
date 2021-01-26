@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
-import { ChatService } from '../shared/chat.service';
-import { Server, Invite } from '../shared/server';
+import { ChatService } from '../shared/services/chat.service';
+import { Server, Invite } from '../shared/models/server';
 
 @Component({
   selector: 'app-add-server',
@@ -8,7 +8,7 @@ import { Server, Invite } from '../shared/server';
   styleUrls: ['./add-server.component.scss']
 })
 export class AddServerComponent implements OnInit {
-  @Input() server: Server = { id: 0, posts: [], name: "", description: "", image: "" }
+  @Input() server: Server = { id: 0, name: "", description: "", image: "", channels:[]}
   @Input() invite: Invite = { code: "" }
   @Output() newServer = new EventEmitter<Server>();
   file: File = null!;

@@ -4,7 +4,7 @@
         <button mat-button class="option" (click)="showAddServer = true">Add Server</button>
         <button mat-button class="option" (click)="showCreateServer = true">Create Server</button>
     </div>
-    <ng-container *ngIf="showCreateServer" >
+    <ng-container *ngIf="showCreateServer">
         <div id="server-image">
             <img [src]="serverImageUrl">
             <span id="image-instructions">Select Image</span>

@@ -1,0 +1,15 @@
+<div class="card">
+    <span id="title">Create Channel</span>
+<app-input-field label="Channel Name" hint="Required" [showHint]="showHint"></app-input-field>
+
+    <div id="private-channel-select">
+        <span>Private Channel</span>
+        <label class="switch">
+            <input type="checkbox" [(ngModel)]="isSecret" (change)="checkValue(isSecret?'A':'B')">
+            <span class="slider"></span>
+        </label>
+    </div>
+    
+    <button mat-button class="submit" (click)="createChannel()">Create Channel</button>
+
+</div>

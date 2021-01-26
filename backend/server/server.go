@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"nebula/database"
 	"nebula/permissions"
-	"nebula/user"
 	"nebula/util"
 	"net/http"
 )
@@ -22,6 +21,13 @@ type Server struct {
 	Channels    []*Channel `json:"channels"`
 }
 
+// Member .
+type Member struct {
+	AccountID int    `json:"accountID"`
+	Alias     string `json:"alias"`
+	Avatar    string `json:"avatar"`
+}
+
 // Invite .
 type Invite struct {
 	Code     string `json:"code"`
@@ -29,7 +35,7 @@ type Invite struct {
 }
 
 // New .
-func New(u *user.User, r *http.Request) Server {
+func New(m *Member, r *http.Request) Server {
 	serverJSON := r.FormValue("server")
 	var server Server
 	json.Unmarshal([]byte(serverJSON), &server)
@@ -43,19 +49,19 @@ func New(u *user.User, r *http.Request) Server {
 		fmt.Println("failed to add server")
 	}
 	server.NewRole("Owner", permissions.Full)
-	server.NewMember(u)
+	server.NewMember(m)
 	return server
 }
 
 // NewMember .
-func (s *Server) NewMember(u *user.User) {
+func (s *Server) NewMember(m *Member) {
 	var args []interface{}
-	args = append(args, s.ID, u.ID, u.Username, s.Role.ID)
+	args = append(args, s.ID, m.AccountID, m.Alias, s.Role.ID)
 	_, err := database.Exec("INSERT INTO ServerMember (server_id, account_id, alias, role_id) Values (?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
-	s.Alias = u.Username
+	s.Alias = m.Alias
 }
 
 // NewRole .
@@ -70,18 +76,20 @@ func (s *Server) NewRole(name string, permissions uint8) {
 	s.Role = role
 }
 
-// NewChannel .
-func (s *Server) NewChannel(c *Channel, channelPermissions []ChannelPermissions) {
+// AddChannel .
+func AddChannel(newChannel *NewChannel) *Channel {
 	var args []interface{}
-	args = append(args, s.ID, c.Name)
+	args = append(args, newChannel.ServerID, newChannel.Name)
 	channelID, err := database.Exec("INSERT INTO Channel (server_id, name) Values (?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
+	var c *Channel
 	c.ID = channelID
-	for _, p := range channelPermissions {
+	for _, p := range c.ChannelPermissions {
 		c.AddChannelPermissions(p)
 	}
+	return c
 }
 
 // Delete .

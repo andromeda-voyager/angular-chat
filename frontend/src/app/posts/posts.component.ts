@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Message } from '../shared/message';
-import { Post } from '../shared/server';
+import { Message } from '../shared/models/message';
+import { Post } from '../shared/models/post';
 
 @Component({
   selector: 'app-posts',

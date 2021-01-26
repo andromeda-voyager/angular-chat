@@ -1,16 +1,17 @@
-<div [ngClass]="{'dim': showAddServer || showAdminPanel}" id="component">
+<div id="component">
 
-    <div id="servers"> <button id="add-server-button" (click)="addServer()">Add Server</button>
+    <div id="servers"> <button id="add-server-button" (click)="openDialog(0)">Add Server</button>
         <a class="server" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
             <img class="server-image" [src]="server.image">
-            <!-- <img class="server-image" src="http://localhost:8080/static/avatars/default-avatar.jpg"> -->
         </a>
     </div>
 
     <div *ngIf="currentServer" id="server">
         <span>{{currentServer.name}}</span>
-
-        <button id="admin-button" (click)="openAdminPanel()">
+        <button id="add-channel-button" (click)="openDialog(2)">
+            +
+        </button>
+        <button id="admin-button" (click)="openDialog(1)">
             <img src="assets/icons/settings-gear.svg">
         </button>
     </div>
@@ -19,13 +20,10 @@
         <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
     </div> -->
 </div>
-<div class="dialog-container" *ngIf="showAddServer">
+<div class="dialog-container" *ngIf="showDialog">
     <div (click)="closeDialog()" class="overlay"></div>
-    <app-add-server (newServer)="onNewServer($event)"> </app-add-server>
-</div>
+    <app-add-server *ngIf="dialogOption==0" (newServer)="onNewServer($event)"> </app-add-server>
+    <app-admin *ngIf="dialogOption==1" [server]="currentServer" id="admin"></app-admin>
+    <app-add-channel *ngIf="dialogOption==2" (newChannel)="onNewChannel($event)" id="admin"></app-add-channel>
 
-<div class="dialog-container" *ngIf="showAdminPanel && currentServer">
-    <div (click)="closeAdminPanel()" class="overlay"></div>
-    <app-admin [server]="currentServer" id="admin">
-    </app-admin>
 </div>

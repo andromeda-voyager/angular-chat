@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"nebula/permissions"
 	"nebula/router"
 	"net/http"
 	"path/filepath"
@@ -15,7 +14,6 @@ func main() {
 
 	//database.Reset()
 
-	fmt.Println(permissions.CanDeleteServer(192))
 	publicFolder, err := filepath.Abs("./public")
 	if err != nil {
 

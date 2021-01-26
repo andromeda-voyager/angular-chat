@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"nebula/database"
+	"nebula/permissions"
 	"nebula/router"
 	"nebula/server"
 	"nebula/session"
@@ -92,15 +93,21 @@ func init() {
 	router.AuthPost("/create-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		serverJSON := []byte(r.FormValue("server"))
 		fmt.Println(serverJSON)
-		server := server.New(u, r)
+		var serverOwner = &server.Member{AccountID: u.ID, Alias: u.Username, Avatar: u.Avatar}
+		server := server.New(serverOwner, r)
 		json.NewEncoder(w).Encode(server)
 	})
 
 	router.AuthPost("/create-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		serverJSON := []byte(r.FormValue("server"))
-		fmt.Println(serverJSON)
-		server := server.New(u, r)
-		json.NewEncoder(w).Encode(server)
+		resp, _ := ioutil.ReadAll(r.Body)
+		var newChannel *server.NewChannel
+		if err := json.Unmarshal(resp, &newChannel); err != nil {
+			panic(err)
+		}
+		if u.HasPermission(permissions.CreateChannel, newChannel.ServerID) {
+			channel := server.AddChannel(&newChannel)
+			json.NewEncoder(w).Encode(channel)
+		}
 	})
 
 	router.AuthPost("/delete-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
@@ -110,7 +117,7 @@ func init() {
 			panic(err)
 		}
 		fmt.Println(u.ID)
-		if u.HasDeletePermissions(s.ID) {
+		if u.HasPermission(permissions.DeleteServer, s.ID) {
 			ok := s.Delete()
 			fmt.Println("server deleted?", ok)
 		} else {

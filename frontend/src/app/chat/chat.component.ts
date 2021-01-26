@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { ChatService } from '../shared/chat.service';
-import { Server, Post } from '../shared/server';
-import { User } from '../shared/user';
-import { LoginService } from '../shared/login.service';
+import { Component, OnInit, Input } from '@angular/core';
+import { ChatService } from '../shared/services/chat.service';
+import { Server } from '../shared/models/server';
+import { LoginResponse, User } from '../shared/models/user';
+import { LoginService } from '../shared/services/login.service';
+import { Router } from '@angular/router';
+import { Channel } from '../shared/models/channel';
 
-declare var MediaRecorder: any;
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -14,27 +15,32 @@ export class ChatComponent implements OnInit {
 
   user!: User;
   servers: Server[] = []
-  showAddServer: boolean = false;
   currentServer!: Server;
   currentChannel!: Server;
   image: string = "";
-  showAdminPanel = false;
+  showDialog = false;
+  dialogOption: number =0;
   @Input() postText: string = "";
 
-  constructor(private chatService: ChatService, private loginService: LoginService) { }
+  constructor(private chatService: ChatService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
-    let loginData = this.loginService.getLoginResponse();
-    console.log(loginData);
-    this.user = loginData.user;
-    if (loginData.servers) {
+    let data = sessionStorage.getItem("loginData");
+    if (data != null) {
+      let loginData: LoginResponse = JSON.parse(data);
+      this.user = loginData.user;
       this.servers = loginData.servers;
-      this.currentServer = this.servers[0];
+      if (this.servers) {
+        this.currentServer = this.servers[0];
+      } 
+    } else {
+      this.router.navigate(['login']);
     }
+
   }
 
   closeDialog() {
-    this.showAddServer = false;
+    this.showDialog = false;
 
     console.log("closing dialogs")
   }
@@ -48,13 +54,14 @@ export class ChatComponent implements OnInit {
     //   this.account.connections = [];
     // }
     this.servers.push(server);
-    this.showAddServer = false;
+    this.showDialog = false;
   }
 
-  addServer() {
-    console.log("opening dialogs")
-    this.showAddServer = true;
+  onNewChannel(channel: Channel) {
+
   }
+
+ 
 
   post() {
     // this.chatService.post({ serverID: this.currentConnection.serverID, text: this.postText, media: "" });
@@ -62,11 +69,9 @@ export class ChatComponent implements OnInit {
     //  this.socket.send(JSON.stringify(message));
   }
 
-  openAdminPanel() {
-    this.showAdminPanel = true;
+  openDialog(option: number) {
+    this.dialogOption = option;
+    this.showDialog = true;  
   }
 
-  closeAdminPanel() {
-    this.showAdminPanel = false;
-  }
 }

@@ -69,6 +69,18 @@
   color: #125699;
 }
 
+#add-channel-button {
+  background-color: transparent;
+  border-style: none;
+  cursor: pointer;
+  font-size: xx-large;
+  color:rgb(170, 170, 170);
+}
+
+#add-channel-button:hover {
+  color:rgb(255, 255, 255);
+}
+
 #servers {
   display:flex;
   flex-direction: column;
@@ -129,6 +141,7 @@
   height:100%;
   width:100%;
   z-index: 1;
+  background-color: rgba(0, 0, 0, 0.664);
 }
 
 .dialog-container {

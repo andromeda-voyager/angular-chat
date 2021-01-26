@@ -16,6 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { AddServerComponent } from './add-server/add-server.component';
 import { AdminComponent } from './admin/admin.component';
+import { AddChannelComponent } from './add-channel/add-channel.component';
+import { InputFieldComponent } from './shared/input-field/input-field.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { AdminComponent } from './admin/admin.component';
     CreateAccountComponent,
     AddServerComponent,
     AdminComponent,
+    AddChannelComponent,
+    InputFieldComponent,
   ],
   imports: [
     BrowserModule,

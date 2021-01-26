@@ -1,0 +1,13 @@
+<!-- isFocused -->
+
+<div id="component">
+
+    <div [ngClass]="{'focused': isFocused, 'red': showHint}" class="input-wrapper">
+        <label [ngClass]="{'focused': isFocused}">{{label}}</label>
+
+        <input (focus)="isFocused=true" (blur)="isFocused=false" [(ngModel)]="input">
+    </div>
+    <div id="hint" [ngClass]="{'visible': showHint}" >{{hint}}</div>
+
+</div>
+<!-- placeholder="Channel Name" -->

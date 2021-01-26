@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Server, Invite, NewPost } from '../shared/server';
+import { Server, Invite } from '../models/server';
+import { NewChannel, Channel } from '../models/channel';
+import { NewPost } from '../models/post';
 
 const formOptions = {
   headers: new HttpHeaders({
@@ -24,6 +26,7 @@ const joinServerUrl = environment.BaseApiUrl + "/join-server";
 const getPostsURL = environment.BaseApiUrl + "/posts";
 const postURL = environment.BaseApiUrl + "/post";
 const deleteServerURL = environment.BaseApiUrl + "/delete-server";
+const createChannelURL = environment.BaseApiUrl + "/create-channel";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +45,10 @@ export class ChatService {
     return this.http.post<Server>(createServerUrl, formData, formOptions);
   }
 
+  createChannel(newChannel: NewChannel): Observable<Channel> {
+    return this.http.post<Channel>(createServerUrl, newChannel, formOptions);
+  }
+
   deleteServer(server: Server): Observable<Server> {
     return this.http.post<Server>(deleteServerURL, server, jsonOptions);
   }
@@ -54,7 +61,7 @@ export class ChatService {
     return this.http.get<Server>(getPostsURL + "?serverID=" + serverID, jsonOptions);
   }
 
-  post(post: NewPost){
-     this.http.post(postURL, post, jsonOptions).subscribe();
+  post(post: NewPost) {
+    this.http.post(postURL, post, jsonOptions).subscribe();
   }
 }

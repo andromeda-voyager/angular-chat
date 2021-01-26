@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ChatService } from '../shared/chat.service';
-import { Server } from '../shared/server';
+import { ChatService } from '../shared/services/chat.service';
+import { Server } from '../shared/models/server';
 
 @Component({
   selector: 'app-admin',
