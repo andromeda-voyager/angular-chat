@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit {
 
   user!: User;
   servers: Server[] = []
-  currentServer!: Server;
+  selectedServer!: Server;
   currentChannel!: Server;
   image: string = "";
   showDialog = false;
@@ -31,7 +31,7 @@ export class ChatComponent implements OnInit {
       this.user = loginData.user;
       this.servers = loginData.servers;
       if (this.servers) {
-        this.currentServer = this.servers[0];
+        this.selectedServer = this.servers[0];
       } 
     } else {
       this.router.navigate(['login']);
@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit {
   }
 
   changeServer(index: number) {
-    this.currentServer = this.servers[index];
+    this.selectedServer = this.servers[index];
   }
 
   onNewServer(server: Server) {
@@ -58,7 +58,7 @@ export class ChatComponent implements OnInit {
   }
 
   onNewChannel(channel: Channel) {
-
+    this.selectedServer.channels.push(channel);
   }
 
  

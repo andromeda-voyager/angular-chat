@@ -6,15 +6,17 @@
         </a>
     </div>
 
-    <div *ngIf="currentServer" id="server">
-        <span>{{currentServer.name}}</span>
-        <button id="add-channel-button" (click)="openDialog(2)">
-            +
-        </button>
-        <button id="admin-button" (click)="openDialog(1)">
-            <img src="assets/icons/settings-gear.svg">
-        </button>
+    <div>
+        <div *ngIf="selectedServer"> 
+            {{selectedServer.name}}
+            <button id="admin-button" (click)="openDialog(1)">
+                <img src="assets/icons/settings-gear.svg">
+            </button>
+        </div>
+        <app-channel-list [server]="selectedServer" (openChannelDialog)="openDialog(2)"></app-channel-list>
+
     </div>
+
     <!-- <div *ngIf="currentChannel" id="center-components">
         <app-posts [posts]="channel.posts" id="messages"></app-posts>
         <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
@@ -22,8 +24,7 @@
 </div>
 <div class="dialog-container" *ngIf="showDialog">
     <div (click)="closeDialog()" class="overlay"></div>
-    <app-add-server *ngIf="dialogOption==0" (newServer)="onNewServer($event)"> </app-add-server>
-    <app-admin *ngIf="dialogOption==1" [server]="currentServer" id="admin"></app-admin>
-    <app-add-channel *ngIf="dialogOption==2" (newChannel)="onNewChannel($event)" id="admin"></app-add-channel>
-
+    <app-add-server *ngIf="dialogOption==0" (newServer)="onNewServer($event)" class="dialog"> </app-add-server>
+    <app-admin *ngIf="dialogOption==1" [server]="selectedServer" class="dialog"></app-admin>
+    <app-add-channel *ngIf="dialogOption==2" [server]="selectedServer" class="dialog"></app-add-channel>
 </div>

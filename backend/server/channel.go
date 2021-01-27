@@ -19,7 +19,8 @@ type NewChannel struct {
 
 // ChannelPermissions .
 type ChannelPermissions struct {
-	RoleID      int   `json:"roleID"`
+	RoleID      int
+	RoleRank    int   `json:"roleRank"`
 	Permissions uint8 `json:"permissions"`
 }
 
@@ -44,10 +45,12 @@ func (c *Channel) getPosts() {
 
 // AddChannelPermissions .
 func (c *Channel) AddChannelPermissions(channelPermissions ChannelPermissions) {
+
 	var args []interface{}
 	args = append(args, channelPermissions.RoleID, c.ID, channelPermissions.Permissions)
 	_, err := database.Exec("INSERT INTO ChannelPermissions (role_id, channel_id, permissions) Values (?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
+
 }

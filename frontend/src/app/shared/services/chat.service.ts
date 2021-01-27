@@ -46,7 +46,7 @@ export class ChatService {
   }
 
   createChannel(newChannel: NewChannel): Observable<Channel> {
-    return this.http.post<Channel>(createServerUrl, newChannel, formOptions);
+    return this.http.post<Channel>(createChannelURL, newChannel, formOptions);
   }
 
   deleteServer(server: Server): Observable<Server> {

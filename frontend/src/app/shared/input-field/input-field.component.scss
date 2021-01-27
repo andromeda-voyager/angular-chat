@@ -4,42 +4,34 @@
 }
 
 label {
-    color:rgb(231, 231, 231);
-    position:absolute;
-    top:50%;
-    transform: translateY(-50%);
-    left:12px;
-    pointer-events: none;
+    display: block;
+    color:White;
+    margin-bottom:2px;
+    text-align: left;
 }
 
 label.focused {
-    transform: none;
-    position:absolute;
-    top:-2px;
-    left:12px;
-    pointer-events: none;
-    font-size:x-small;
     color: rgb(46, 171, 255);
-    transition: all .2s;
 }
-  input {
-      color:white;
-      height:25px;
-      width:100%;
-      margin:auto;
-      background-color: transparent;
-      border: none;
-  }
+  
+input {
+    color:white;
+    height:25px;
+    width:100%;
+    margin:auto;
+    background-color: transparent;
+    border: none;
+}
 
-  .input-wrapper {
-      width:100%;
-      box-sizing: border-box;
-      position: relative;
-      padding:12px;
-      background-color: rgb(83, 84, 85);
-      border: .5px solid white;
-      border-radius: 3px;
-  }
+.input-wrapper {
+    width:100%;
+    box-sizing: border-box;
+    position: relative;
+    padding:12px;
+    background-color: rgb(83, 84, 85);
+    border: .5px solid white;
+    border-radius: 3px;
+}
 
 .input-wrapper.focused  {
     border-color: rgb(46, 171, 255);
@@ -47,6 +39,14 @@ label.focused {
 
 .input-wrapper.red {
     border-color:red;
+}
+
+#top-border {
+    position: absolute;
+    height:100%;
+    width:100%;
+    z-index:7;
+    background-color: red;
 }
 
 #hint {

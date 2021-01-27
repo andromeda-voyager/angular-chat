@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-input-field',
@@ -9,7 +9,8 @@ export class InputFieldComponent implements OnInit {
 
   @Input() label = "";
   @Input() hint = "";
-  @Output() input = "";
+  @Input() inputValue: string = "";
+  @Output() inputValueChange = new EventEmitter<string>();
 
   @Input() showHint = false;
   isFocused = false;

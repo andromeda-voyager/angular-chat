@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ChatService } from '../shared/services/chat.service';
 import { Channel, ChannelPermissions } from '../shared/models/channel';
+import { Server } from '../shared/models/server';
 
 @Component({
   selector: 'app-add-channel',
@@ -9,8 +10,8 @@ import { Channel, ChannelPermissions } from '../shared/models/channel';
 })
 
 export class AddChannelComponent implements OnInit {
-  @Input() serverID!: number;
-  @Input() name = "";
+  @Input() server!: Server;
+  name = "";
   @Input() channelPermissions: ChannelPermissions[] = [];
   @Output() newChannel = new EventEmitter<Channel>();
   showRequired = false;
@@ -22,7 +23,10 @@ export class AddChannelComponent implements OnInit {
   }
 
   createChannel() {
-    this.chatService.createChannel({ serverID: this.serverID, name: this.name, channelPermissions: this.channelPermissions })
+    console.log(this.name);
+    this.chatService.createChannel({ serverID: this.server.id, name: this.name, channelPermissions: this.channelPermissions }).subscribe(channel => {
+      this.newChannel.emit(channel);
+    })
   }
 
   checkValue(event: any) {

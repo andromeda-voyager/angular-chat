@@ -105,7 +105,7 @@ func init() {
 			panic(err)
 		}
 		if u.HasPermission(permissions.CreateChannel, newChannel.ServerID) {
-			channel := server.AddChannel(&newChannel)
+			channel := server.AddChannel(newChannel)
 			json.NewEncoder(w).Encode(channel)
 		}
 	})

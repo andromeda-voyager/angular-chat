@@ -18,6 +18,7 @@ import { AddServerComponent } from './add-server/add-server.component';
 import { AdminComponent } from './admin/admin.component';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { InputFieldComponent } from './shared/input-field/input-field.component';
+import { ChannelListComponent } from './channel-list/channel-list.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { InputFieldComponent } from './shared/input-field/input-field.component'
     AdminComponent,
     AddChannelComponent,
     InputFieldComponent,
+    ChannelListComponent,
   ],
   imports: [
     BrowserModule,

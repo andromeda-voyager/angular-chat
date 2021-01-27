@@ -2,12 +2,11 @@
 
 <div id="component">
 
-    <div [ngClass]="{'focused': isFocused, 'red': showHint}" class="input-wrapper">
-        <label [ngClass]="{'focused': isFocused}">{{label}}</label>
+    <label for="input" [ngClass]="{'focused': isFocused}">{{label}}</label>
+    <div [ngClass]="{'focused': isFocused}" class="input-wrapper">
 
-        <input (focus)="isFocused=true" (blur)="isFocused=false" [(ngModel)]="input">
+        <input id="input" placeholder="{{label}}" (focus)="isFocused=true" (blur)="isFocused=false" [(ngModel)]="inputValue" (ngModelChange)="inputValueChange.emit(inputValue)">
     </div>
     <div id="hint" [ngClass]="{'visible': showHint}" >{{hint}}</div>
-
 </div>
 <!-- placeholder="Channel Name" -->

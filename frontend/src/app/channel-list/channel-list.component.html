@@ -1,0 +1,9 @@
+<div id="component">
+    <button id="add-channel-button" (click)="openChannelDialog.emit()">
+        +
+    </button>
+  
+    <div *ngFor="let channel of server?.channels; let i = index">
+        {{channel.name}}
+    </div>
+</div>
