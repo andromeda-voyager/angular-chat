@@ -10,5 +10,5 @@ type Post struct {
 	Media      string    `json:"Media"`
 	TimePosted time.Time `json:"timePosted"`
 	AccountID  int       `json:"accountID"`
-	// User       user.User `json:"user"`
+	Member     Member    `json:"member"`
 }

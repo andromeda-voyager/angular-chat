@@ -78,28 +78,6 @@ func (s *Server) NewRole(name string, permissions uint8) {
 	s.Role = role
 }
 
-// AddChannel .
-func AddChannel(newChannel *NewChannel) *Channel {
-	var args []interface{}
-	args = append(args, newChannel.ServerID, newChannel.Name)
-	fmt.Println(newChannel.Name)
-	channelID, err := database.Exec("INSERT INTO Channel (server_id, name) Values (?, ?);", args)
-	if err != nil {
-		panic(err.Error())
-	}
-	var c = &Channel{ID: channelID, Name: newChannel.Name, Posts: nil, ChannelPermissions: newChannel.ChannelPermissions}
-	roles := getRoles(newChannel.ServerID)
-
-	for _, p := range newChannel.ChannelPermissions {
-		if p.RoleRank <= len(roles) {
-			p.RoleID = roles[p.RoleRank].ID
-			c.AddChannelPermissions(p)
-		}
-	}
-
-	return c
-}
-
 // Delete .
 func (s *Server) Delete() bool {
 	var args []interface{}

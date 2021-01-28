@@ -100,12 +100,12 @@ func init() {
 
 	router.AuthPost("/create-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
-		var newChannel *server.NewChannel
-		if err := json.Unmarshal(resp, &newChannel); err != nil {
+		var ccr *server.CreateChannelRequest
+		if err := json.Unmarshal(resp, &ccr); err != nil {
 			panic(err)
 		}
-		if u.HasPermission(permissions.CreateChannel, newChannel.ServerID) {
-			channel := server.AddChannel(newChannel)
+		if u.HasPermission(permissions.CreateChannel, ccr.ServerID) {
+			channel := server.NewChannel(ccr.Channel, ccr.Roles, ccr.ServerID)
 			json.NewEncoder(w).Encode(channel)
 		}
 	})

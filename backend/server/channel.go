@@ -1,27 +1,40 @@
 package server
 
-import "nebula/database"
+import (
+	"fmt"
+	"nebula/database"
+	"nebula/permissions"
+)
 
 // Channel .
 type Channel struct {
-	ID                 int                  `json:"id"`
-	Name               string               `json:"name"`
-	Posts              []*Post              `json:"posts"`
-	ChannelPermissions []ChannelPermissions `json:"channelPermissions"`
+	ID    int     `json:"id"`
+	Name  string  `json:"name"`
+	Posts []*Post `json:"posts"`
+}
+
+// CreateChannelRequest .
+type CreateChannelRequest struct {
+	ServerID int     `json:"serverID"`
+	Channel  Channel `json:"channel"`
+	Roles    []Role  `json:"roles"`
 }
 
 // NewChannel .
-type NewChannel struct {
-	ServerID           int                  `json:"serverID"`
-	Name               string               `json:"name"`
-	ChannelPermissions []ChannelPermissions `json:"channelPermissions"`
-}
-
-// ChannelPermissions .
-type ChannelPermissions struct {
-	RoleID      int
-	RoleRank    int   `json:"roleRank"`
-	Permissions uint8 `json:"permissions"`
+func NewChannel(channel Channel, rolesWithAccess []Role, serverID int) *Channel {
+	var args []interface{}
+	args = append(args, serverID, channel.Name)
+	fmt.Println(channel.Name)
+	channelID, err := database.Exec("INSERT INTO Channel (server_id, name) Values (?, ?);", args)
+	if err != nil {
+		panic(err.Error())
+	}
+	var c = &Channel{ID: channelID, Name: channel.Name, Posts: nil}
+	ok := validateRoles(rolesWithAccess, serverID)
+	if ok {
+		c.AddPermissions(rolesWithAccess)
+	}
+	return c
 }
 
 // getChannels .
@@ -43,14 +56,28 @@ func (c *Channel) getPosts() {
 	}
 }
 
-// AddChannelPermissions .
-func (c *Channel) AddChannelPermissions(channelPermissions ChannelPermissions) {
-
-	var args []interface{}
-	args = append(args, channelPermissions.RoleID, c.ID, channelPermissions.Permissions)
-	_, err := database.Exec("INSERT INTO ChannelPermissions (role_id, channel_id, permissions) Values (?, ?, ?);", args)
-	if err != nil {
-		panic(err.Error())
+func validateRoles(rolesWithAccess []Role, serverID int) bool {
+	allRoles := getServerRoles(serverID)
+	for _, r := range rolesWithAccess {
+		if r.Rank <= len(allRoles) {
+			if r.ID != allRoles[r.Rank].ID {
+				return false
+			}
+		} else {
+			return false
+		}
 	}
+	return true
+}
 
+// AddPermissions .
+func (c *Channel) AddPermissions(roles []Role) {
+	for _, r := range roles {
+		var args []interface{}
+		args = append(args, r.ID, c.ID, permissions.None)
+		_, err := database.Exec("INSERT INTO ChannelPermissions (role_id, channel_id, permissions) Values (?, ?, ?);", args)
+		if err != nil {
+			panic(err.Error())
+		}
+	}
 }
