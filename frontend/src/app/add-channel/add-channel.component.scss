@@ -91,10 +91,12 @@ input:focus + .slider {
 
 input:checked + .slider {
     background-color: rgb(24, 143, 255);
+    transition: all .4s;
 }
 
 input:checked + .slider:before {
     transform: translate(24px,-50%);
+    transition: all .4s;
 }
 
 .slider:before {

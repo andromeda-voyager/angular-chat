@@ -17,7 +17,6 @@
         </app-channel-list>
 
     </div>
-
     <div *ngIf="selectedChannel" id="post-components">
         <app-posts [posts]="selectedChannel.posts" id="messages"></app-posts>
         <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">

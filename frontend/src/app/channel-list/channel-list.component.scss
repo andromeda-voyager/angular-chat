@@ -3,7 +3,6 @@
     flex-direction: column;
     background-color: rgb(73, 73, 73);
     height:100%;
-    width:100%;
 }
 
 #add-channel-button {
@@ -19,16 +18,16 @@
 }
 
 .overlay {
-    position: absolute;;
+    position: absolute;
     top:0;
     left:0;
     height:100%;
     width:100%;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.664);
-  }
+}
   
-  .dialog-container {
+.dialog-container {
     display:flex;
     justify-content: center;
     align-items:center;
@@ -37,17 +36,20 @@
     position:absolute;
     width:100%;
     height:100%;
-  }
+}
 
 .channel-button {
     cursor: pointer;
-    background-color: transparent;
-    width: 100%;
+    width: 95%;
     text-align: left;
     font-size: large;
     border:none;
     color:rgb(17, 17, 17);
     padding:10px;
+    margin: 0 2.5% 0 2.5%;
+    background-color: transparent;
+    box-sizing: border-box;
+    border-radius: 3px;
 }
 
 .channel-button:hover {
@@ -55,5 +57,5 @@
 }
 
 .channel-button.selected {
-    background-color: rgb(94, 94, 94);
+    color:white;
 }
