@@ -4,10 +4,16 @@
 }
 
 label {
+    opacity: 0;
     display: block;
     color:White;
     margin-bottom:2px;
     text-align: left;
+}
+
+label.show {
+    opacity: 1;
+    transition: all .5s;
 }
 
 label.focused {
@@ -29,8 +35,8 @@ input {
     position: relative;
     padding:12px;
     background-color: rgb(83, 84, 85);
-    border: .5px solid white;
-    border-radius: 3px;
+    border: .8px solid white;
+    border-radius: 6px;
 }
 
 .input-wrapper.focused  {
