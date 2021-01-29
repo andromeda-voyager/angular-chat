@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Server, Invite } from '../models/server';
+import { Server, Invite, ServerRequest } from '../models/server';
 import { NewChannel, Channel } from '../models/channel';
 import { NewPost } from '../models/post';
 
@@ -45,8 +45,8 @@ export class ChatService {
     return this.http.post<Server>(createServerUrl, formData, formOptions);
   }
 
-  createChannel(newChannel: NewChannel): Observable<Channel> {
-    return this.http.post<Channel>(createChannelURL, newChannel, formOptions);
+  createChannel(serverRequest: ServerRequest): Observable<Channel> {
+    return this.http.post<Channel>(createChannelURL, serverRequest, formOptions);
   }
 
   deleteServer(server: Server): Observable<Server> {

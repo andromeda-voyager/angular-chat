@@ -13,6 +13,9 @@ frontend//bazel-out
 credentials.go
 reset.go
 
+#bug reports
+bugs.txt
+
 # dependencies
 node_modules/
 

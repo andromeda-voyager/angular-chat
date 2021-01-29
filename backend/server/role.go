@@ -5,7 +5,7 @@ import "nebula/database"
 // Role .
 type Role struct {
 	ID                 int                  `json:"id"`
-	Rank               int                  `json:"rank"`
+	Ranking            int                  `json:"ranking"`
 	Name               string               `json:"name"`
 	ServerPermissions  uint8                `json:"serverPermissions"`
 	ChannelPermissions []ChannelPermissions `json:"channelPermissions"`
@@ -17,25 +17,22 @@ type ChannelPermissions struct {
 	Value     uint8 `json:"value"`
 }
 
-// getServerRoles .
-func getServerRoles(serverID int) []Role {
+// LoadChannelPermissions .
+func (r Role) LoadChannelPermissions() {
 	var args []interface{}
-	args = append(args, serverID)
+	args = append(args, r.ID)
 	rows, err := database.Query(
-		`SELECT id, rank
-		FROM Role
-		ORDER BY
-		rank ASC
-		where server_id=?;`, args)
+		`SELECT channel_id, permissions
+		FROM ChannelPermissions
+		where role_id=?;`, args)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer rows.Close()
-	var roles []Role
+	var permissions []ChannelPermissions
 	for rows.Next() {
-		var r Role
-		rows.Scan(&r.ID, &r.Rank)
-		roles = append(roles, r)
+		var p ChannelPermissions
+		rows.Scan(&p.ChannelID, &p.Value)
+		permissions = append(permissions, p)
 	}
-	return roles
 }

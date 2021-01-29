@@ -16,7 +16,7 @@ export class ChatComponent implements OnInit {
   user!: User;
   servers: Server[] = []
   selectedServer!: Server;
-  currentChannel!: Server;
+  selectedChannel!: Channel;
   image: string = "";
   showDialog = false;
   dialogOption: number =0;
@@ -32,6 +32,9 @@ export class ChatComponent implements OnInit {
       this.servers = loginData.servers;
       if (this.servers) {
         this.selectedServer = this.servers[0];
+        if(this.selectedServer.channels) {
+          this.selectedChannel = this.selectedServer.channels[0];
+        }
       } 
     } else {
       this.router.navigate(['login']);

@@ -27,8 +27,11 @@ func getServers(accountID int) []*server.Server {
 		var s server.Server
 		var r server.Role
 		rows.Scan(&s.ID, &s.Name, &s.Image, &s.Description, &s.Alias, &r.ID, &r.Name, &r.ServerPermissions)
-		s.Role = &r
-		s.GetChannels()
+		r.LoadChannelPermissions()
+		s.Role = r
+		fmt.Println(s.Role.Name)
+		s.LoadRoles()
+		s.LoadChannels()
 		servers = append(servers, &s)
 	}
 

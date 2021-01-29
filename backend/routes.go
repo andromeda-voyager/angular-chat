@@ -20,6 +20,14 @@ type LoginResponse struct {
 	Servers []*server.Server `json:"servers"`
 }
 
+// ServerRequest .
+type ServerRequest struct {
+	ServerID int            `json:"serverID"`
+	Channel  server.Channel `json:"channel"`
+	Role     server.Role    `json:"role"`
+	Roles    []server.Role  `json:"roles"`
+}
+
 func init() {
 
 	// router.AuthPost("/ws", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
@@ -100,12 +108,12 @@ func init() {
 
 	router.AuthPost("/create-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
-		var ccr *server.CreateChannelRequest
-		if err := json.Unmarshal(resp, &ccr); err != nil {
+		var sr *ServerRequest
+		if err := json.Unmarshal(resp, &sr); err != nil {
 			panic(err)
 		}
-		if u.HasPermission(permissions.CreateChannel, ccr.ServerID) {
-			channel := server.NewChannel(ccr.Channel, ccr.Roles, ccr.ServerID)
+		if u.HasPermission(permissions.CreateChannel, sr.ServerID) {
+			channel := server.NewChannel(sr.Channel, sr.Roles, sr.ServerID)
 			json.NewEncoder(w).Encode(channel)
 		}
 	})

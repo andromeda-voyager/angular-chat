@@ -8,7 +8,7 @@ import { Server, Invite } from '../shared/models/server';
   styleUrls: ['./add-server.component.scss']
 })
 export class AddServerComponent implements OnInit {
-  @Input() server: Server = { id: 0, name: "", description: "", image: "", channels:[]}
+  @Input() server: Server = { id: 0, name: "", description: "", image: "", roles:[], channels:[]}
   @Input() invite: Invite = { code: "" }
   @Output() newServer = new EventEmitter<Server>();
   file: File = null!;

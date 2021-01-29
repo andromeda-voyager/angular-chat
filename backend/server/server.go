@@ -11,14 +11,14 @@ import (
 
 // Server .
 type Server struct {
-	ID          int        `json:"id"`
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Image       string     `json:"image"`
-	Role        *Role      `json:"role"`
-	Roles       []*Role    `json:"roles"`
-	Alias       string     `json:"alias"`
-	Channels    []*Channel `json:"channels"`
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Image       string    `json:"image"`
+	Role        Role      `json:"role"`
+	Roles       []Role    `json:"roles"`
+	Alias       string    `json:"alias"`
+	Channels    []Channel `json:"channels"`
 }
 
 // Member .
@@ -26,6 +26,7 @@ type Member struct {
 	AccountID int    `json:"accountID"`
 	Alias     string `json:"alias"`
 	Avatar    string `json:"avatar"`
+	Role      Role   `json:"role"`
 }
 
 // Invite .
@@ -37,22 +38,22 @@ type Invite struct {
 // New .
 func New(m *Member, r *http.Request) Server {
 	serverJSON := r.FormValue("server")
-	var server Server
-	json.Unmarshal([]byte(serverJSON), &server)
-	server.Image = util.SaveImage(r)
+	var s Server
+	json.Unmarshal([]byte(serverJSON), &s)
+	s.Image = util.SaveImage(r)
 	var args []interface{}
-	args = append(args, server.Name, server.Image, server.Description)
-	fmt.Println(server.Name)
+	args = append(args, s.Name, s.Image, s.Description)
+	fmt.Println(s.Name)
 	var err error
-	server.ID, err = database.Exec("INSERT INTO Server (name, image, description) Values (?, ?, ?);", args)
+	s.ID, err = database.Exec("INSERT INTO Server (name, image, description) Values (?, ?, ?);", args)
 	if err != nil {
 		fmt.Println("failed to add server")
 	}
-	server.NewRole("owner", permissions.Full)
-	server.NewRole("default", permissions.None)
+	s.Role = s.NewRole("owner", 0, permissions.Full)
+	s.NewRole("default", 1, permissions.None)
 
-	server.NewMember(m)
-	return server
+	s.NewMember(m)
+	return s
 }
 
 // NewMember .
@@ -67,15 +68,16 @@ func (s *Server) NewMember(m *Member) {
 }
 
 // NewRole .
-func (s *Server) NewRole(name string, permissions uint8) {
+func (s *Server) NewRole(name string, ranking int, permissions uint8) Role {
 	var args []interface{}
-	args = append(args, s.ID, name, permissions)
-	roleID, err := database.Exec("INSERT INTO Role (server_id, name, server_permissions) Values (?, ?, ?);", args)
+	args = append(args, s.ID, name, ranking, permissions)
+	roleID, err := database.Exec("INSERT INTO Role (server_id, name, ranking, server_permissions) Values (?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
-	role := &Role{ID: roleID, Name: name}
-	s.Role = role
+	r := Role{ID: roleID, Name: name}
+	s.Roles = append(s.Roles, r)
+	return r
 }
 
 // Delete .
@@ -89,13 +91,13 @@ func (s *Server) Delete() bool {
 	return true
 }
 
-// GetChannels .
-func (s *Server) GetChannels() {
+// LoadChannels .
+func (s *Server) LoadChannels() {
 	fmt.Println("Getting channels")
 	var args []interface{}
 	args = append(args, s.Role.ID)
 	rows, err := database.Query(
-		`SELECT ChannelPermissions.permissions, Channel.id, Channel.name
+		`SELECT Channel.id, Channel.name
 		FROM ChannelPermissions 
 		INNER JOIN Channel ON ChannelPermissions.channel_id = Channel.id 
 		where ChannelPermissions.role_id=?;`, args)
@@ -104,8 +106,31 @@ func (s *Server) GetChannels() {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var c *Channel
+		var c Channel
 		rows.Scan(&c.ID, &c.Name)
+		fmt.Println(c.Name)
 		s.Channels = append(s.Channels, c)
+	}
+}
+
+// LoadRoles .
+func (s *Server) LoadRoles() {
+	var args []interface{}
+	args = append(args, s.ID)
+	rows, err := database.Query(
+		`SELECT id, name, ranking, server_permissions
+		FROM Role
+		where server_id=?
+		ORDER BY
+		ranking ASC;`, args)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var r Role
+		rows.Scan(&r.ID, &r.Name, &r.Ranking, &r.ServerPermissions)
+		r.LoadChannelPermissions()
+		s.Roles = append(s.Roles, r)
 	}
 }

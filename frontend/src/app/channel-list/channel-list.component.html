@@ -1,9 +1,6 @@
-<div id="component">
-    <button id="add-channel-button" (click)="openChannelDialog.emit()">
-        +
-    </button>
-  
-    <div *ngFor="let channel of server?.channels; let i = index">
-        {{channel.name}}
-    </div>
+<button id="add-channel-button" (click)="openChannelDialog.emit()">
+    +
+</button>
+<div *ngFor="let channel of server?.channels; let i = index">
+    <button [ngClass]="{'selected': selectedChannel==channel}" class="channel-button">{{channel.name}}</button>
 </div>

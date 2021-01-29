@@ -13,13 +13,6 @@ type Channel struct {
 	Posts []*Post `json:"posts"`
 }
 
-// CreateChannelRequest .
-type CreateChannelRequest struct {
-	ServerID int     `json:"serverID"`
-	Channel  Channel `json:"channel"`
-	Roles    []Role  `json:"roles"`
-}
-
 // NewChannel .
 func NewChannel(channel Channel, rolesWithAccess []Role, serverID int) *Channel {
 	var args []interface{}
@@ -30,15 +23,15 @@ func NewChannel(channel Channel, rolesWithAccess []Role, serverID int) *Channel 
 		panic(err.Error())
 	}
 	var c = &Channel{ID: channelID, Name: channel.Name, Posts: nil}
-	ok := validateRoles(rolesWithAccess, serverID)
-	if ok {
-		c.AddPermissions(rolesWithAccess)
-	}
+	// ok := validateRoles(rolesWithAccess, serverID)
+	// if ok {
+	c.AddPermissions(rolesWithAccess)
+	//	}
 	return c
 }
 
 // getChannels .
-func (c *Channel) getPosts() {
+func (c Channel) getPosts() {
 	var args []interface{}
 	args = append(args, c.ID)
 	rows, err := database.Query(
@@ -56,19 +49,19 @@ func (c *Channel) getPosts() {
 	}
 }
 
-func validateRoles(rolesWithAccess []Role, serverID int) bool {
-	allRoles := getServerRoles(serverID)
-	for _, r := range rolesWithAccess {
-		if r.Rank <= len(allRoles) {
-			if r.ID != allRoles[r.Rank].ID {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-	return true
-}
+// func validateRoles(rolesWithAccess []Role, serverID int) bool {
+// 	allRoles := getServerRoles(serverID)
+// 	for _, r := range rolesWithAccess {
+// 		if r.Rank <= len(allRoles) {
+// 			if r.ID != allRoles[r.Rank].ID {
+// 				return false
+// 			}
+// 		} else {
+// 			return false
+// 		}
+// 	}
+// 	return true
+// }
 
 // AddPermissions .
 func (c *Channel) AddPermissions(roles []Role) {

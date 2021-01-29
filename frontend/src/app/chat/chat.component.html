@@ -1,26 +1,27 @@
 <div id="component">
-
     <div id="servers"> <button id="add-server-button" (click)="openDialog(0)">Add Server</button>
         <a class="server" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
             <img class="server-image" [src]="server.image">
         </a>
     </div>
 
-    <div>
-        <div *ngIf="selectedServer"> 
+    <div id="server-panel" *ngIf="selectedServer">
+        <div id="server-control">
             {{selectedServer.name}}
             <button id="admin-button" (click)="openDialog(1)">
                 <img src="assets/icons/settings-gear.svg">
             </button>
         </div>
-        <app-channel-list [server]="selectedServer" (openChannelDialog)="openDialog(2)"></app-channel-list>
+        <app-channel-list [server]="selectedServer" [(selectedChannel)]="selectedChannel"
+            (openChannelDialog)="openDialog(2)">
+        </app-channel-list>
 
     </div>
 
-    <!-- <div *ngIf="currentChannel" id="center-components">
-        <app-posts [posts]="channel.posts" id="messages"></app-posts>
+    <div *ngIf="selectedChannel" id="post-components">
+        <app-posts [posts]="selectedChannel.posts" id="messages"></app-posts>
         <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
-    </div> -->
+    </div>
 </div>
 <div class="dialog-container" *ngIf="showDialog">
     <div (click)="closeDialog()" class="overlay"></div>

@@ -1,16 +1,18 @@
-#chat-box {
+#component {
     overflow-y:scroll;
     display:flex;
     flex-direction: column;
     border-radius: 6px;
     height: 100%;
+    width:100%;
     border: 3px solid  rgb(47, 48, 49);
     background-color:  rgb(47, 48, 49);
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
     scrollbar-width: none;
+    box-sizing: border-box;
 }
 
-#chat-box::-webkit-scrollbar {
+#component::-webkit-scrollbar {
     display: none;
 }
 

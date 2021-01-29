@@ -4,7 +4,6 @@ export interface Channel {
     id: number
     name: string
     posts: Post[]
-    channelPermissions: ChannelPermissions[]
 }
 
 export interface ChannelPermissions {
