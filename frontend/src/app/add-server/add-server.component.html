@@ -4,33 +4,21 @@
         <button mat-button class="option" (click)="showAddServer = true">Add Server</button>
         <button mat-button class="option" (click)="showCreateServer = true">Create Server</button>
     </div>
+
     <ng-container *ngIf="showCreateServer">
         <div id="server-image">
             <img [src]="serverImageUrl">
-            <span id="image-instructions">Select Image</span>
+            <span>Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Server Name</mat-label>
-            <input isFocused matInput [(ngModel)]="server.name">
-            <mat-hint *ngIf="server.name.length < 1 && showRequired">Required</mat-hint>
-            <mat-hint *ngIf="server.name.length < 4 && server.name.length > 0 && showRequired">Server name not long
-                enough</mat-hint>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Description</mat-label>
-            <input matInput [(ngModel)]="server.description">
-        </mat-form-field>
+        <app-input-field label="Server Name" hint="Required" [(inputValue)]="server.name" [showHint]="highlightRequired"></app-input-field>
+        <app-input-field label="Description" hint="Required" [(inputValue)]="server.description" [showHint]="highlightRequired"></app-input-field>
         <button mat-button class="submit" (click)="createServer()">Create Server</button>
     </ng-container>
-    <ng-container *ngIf="showAddServer">
-        <mat-form-field appearance="outline">
-            <mat-label>Invite Code</mat-label>
-            <input isFocused matInput [(ngModel)]="invite.code">
-            <mat-hint *ngIf="showRequired">Invalid Code</mat-hint>
-        </mat-form-field>
-        <button mat-button class="submit" (click)="joinServer()">Join</button>
 
+    <ng-container *ngIf="showAddServer">
+        <app-input-field label="Invite Code" hint="Required" [(inputValue)]="invite.code" [showHint]="highlightRequired"></app-input-field>
+        <button mat-button class="submit" (click)="joinServer()">Join</button>
     </ng-container>
+
 </div>

@@ -13,7 +13,7 @@ export class AddServerComponent implements OnInit {
   @Output() newServer = new EventEmitter<Server>();
   file: File = null!;
   serverImageUrl: string = "assets/default-avatar.jpg"
-  showRequired = false;
+  highlightRequired = false;
   showCreateServer = false;
   showAddServer = false;
 
@@ -29,7 +29,7 @@ export class AddServerComponent implements OnInit {
       })
     }
     else {
-      this.showRequired = true;
+      this.highlightRequired = true;
     }
 
   }
@@ -52,7 +52,7 @@ export class AddServerComponent implements OnInit {
       })
     }
     else {
-      this.showRequired = true;
+      this.highlightRequired = true;
     }
   }
 
