@@ -6,9 +6,7 @@
 }
 
 #card {
-  width:fit-content;
-  height:fit-content;
-  padding:40px;
+  padding:50px;
   display:flex;
   flex-direction: column;
   align-items: center;
@@ -16,6 +14,7 @@
   border-radius: 5px;
   background-color: rgb(255, 255, 255);
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.356);
+  position: relative;
 }
 
 mat-form-field {
@@ -36,4 +35,21 @@ mat-form-field {
 
 mat-hint {
   color:red
+}
+
+#forgot-password-button {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size:small;
+  position: absolute;
+  bottom:0;
+  right:0;
+  color:rgb(110, 110, 110);
+  background-color: transparent;
+  border:none;
+  cursor: pointer;
+  padding:10px;
+}
+
+#forgot-password-button:hover {
+  color:black;
 }

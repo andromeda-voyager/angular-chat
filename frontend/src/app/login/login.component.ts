@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { AccountService } from '../shared/services/account.service';
 import { LoginService } from '../shared/services/login.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   isPasswordCorrect = true;
   hide = true;
   loginFailed = false;
-  constructor(private loginService: LoginService, private router: Router) {
+  constructor(private loginService: LoginService, private accountService: AccountService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -32,6 +33,10 @@ export class LoginComponent implements OnInit {
       console.log("password correct");
       this.router.navigate(['chat']);
     }, error => this.handleError(error));
+  }
+
+  forgotPassword() {
+      this.accountService.forgotPassword(this.email)
   }
 
   handleError(error: any) {
