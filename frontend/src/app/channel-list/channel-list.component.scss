@@ -1,7 +1,7 @@
 #component {
     display: flex;
     flex-direction: column;
-    background-color: rgb(73, 73, 73);
+    background-color: rgb(43, 45, 46);
     height:100%;
 }
 
@@ -9,8 +9,22 @@
     background-color: transparent;
     border-style: none;
     cursor: pointer;
-    font-size: xx-large;
+    font-size: x-large;
     color:rgb(170, 170, 170);
+}
+
+#add-channel-container {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+    font-weight: 450;
+    font-size: larger;
+}
+
+#component span {
+    color:rgb(122, 122, 122);
+    font-weight: 450;
 }
   
 #add-channel-button:hover {
@@ -44,7 +58,7 @@
     text-align: left;
     font-size: large;
     border:none;
-    color:rgb(17, 17, 17);
+    color:rgb(122, 122, 122);
     padding:10px;
     margin: 0 2.5% 0 2.5%;
     background-color: transparent;
@@ -57,5 +71,9 @@
 }
 
 .channel-button.selected {
-    color:white;
+    color:rgb(87, 119, 145);
+}
+
+.channel-button.selected:hover {
+    background-color: transparent;
 }
