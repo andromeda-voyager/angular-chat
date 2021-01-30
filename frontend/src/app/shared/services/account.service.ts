@@ -11,6 +11,7 @@ const formOptions = {
   withCredentials: true
 };
 
+const forgotPasswordUrl = environment.BaseApiUrl + "/forgot-password";
 const createAccountUrl = environment.BaseApiUrl + "/create-account";
 const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 
@@ -29,6 +30,10 @@ export class AccountService {
     formData.append("user", JSON.stringify(account));
 
     return this.http.post<User>(createAccountUrl, formData);
+  }
+
+  forgotPassword(email: string)  {  
+    return this.http.post<User>(forgotPasswordUrl, email).subscribe();
   }
 
   sendVerificationCode(_email: string) {
