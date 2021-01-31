@@ -6,28 +6,18 @@
             <span id="instructions">Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
-        <span [ngClass]="{'hidden': !this.file && isValidImage()}" class="hint">Image too large. File size limit is 1 MB.</span>
+        <span [ngClass]="{'hidden': !this.file && isValidImage()}" class="hint">Image too large. File size limit is 1
+            MB.</span>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input isFocused matInput [(ngModel)]="account.email">
-            <mat-hint *ngIf="!isValidEmail() && account.email.length != 0">Invalid Email</mat-hint>
-            <mat-hint *ngIf="showRequired && account.email.length == 0">Required</mat-hint>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Username</mat-label>
-            <input matInput [(ngModel)]="account.username">
-            <mat-hint *ngIf="showRequired && account.username.length == 0">Required</mat-hint>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input [type]="hide ? 'password' : 'text'" matInput [(ngModel)]="account.password">
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
-                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-hint *ngIf="showRequired && 8 > account.password.length">Password too short</mat-hint>
-        </mat-form-field>
+        <app-input-field label="Email" hint="Invalid Email" [(inputValue)]="account.email"
+            [showHint]="!isValidEmail() && account.email.length != 0"></app-input-field>
+
+        <app-input-field label="Username" hint="Required" [(inputValue)]="account.username"
+            [showHint]="showRequired && account.username.length == 0"></app-input-field>
+
+        <app-input-field label="Password" hint="Required" [isPassword]="true" [(inputValue)]="account.password"
+            [showHint]="showRequired && 8 > account.password.length"></app-input-field>
+
         <button mat-button class="submit" (click)=next()>Next</button>
     </div>
 
