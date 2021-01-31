@@ -1,6 +1,6 @@
 <div class="card">
     <span id="title">Create Channel</span>
-<app-input-field label="Channel Name" hint="Required" [(inputValue)]="name" [showHint]="showHint"></app-input-field>
+<app-input-field label="Channel Name" [isDark]="true" hint="Required" [(inputValue)]="name" [showHint]="showHint"></app-input-field>
 
     <div id="private-channel-select">
         <span>Private Channel</span>
@@ -10,6 +10,6 @@
         </label>
     </div>
     
-    <button mat-button class="submit" (click)="createChannel()">Create Channel</button>
+    <button mat-button class="submit" (click)="addChannel()">Create Channel</button>
 
 </div>

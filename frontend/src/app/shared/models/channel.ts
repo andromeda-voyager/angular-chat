@@ -7,12 +7,7 @@ export interface Channel {
 }
 
 export interface ChannelPermissions {
-    roleID: number
+    channelID: number
     permissions: number
 }
 
-export interface NewChannel {
-    serverID: number
-    name: string
-    channelPermissions: ChannelPermissions[]
-}

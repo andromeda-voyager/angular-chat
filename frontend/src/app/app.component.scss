@@ -8,6 +8,8 @@
 
 #router-wrapper {
     overflow: auto;
+    padding:25px;
+    box-sizing: border-box;
     margin-top: 75px;
     height:calc(100vh - 75px);
     background-color: rgb(71, 71, 71);

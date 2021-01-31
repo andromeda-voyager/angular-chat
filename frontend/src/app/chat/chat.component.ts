@@ -18,6 +18,7 @@ enum Dialog {
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
+
 export class ChatComponent implements OnInit {
   Dialog = Dialog;
   user!: User;

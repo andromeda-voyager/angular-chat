@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Server, Invite, ServerRequest } from '../models/server';
-import { NewChannel, Channel } from '../models/channel';
+import { Channel } from '../models/channel';
 import { NewPost } from '../models/post';
 
 const formOptions = {
@@ -26,7 +26,7 @@ const joinServerUrl = environment.BaseApiUrl + "/join-server";
 const getPostsURL = environment.BaseApiUrl + "/posts";
 const postURL = environment.BaseApiUrl + "/post";
 const deleteServerURL = environment.BaseApiUrl + "/delete-server";
-const createChannelURL = environment.BaseApiUrl + "/create-channel";
+const addChannelURL = environment.BaseApiUrl + "/add-channel";
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +45,8 @@ export class ChatService {
     return this.http.post<Server>(createServerUrl, formData, formOptions);
   }
 
-  createChannel(serverRequest: ServerRequest): Observable<Channel> {
-    return this.http.post<Channel>(createChannelURL, serverRequest, formOptions);
+  addChannel(serverRequest: ServerRequest): Observable<Channel> {
+    return this.http.post<Channel>(addChannelURL, serverRequest, formOptions);
   }
 
   deleteServer(server: Server): Observable<Server> {

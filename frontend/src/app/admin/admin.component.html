@@ -1,3 +1,32 @@
 <div id="component">
-    <button mat-raised-button id="delete-server-button" (click)="deleteServer()">Delete Server</button>
+
+    <div id="menu">
+        <button (click)="menuIndex=Menu.GENERAL">General</button>
+        <button (click)="menuIndex=Menu.ROLES">Roles</button>
+        <button (click)="menuIndex=Menu.MEMBERS">Members</button>
+
+    </div>
+
+    <div id="view">
+        <div id="roles" *ngIf="menuIndex==Menu.ROLES">
+            <div id="role-selection">
+                <button *ngFor="let role of server.roles" (click)="selectedRole=role">
+                    {{role.name}}
+                </button>
+            </div>
+
+            <div *ngIf="selectedRole" id="role-view">
+                {{selectedRole.serverPermissions}}
+
+                <span>Can Invite</span>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="menuSection" *ngIf="menuIndex==Menu.GENERAL">
+            <button mat-raised-button id="delete-server-button" (click)="deleteServer()">Delete Server</button>
+        </div>
+    </div>
 </div>

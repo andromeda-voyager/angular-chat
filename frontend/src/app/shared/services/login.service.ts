@@ -28,7 +28,7 @@ export class LoginService {
   }
 
   isUserLoggedIn(): boolean {
-    return (sessionStorage.getItem("loginData") != null);
+    return this.loginResponse != null;
   }
 
   getLoginResponse(): LoginResponse {
@@ -43,7 +43,8 @@ export class LoginService {
   login(credentials: Credentials): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(loginUrl, credentials, jsonOptions).pipe(tap(loginResponse => {
       if (loginResponse.user) {
-        sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
+        (this.loginResponse = loginResponse)
+      //  sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
       } else console.log("not logged in");
     }));
   }
@@ -51,8 +52,7 @@ export class LoginService {
   loginWithCookie(): Observable<LoginResponse> {
     return this.http.get<LoginResponse>(loginWithCookieURL, jsonOptions).pipe(tap(loginResponse => {
       if (loginResponse.user) {
-
-        sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
+        (this.loginResponse = loginResponse)
       }
     }));
   }
