@@ -63,7 +63,6 @@ func init() {
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 		} else {
-			fmt.Println("user logged in")
 			servers := getServers(user.ID)
 			loginResponse := &LoginResponse{User: user, Servers: servers}
 			cookie := session.Add(user)
@@ -74,11 +73,7 @@ func init() {
 
 	router.AuthPost("/logout", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		cookie, err := r.Cookie("Auth")
-		fmt.Println("logout")
-		if err != nil {
-			fmt.Println("no cookie")
-		} else {
-			fmt.Println("removing session")
+		if err == nil {
 			session.Remove(cookie.Value)
 		}
 	})
@@ -106,13 +101,13 @@ func init() {
 		json.NewEncoder(w).Encode(server)
 	})
 
-	router.AuthPost("/create-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.AuthPost("/add-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var sr *ServerRequest
 		if err := json.Unmarshal(resp, &sr); err != nil {
 			panic(err)
 		}
-		if u.HasPermission(permissions.CreateChannel, sr.ServerID) {
+		if u.HasPermission(permissions.AddChannels, sr.ServerID) {
 			channel := server.NewChannel(sr.Channel, sr.Roles, sr.ServerID)
 			json.NewEncoder(w).Encode(channel)
 		}
@@ -125,7 +120,7 @@ func init() {
 			panic(err)
 		}
 		fmt.Println(u.ID)
-		if u.HasPermission(permissions.DeleteServer, s.ID) {
+		if u.HasPermission(permissions.Full, s.ID) {
 			ok := s.Delete()
 			fmt.Println("server deleted?", ok)
 		} else {
