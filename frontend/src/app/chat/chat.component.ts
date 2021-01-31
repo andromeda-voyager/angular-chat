@@ -6,36 +6,41 @@ import { LoginService } from '../shared/services/login.service';
 import { Router } from '@angular/router';
 import { Channel } from '../shared/models/channel';
 
+enum Dialog {
+  NONE = -1,
+  ADMIN = 0,
+  ADD_SERVER = 1,
+  ADD_CHANNEL = 2
+}
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
-
+  Dialog = Dialog;
   user!: User;
   servers: Server[] = []
   selectedServer!: Server;
   selectedChannel!: Channel;
   image: string = "";
-  showDialog = false;
-  dialogOption: number =0;
+  dialogOption: Dialog = Dialog.NONE;
   @Input() postText: string = "";
 
   constructor(private chatService: ChatService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
-    let data = sessionStorage.getItem("loginData");
-    if (data != null) {
-      let loginData: LoginResponse = JSON.parse(data);
-      this.user = loginData.user;
-      this.servers = loginData.servers;
-      if (this.servers) {
+    let loginResponse = this.loginService.getLoginResponse()
+    if (loginResponse != null) {
+      this.user = loginResponse.user;
+      if (loginResponse.servers) {
+        this.servers = loginResponse.servers;
         this.selectedServer = this.servers[0];
-        if(this.selectedServer.channels) {
+        if (this.selectedServer.channels) {
           this.selectedChannel = this.selectedServer.channels[0];
         }
-      } 
+      }
     } else {
       this.router.navigate(['login']);
     }
@@ -43,9 +48,7 @@ export class ChatComponent implements OnInit {
   }
 
   closeDialog() {
-    this.showDialog = false;
-
-    console.log("closing dialogs")
+    this.dialogOption = Dialog.NONE;
   }
 
   changeServer(index: number) {
@@ -53,18 +56,19 @@ export class ChatComponent implements OnInit {
   }
 
   onNewServer(server: Server) {
-    // if (this.servers == null) {
-    //   this.account.connections = [];
-    // }
     this.servers.push(server);
-    this.showDialog = false;
+    this.closeDialog();
+  }
+
+  onServerDeleted(server: Server) {
+    this.servers.splice(this.servers.indexOf(server), 1);
+    this.closeDialog();
+    this.selectedServer = this.servers[0];
   }
 
   onNewChannel(channel: Channel) {
     this.selectedServer.channels.push(channel);
   }
-
- 
 
   post() {
     // this.chatService.post({ serverID: this.currentConnection.serverID, text: this.postText, media: "" });
@@ -72,9 +76,8 @@ export class ChatComponent implements OnInit {
     //  this.socket.send(JSON.stringify(message));
   }
 
-  openDialog(option: number) {
+  openDialog(option: Dialog) {
     this.dialogOption = option;
-    this.showDialog = true;  
   }
 
 }

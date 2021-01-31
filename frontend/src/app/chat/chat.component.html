@@ -1,6 +1,6 @@
 <div id="component">
 
-    <div id="servers"> <button id="add-server-button" (click)="openDialog(0)">Add Server</button>
+    <div id="servers"> <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">Add Server</button>
         <a class="server" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
             <img class="server-image" [src]="server.image">
         </a>
@@ -9,12 +9,12 @@
     <div id="server-panel" *ngIf="selectedServer">
         <div id="server-control">
             {{selectedServer.name}}
-            <button id="admin-button" (click)="openDialog(1)">
+            <button id="admin-button" (click)="openDialog(Dialog.ADMIN)">
                 <img src="assets/icons/settings-gear.svg">
             </button>
         </div>
         <app-channel-list [server]="selectedServer" [(selectedChannel)]="selectedChannel"
-            (openChannelDialog)="openDialog(2)">
+            (openChannelDialog)="openDialog(Dialog.ADD_CHANNEL)">
         </app-channel-list>
     </div>
 
@@ -25,9 +25,9 @@
 
 </div>
 
-<div class="dialog-container" *ngIf="showDialog">
+<div class="dialog-container" *ngIf="dialogOption != Dialog.NONE">
     <div (click)="closeDialog()" class="overlay"></div>
-    <app-add-server *ngIf="dialogOption==0" (newServer)="onNewServer($event)" class="dialog"> </app-add-server>
-    <app-admin *ngIf="dialogOption==1" [server]="selectedServer" class="dialog"></app-admin>
-    <app-add-channel *ngIf="dialogOption==2" [server]="selectedServer" class="dialog"></app-add-channel>
+    <app-add-server *ngIf="dialogOption==Dialog.ADD_SERVER" (newServer)="onNewServer($event)" class="dialog"> </app-add-server>
+    <app-admin *ngIf="dialogOption==Dialog.ADMIN" [server]="selectedServer" (serverDeleted)="onServerDeleted($event)"  class="dialog"></app-admin>
+    <app-add-channel *ngIf="dialogOption==Dialog.ADD_CHANNEL" [server]="selectedServer" class="dialog"></app-add-channel>
 </div>
