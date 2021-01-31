@@ -47,8 +47,8 @@ export class AddServerComponent implements OnInit {
   createServer() {
     if (this.server.name.length > 3) {
       console.log(this.server.name);
-      this.chatService.createServer(this.file, this.server).subscribe(connection => {
-        this.newServer.emit(connection);
+      this.chatService.createServer(this.file, this.server).subscribe(server => {
+        this.newServer.emit(server);
       })
     }
     else {

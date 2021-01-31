@@ -1,8 +1,9 @@
 <div class="card">
 
     <div *ngIf="!showCreateServer && !showAddServer" id="buttons-container">
-        <button mat-button class="option" (click)="showAddServer = true">Add Server</button>
-        <button mat-button class="option" (click)="showCreateServer = true">Create Server</button>
+        <span>Add a Server</span>
+        <button mat-button class="option" (click)="showAddServer = true">Join a Server</button>
+        <button mat-button class="option" (click)="showCreateServer = true">Create a Server</button>
     </div>
 
     <ng-container *ngIf="showCreateServer">
@@ -11,13 +12,13 @@
             <span>Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
-        <app-input-field label="Server Name" hint="Required" [(inputValue)]="server.name" [showHint]="highlightRequired"></app-input-field>
-        <app-input-field label="Description" hint="Required" [(inputValue)]="server.description" [showHint]="highlightRequired"></app-input-field>
+        <app-input-field label="Server Name" [isDark]="true" hint="Required" [(inputValue)]="server.name" [showHint]="highlightRequired"></app-input-field>
+        <app-input-field label="Description" [isDark]="true" hint="Required" [(inputValue)]="server.description" [showHint]="highlightRequired"></app-input-field>
         <button mat-button class="submit" (click)="createServer()">Create Server</button>
     </ng-container>
 
     <ng-container *ngIf="showAddServer">
-        <app-input-field label="Invite Code" hint="Required" [(inputValue)]="invite.code" [showHint]="highlightRequired"></app-input-field>
+        <app-input-field label="Invite Code" [isDark]="true" hint="Required" [(inputValue)]="invite.code" [showHint]="highlightRequired"></app-input-field>
         <button mat-button class="submit" (click)="joinServer()">Join</button>
     </ng-container>
 
