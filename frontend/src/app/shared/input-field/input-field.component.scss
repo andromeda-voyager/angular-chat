@@ -6,14 +6,18 @@
 label {
     opacity: 0;
     display: block;
-    color:White;
+    color:grey;
     margin-bottom:2px;
     text-align: left;
 }
 
+label.dark {
+    color:white;
+}
+
 label.show {
     opacity: 1;
-    transition: all .5s;
+    transition: opacity .5s;
 }
 
 label.focused {
@@ -21,22 +25,35 @@ label.focused {
 }
   
 input {
-    color:white;
-    height:25px;
-    width:100%;
+    color:black;
+    width: 100%;
+    padding:18px 5px 18px 8px;
+    box-sizing: border-box;
     margin:auto;
     background-color: transparent;
-    border: none;
+    border-color:transparent;
+}
+
+input.password {
+    width:calc(100% - 30px);
+}
+
+input.dark {
+    color:white;
 }
 
 .input-wrapper {
     width:100%;
     box-sizing: border-box;
-    position: relative;
-    padding:12px;
-    background-color: rgb(83, 84, 85);
-    border: .8px solid white;
+    display:flex;
+    align-items: center;
+    border: 1px solid rgb(192, 192, 192);
     border-radius: 6px;
+}
+
+.input-wrapper.dark  {
+    background-color: rgb(83, 84, 85);
+    border: 1px solid white;
 }
 
 .input-wrapper.focused  {
@@ -66,4 +83,19 @@ input {
 
 #hint.visible {
     visibility: visible;
+}
+
+.visibility-icon {
+  width:25px;
+  height:25px;
+  margin-right:5px;
+  cursor: pointer;
+}
+
+.visibility-icon {
+    fill:rgb(82, 82, 82);
+}
+
+.visibility-icon.dark {
+    fill:white;
 }

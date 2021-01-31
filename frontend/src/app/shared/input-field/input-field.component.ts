@@ -10,13 +10,19 @@ export class InputFieldComponent implements OnInit {
   @Input() label = "";
   @Input() hint = "";
   @Input() inputValue: string = "";
-  @Output() inputValueChange = new EventEmitter<string>();
+  @Input() isPassword: boolean = false;
+  @Input() isDark = false;
 
+  @Output() inputValueChange = new EventEmitter<string>();
   @Input() showHint = false;
   isFocused = false;
-  constructor() { }
+  type = this.isPassword ? "password" : "text"
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
+
 
 }
