@@ -10,7 +10,7 @@
     justify-content: center;
     border-radius: 5px;
     background-color:  rgb(68, 70, 71);
-    padding:20px;
+    padding:30px;
     box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.356);
 }
 
@@ -26,20 +26,23 @@ app-input-field {
     justify-content: space-between;
     align-items: center;
 }
+
 #title {
     color:White;
     font-size: x-large;
-    margin-bottom:60px;
+    margin-bottom:20px;
 }
 
-.submit {
+button {
+    font-size:1.2em;
+    margin-top:30px;
     background-color: rgb(26, 111, 190);
     color:white;
-    padding:5px 25px 5px 25px;
+    padding:8px 25px 8px 25px;
     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.356);
 }
     
-.submit:hover {
+button:hover {
     opacity: .8;
 }
     
