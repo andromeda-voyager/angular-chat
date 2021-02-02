@@ -28,19 +28,3 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
-// func socket(ws *websocket.Conn) {
-// 	defer ws.Close()
-// 	for {
-// 		var m text
-// 		if err := websocket.JSON.Receive(ws, &m); err != nil {
-// 			fmt.Println("unable to receive")
-// 			break
-// 		}
-// 		m2 := text{"thanks"}
-// 		if err := websocket.JSON.Send(ws, m2); err != nil {
-// 			fmt.Println("unable to send")
-// 			break
-// 		}
-// 	}
-// }

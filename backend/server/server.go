@@ -43,7 +43,6 @@ func New(m *Member, r *http.Request) Server {
 	s.Image = util.SaveImage(r)
 	var args []interface{}
 	args = append(args, s.Name, s.Image, s.Description)
-	fmt.Println(s.Name)
 	var err error
 	s.ID, err = database.Exec("INSERT INTO Server (name, image, description) Values (?, ?, ?);", args)
 	if err != nil {
@@ -93,7 +92,6 @@ func (s *Server) Delete() bool {
 
 // LoadChannels .
 func (s *Server) LoadChannels() {
-	fmt.Println("Getting channels")
 	var args []interface{}
 	args = append(args, s.Role.ID)
 	rows, err := database.Query(
@@ -108,7 +106,6 @@ func (s *Server) LoadChannels() {
 	for rows.Next() {
 		var c Channel
 		rows.Scan(&c.ID, &c.Name)
-		fmt.Println(c.Name)
 		s.Channels = append(s.Channels, c)
 	}
 }

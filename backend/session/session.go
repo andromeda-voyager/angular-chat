@@ -13,8 +13,8 @@ import (
 )
 
 type connection struct {
-	Permissions uint8 `json:"permissions"`
-	ws          *websocket.Conn
+	channels map[int]bool
+	ws       *websocket.Conn
 }
 
 var loggedInUsers map[string]*user.User
@@ -25,7 +25,9 @@ func init() {
 	connections = make(map[int]map[int]*connection)
 }
 
-// ServerID => channels[], ws, serverPermissions
+// channelID -> map of tokens -> ws
+
+//serverID -> map of tokens (for eached user logged into server)-> map of channels
 
 // Add .
 func Add(user *user.User) *http.Cookie {
@@ -34,10 +36,6 @@ func Add(user *user.User) *http.Cookie {
 	cookie := &http.Cookie{Name: "Auth", Value: token, Path: "/", Expires: time.Now().Add(24 * time.Hour)}
 	return cookie
 }
-
-// func AddConnection(serverID, accountID int, c *connection) {
-// 	connections[serverID][accountID] = c
-// }
 
 // Remove .
 func Remove(token string) {
@@ -53,7 +51,7 @@ func Get(token string) *user.User {
 }
 
 // Post .
-func Post(a *user.Account, post server.Post) {
+func Post(a *user.Account, m server.Message) {
 	// post.TimePosted = time.Now().UTC()
 	// post.AccountID = a.ID
 	// connectionsToServer := serverConnections[post.ServerID]

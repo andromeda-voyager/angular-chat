@@ -12,6 +12,8 @@ import (
 	"nebula/user"
 	"nebula/util"
 	"net/http"
+
+	"golang.org/x/net/websocket"
 )
 
 // LoginResponse .
@@ -28,12 +30,30 @@ type ServerRequest struct {
 	Roles    []server.Role  `json:"roles"`
 }
 
+func socket(ws *websocket.Conn) {
+	cookie, err := ws.Request().Cookie("Auth")
+	if err != nil {
+		defer ws.Close()
+	} else {
+		user := session.Get((cookie.Value))
+		servers := getServers(user.ID)
+		loginResponse := &LoginResponse{User: user, Servers: servers}
+		if err := websocket.JSON.Send(ws, loginResponse); err != nil {
+			fmt.Println("unable to send")
+			defer ws.Close()
+		}
+	}
+	// 	var m server.Message
+	// 	websocket.JSON.Receive(ws, &m)
+
+}
+
 func init() {
 
-	// router.AuthPost("/ws", func(w http.ResponseWriter, r *http.Request, a *account.Account) {
-	// 	s := websocket.Handler(socket)
-	// 	s.ServeHTTP(w, r)
-	// })
+	router.AuthPost("/ws", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+		s := websocket.Handler(socket)
+		s.ServeHTTP(w, r)
+	})
 
 	router.Post("/create-account", func(w http.ResponseWriter, r *http.Request) {
 		accountStr := []byte(r.FormValue("user"))
@@ -107,9 +127,11 @@ func init() {
 		if err := json.Unmarshal(resp, &sr); err != nil {
 			panic(err)
 		}
-		if u.HasPermission(permissions.AddChannels, sr.ServerID) {
+		if u.HasPermission(permissions.ManageChannels, sr.ServerID) {
 			channel := server.NewChannel(sr.Channel, sr.Roles, sr.ServerID)
 			json.NewEncoder(w).Encode(channel)
+		} else {
+			fmt.Println("can't create channel")
 		}
 	})
 
@@ -152,8 +174,8 @@ func init() {
 
 	router.AuthPost("/post", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
-		var post server.Post
-		if err := json.Unmarshal(resp, &post); err != nil {
+		var m server.Message
+		if err := json.Unmarshal(resp, &m); err != nil {
 			panic(err)
 		}
 

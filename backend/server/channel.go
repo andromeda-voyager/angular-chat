@@ -1,28 +1,26 @@
 package server
 
 import (
-	"fmt"
 	"nebula/database"
 	"nebula/permissions"
 )
 
 // Channel .
 type Channel struct {
-	ID    int     `json:"id"`
-	Name  string  `json:"name"`
-	Posts []*Post `json:"posts"`
+	ID       int        `json:"id"`
+	Name     string     `json:"name"`
+	Messages []*Message `json:"messages"`
 }
 
 // NewChannel .
 func NewChannel(channel Channel, rolesWithAccess []Role, serverID int) *Channel {
 	var args []interface{}
 	args = append(args, serverID, channel.Name)
-	fmt.Println(channel.Name)
 	channelID, err := database.Exec("INSERT INTO Channel (server_id, name) Values (?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
-	var c = &Channel{ID: channelID, Name: channel.Name, Posts: nil}
+	var c = &Channel{ID: channelID, Name: channel.Name, Messages: nil}
 	// ok := validateRoles(rolesWithAccess, serverID)
 	// if ok {
 	c.AddPermissions(rolesWithAccess)
@@ -35,17 +33,17 @@ func (c Channel) getPosts() {
 	var args []interface{}
 	args = append(args, c.ID)
 	rows, err := database.Query(
-		`SELECT text, media, time_posted, account_id
-		FROM Post 
-		where Post.channel_id=?;`, args)
+		`SELECT text, media, time_sent, account_id
+		FROM Message 
+		where Message.channel_id=?;`, args)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var p *Post
-		rows.Scan(&p.Text, p.Media, p.TimePosted, p.AccountID)
-		c.Posts = append(c.Posts, p)
+		var m Message
+		rows.Scan(&m.Text, &m.Media, &m.TimePosted, &m.AccountID)
+		c.Messages = append(c.Messages, &m)
 	}
 }
 

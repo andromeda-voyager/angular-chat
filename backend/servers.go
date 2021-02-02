@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"nebula/database"
 	"nebula/server"
 )
@@ -9,7 +8,6 @@ import (
 func getServers(accountID int) []*server.Server {
 	var servers []*server.Server
 	var args []interface{}
-	fmt.Println("id: ", accountID)
 	args = append(args, accountID)
 	rows, err := database.Query(
 		`SELECT Server.id, Server.name, Server.image, Server.description, 
@@ -29,7 +27,6 @@ func getServers(accountID int) []*server.Server {
 		rows.Scan(&s.ID, &s.Name, &s.Image, &s.Description, &s.Alias, &r.ID, &r.Name, &r.ServerPermissions)
 		r.LoadChannelPermissions()
 		s.Role = r
-		fmt.Println(s.Role.Name)
 		s.LoadRoles()
 		s.LoadChannels()
 		servers = append(servers, &s)
