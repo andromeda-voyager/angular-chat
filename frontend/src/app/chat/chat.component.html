@@ -1,33 +1,37 @@
 <div id="component">
-
-    <div id="servers"> <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">Add Server</button>
-        <a class="server" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
-            <img class="server-image" [src]="server.image">
-        </a>
-    </div>
-
-    <div id="server-panel" *ngIf="selectedServer">
-        <div id="server-control">
-            {{selectedServer.name}}
-            <button id="admin-button" (click)="openDialog(Dialog.ADMIN)">
-                <img src="assets/icons/settings-gear.svg">
+    <div id="border">
+        <div id="servers"> <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">Add Server</button>
+            <button class="server" [ngClass]="{'selected':selectedServer == server}" (click)="changeServer(i)" *ngFor="let server of servers; let i = index">
+                <img [src]="server.image">
             </button>
         </div>
-        <app-channel-list [server]="selectedServer" [(selectedChannel)]="selectedChannel"
-            (openChannelDialog)="openDialog(Dialog.ADD_CHANNEL)">
-        </app-channel-list>
-    </div>
 
-    <div *ngIf="selectedChannel" id="post-components">
-        <app-posts [posts]="selectedChannel.posts" id="messages"></app-posts>
-        <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
+        <div id="server-panel" *ngIf="selectedServer">
+            <div id="server-control">
+                {{selectedServer.name}}
+                <button id="admin-button" (click)="openDialog(Dialog.ADMIN)">
+                    <img src="assets/icons/settings-gear.svg">
+                </button>
+            </div>
+            <app-channel-list *ngIf="selectedServer" [server]="selectedServer" [(selectedChannel)]="selectedChannel"
+                (openChannelDialog)="openDialog(Dialog.ADD_CHANNEL)">
+            </app-channel-list>
+        </div>
+
+        <div *ngIf="selectedChannel" id="post-components">
+            <app-messages [channel]="selectedChannel" id="messages"></app-messages>
+            <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
+        </div>
     </div>
 
 </div>
 
 <div class="dialog-container" *ngIf="dialogOption != Dialog.NONE">
     <div (click)="closeDialog()" class="overlay"></div>
-    <app-add-server *ngIf="dialogOption==Dialog.ADD_SERVER" (newServer)="onNewServer($event)" class="dialog"> </app-add-server>
-    <app-admin *ngIf="dialogOption==Dialog.ADMIN" [server]="selectedServer" (serverDeleted)="onServerDeleted($event)"  class="dialog"></app-admin>
-    <app-add-channel *ngIf="dialogOption==Dialog.ADD_CHANNEL" [server]="selectedServer" class="dialog"></app-add-channel>
+    <app-add-server *ngIf="dialogOption==Dialog.ADD_SERVER" (newServer)="onNewServer($event)" class="dialog">
+    </app-add-server>
+    <app-admin *ngIf="dialogOption==Dialog.ADMIN" [server]="selectedServer" (serverDeleted)="onServerDeleted($event)"
+        class="dialog"></app-admin>
+    <app-add-channel *ngIf="dialogOption==Dialog.ADD_CHANNEL" [server]="selectedServer" class="dialog">
+    </app-add-channel>
 </div>
