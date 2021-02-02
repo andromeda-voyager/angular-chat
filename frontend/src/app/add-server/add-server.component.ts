@@ -13,7 +13,7 @@ export class AddServerComponent implements OnInit {
   @Output() newServer = new EventEmitter<Server>();
   file: File = null!;
   serverImageUrl: string = "assets/default-avatar.jpg"
-  highlightRequired = false;
+  showRequired = false;
   showCreateServer = false;
   showAddServer = false;
 
@@ -29,7 +29,7 @@ export class AddServerComponent implements OnInit {
       })
     }
     else {
-      this.highlightRequired = true;
+      this.showRequired = true;
     }
 
   }
@@ -45,14 +45,14 @@ export class AddServerComponent implements OnInit {
   }
 
   createServer() {
-    if (this.server.name.length > 3) {
+    if (this.server.name.length != 0) {
       console.log(this.server.name);
       this.chatService.createServer(this.file, this.server).subscribe(server => {
         this.newServer.emit(server);
       })
     }
     else {
-      this.highlightRequired = true;
+      this.showRequired = true;
     }
   }
 

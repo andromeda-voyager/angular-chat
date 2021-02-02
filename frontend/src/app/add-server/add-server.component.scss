@@ -1,13 +1,9 @@
-
-  
-mat-form-field {
-  margin-bottom:2px;
-}
-  
 #file-select {
   opacity: 0;
-  height:100px;
-  width:100px;
+  top:0;
+  left:0;
+  height:100%;
+  width:100%;
   cursor: pointer;
   position: absolute;
   border-radius: 50%;
@@ -15,25 +11,29 @@ mat-form-field {
   
 #server-image span {
   opacity: 0;
-  height:100px;
-  width:100px;
+  height:100%;
+  width:100%;
+  top:0;
+  left:0;
   position: absolute;
   border-radius: 50%;
-  margin-top:10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.288);
+  background-color: rgba(0, 0, 0, 0.329);
   color:white;
+  font-weight: 500;
+  font-size:1.2em;
 }
   
 #server-image:hover span {
-  font-weight: 500;
   opacity: 1;
   transition: all .4s;
 }
   
 #server-image {
+  height:115px;
+  width:115px;
   position: relative;
   margin-bottom: 25px;
   display: flex;
@@ -47,8 +47,8 @@ mat-form-field {
 }
   
 #server-image img {
-  height:100px;
-  width:100px;
+  height:100%;
+  width:100%;
   border-radius: 50%;
 }
   
@@ -78,8 +78,10 @@ mat-form-field {
 .submit {
   background-color: rgb(26, 111, 190);
   color:white;
-  padding:5px 25px 5px 25px;
   box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.233);
+  font-size:1.2em;
+  padding:8px 22px 8px 22px;
+  margin-top:5px;
 }
   
 .submit:hover {

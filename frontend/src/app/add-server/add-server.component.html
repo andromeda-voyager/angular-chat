@@ -7,19 +7,25 @@
     </div>
 
     <ng-container *ngIf="showCreateServer">
+
         <div id="server-image">
             <img [src]="serverImageUrl">
             <span>Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
-        <app-input-field label="Server Name" [isDark]="true" hint="Required" [(inputValue)]="server.name" [showHint]="highlightRequired"></app-input-field>
-        <app-input-field label="Description" [isDark]="true" hint="Required" [(inputValue)]="server.description" [showHint]="highlightRequired"></app-input-field>
+        <app-input-field label="Server Name" [isDark]="true" hint="Required" [(inputValue)]="server.name"
+            [showHint]="showRequired && server.name.length == 0"></app-input-field>
+        <app-input-field label="Description" [isDark]="true" [(inputValue)]="server.description"></app-input-field>
         <button mat-button class="submit" (click)="createServer()">Create Server</button>
+
     </ng-container>
 
     <ng-container *ngIf="showAddServer">
-        <app-input-field label="Invite Code" [isDark]="true" hint="Required" [(inputValue)]="invite.code" [showHint]="highlightRequired"></app-input-field>
+
+        <app-input-field label="Invite Code" [isDark]="true" hint="Required" [(inputValue)]="invite.code"
+            [showHint]="showRequired && invite.code.length < 5"></app-input-field>
         <button mat-button class="submit" (click)="joinServer()">Join</button>
+        
     </ng-container>
 
 </div>
