@@ -23,15 +23,17 @@ export class CreateAccountComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createAccount() {
+  createAccountOnClick() {
+    if(this.isValidCodeLength()) {
       this.accountService.createAccount(this.file, this.account).subscribe(user => {
         console.log(user);
         this.router.navigate(['chat']);
       })
+    } else this.showRequired = true;
   }
 
-  next() {
-    if (this.userFieldsValid()) {
+  nextOnClick() {
+    if (this.isAccountValid()) {
       this.accountService.sendVerificationCode(this.account.email);
       this.showFirstCard = false;
     } else this.showRequired = true;
@@ -55,22 +57,20 @@ export class CreateAccountComponent implements OnInit {
     reader.readAsDataURL(event.target.files[0]);
   }
 
-  userFieldsValid() {
-    return (this.isValidEmail() &&
+  isAccountValid() {
+    return (this.isEmailValid() &&
       this.account.username.length > 0 &&
       this.account.password.length > 7 &&
       this.isValidImage())
-
   }
 
   // does a simple check for email syntax (not complete)
-  isValidEmail() {
+  isEmailValid() {
     return emailRegex.test(this.account.email)
   }
 
   isValidImage() {
     if (this.file) {
-      console.log(this.file.size/1000000)
       return this.file.size/1000000 <= 1; 
     }
     return true; // null is valid since default image will be used on the server

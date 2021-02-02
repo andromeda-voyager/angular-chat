@@ -1,4 +1,12 @@
 export interface Message {
-     text: string;
-     isIncomming: boolean;
-}
+     accountID: number
+     text: string
+     media: string
+     timePosted: Date
+ }
+ 
+ export interface NewMessage {
+     channelID: number
+     text: string
+     media?: string
+ }

@@ -1,13 +1,15 @@
-<nav id="top-nav">
-    <ng-container *ngIf="isLoggedIn()">
-        <a (click)="logout()" routerLink="/login" routerLinkActive="active-link">Logout</a>
-    </ng-container>
-    <ng-container *ngIf="!isLoggedIn()">
-        <a routerLink="/login" routerLinkActive="active-link">Login</a>
-        <a routerLink="/create-account" routerLinkActive="active-link">Create Account</a>
-    </ng-container>
-</nav>
+<div id="component">
+    <nav id="top-nav">
+        <ng-container *ngIf="isLoggedIn()">
+            <a (click)="logout()" routerLink="/login" routerLinkActive="active-link">Logout</a>
+        </ng-container>
+        <ng-container *ngIf="!isLoggedIn()">
+            <a routerLink="/login" routerLinkActive="active-link">Login</a>
+            <a routerLink="/create-account" routerLinkActive="active-link">Create Account</a>
+        </ng-container>
+    </nav>
 
-<div id="router-wrapper">
-    <router-outlet></router-outlet>
+    <div id="router-wrapper">
+        <router-outlet></router-outlet>
+    </div>
 </div>

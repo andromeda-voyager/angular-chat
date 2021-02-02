@@ -1,6 +1,6 @@
 <div id="component">
-    <label for="input" [ngClass]="{'show': inputValue.length > 0, 'focused': isFocused, 'dark':isDark}">{{label}}</label>
-    <div [ngClass]="{'focused': isFocused, 'dark':isDark}" class="input-wrapper">
+    <label for="input" [ngClass]="{'show': inputValue.length > 0, 'focused': isFocused, 'red': showHint, 'dark':isDark}">{{label}}</label>
+    <div [ngClass]="{'focused': isFocused, 'red': showHint, 'dark':isDark}" class="input-wrapper">
         <input [ngClass]="{'focused': isFocused, 'dark':isDark, 'password':isPassword}" type="{{type}}" id="input"
             placeholder="{{label}}" (focus)="isFocused=true" (blur)="isFocused=false" [(ngModel)]="inputValue"
             (ngModelChange)="inputValueChange.emit(inputValue)">

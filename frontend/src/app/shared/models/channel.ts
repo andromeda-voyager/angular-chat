@@ -1,9 +1,9 @@
-import { Post } from "./post";
+import { Message } from "./message";
 
 export interface Channel {
     id: number
     name: string
-    posts: Post[]
+    messages: Message[]
 }
 
 export interface ChannelPermissions {

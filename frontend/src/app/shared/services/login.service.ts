@@ -24,11 +24,12 @@ const logoutURL = environment.BaseApiUrl + "/logout";
 
 export class LoginService {
   loginResponse!: LoginResponse;
+  isUserLoggedIn = false;
   constructor(private http: HttpClient) {
   }
 
-  isUserLoggedIn(): boolean {
-    return this.loginResponse != null;
+  isLoggedIn(): boolean {
+    return this.isUserLoggedIn;
   }
 
   getLoginResponse(): LoginResponse {
@@ -36,15 +37,16 @@ export class LoginService {
   }
 
   logout() {
-     sessionStorage.removeItem("loginData");
-     this.http.post(logoutURL, null, jsonOptions).subscribe();
+    this.isUserLoggedIn = false;
+    this.http.post(logoutURL, null, jsonOptions).subscribe();
   }
 
   login(credentials: Credentials): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(loginUrl, credentials, jsonOptions).pipe(tap(loginResponse => {
       if (loginResponse.user) {
-        (this.loginResponse = loginResponse)
-      //  sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
+        this.loginResponse = loginResponse
+        this.isUserLoggedIn = true;
+        //  sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
       } else console.log("not logged in");
     }));
   }
@@ -52,7 +54,8 @@ export class LoginService {
   loginWithCookie(): Observable<LoginResponse> {
     return this.http.get<LoginResponse>(loginWithCookieURL, jsonOptions).pipe(tap(loginResponse => {
       if (loginResponse.user) {
-        (this.loginResponse = loginResponse)
+        this.loginResponse = loginResponse;
+        this.isUserLoggedIn = true;
       }
     }));
   }

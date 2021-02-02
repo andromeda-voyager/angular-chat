@@ -11,49 +11,52 @@ mat-form-field {
 
 #file-select {
   opacity: 0;
-  height:100px;
-  width:100px;
+  height:100%;
+  width:100%;
+  top:0;
+  left:0;
   cursor: pointer;
   position: absolute;
-  background-color: green;
   border-radius: 50%;
 }
 
-#instructions {
+#avatar span {
   opacity: 0;
-  height:100px;
-  width:100px;
-  position: absolute;
-  border-radius: 50%;
-  display: flex;
+  height:100%;
+  width:100%;
+  top:0;
+  left:0;
+  display:flex;
   justify-content: center;
   align-items: center;
-  margin-top:10px;
-  background-color: rgba(226, 231, 238, 0.081);
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.329);
+  border-radius: 50%;
+  color:white;
+  font-weight: 500;
+  font-size:1.2em;
 }
 
-#avatar:hover #instructions {
-  font-weight: 500;
+#avatar:hover {
+  background-color: rgb(0, 0, 0);
+}
+
+#avatar:hover span {
   opacity: 1;
-  transition: opacity .4s;
+  transition: all .4s;
 }
 
 #avatar {
+  height:115px;
+  width:115px;
   position: relative;
-  margin-bottom: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-style: solid;
-  border-color:rgb(24, 113, 187);
-  border-width: 4px;
+  border: 6px solid rgb(24, 113, 187);
   border-radius: 50%;
 }
 
 #avatar img {
-  height:100px;
-  width:100px;
+  height:100%;
+  width:100%;
   border-radius: 50%;
 }
 
@@ -82,20 +85,20 @@ mat-form-field {
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.356);
 }
 
-mat-form-field {
-  width: 250px;
-}
 app-input-field {
   width:250px;
 }
-.submit {
+
+button {
+  margin-top:5px;
+  font-size:1.2em;
   background-color: rgb(26, 111, 190);
   color:white;
-  padding:5px 20px 5px 20px;
+  padding:8px 22px 8px 22px;
   box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.356);
 }
 
-.submit:hover {
+button:hover {
   opacity: .8;
 }
 
@@ -107,6 +110,10 @@ span {
   margin-bottom:10px;
 }
 
-.hidden {
+.visible {
+  visibility: visible !important;
+}
+
+#avatar + span {
   visibility: hidden;
 }

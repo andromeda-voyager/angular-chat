@@ -6,7 +6,8 @@
 label {
     opacity: 0;
     display: block;
-    color:grey;
+    color:rgb(114, 114, 114);
+    font-size:1.1em;
     margin-bottom:2px;
     text-align: left;
 }
@@ -23,15 +24,18 @@ label.show {
 label.focused {
     color: rgb(46, 171, 255);
 }
+
+label.red {
+    color:rgb(255, 41, 41);
+}
   
 input {
     color:black;
     width: 100%;
-    padding:18px 5px 18px 8px;
-    box-sizing: border-box;
-    margin:auto;
+    font-size:1.2em;
     background-color: transparent;
-    border-color:transparent;
+    outline:none;
+    border:none;
 }
 
 input.password {
@@ -43,17 +47,23 @@ input.dark {
 }
 
 .input-wrapper {
+    padding: 0px;
     width:100%;
+    padding:18px 8px 18px 8px;
     box-sizing: border-box;
     display:flex;
     align-items: center;
-    border: 1px solid rgb(192, 192, 192);
+    border: 2px solid rgb(184, 184, 184);
     border-radius: 6px;
 }
 
 .input-wrapper.dark  {
     background-color: rgb(83, 84, 85);
-    border: 1px solid white;
+    border: 2px solid white;
+}
+
+.input-wrapper.red  {
+    border: 2px solid rgb(255, 41, 41);
 }
 
 .input-wrapper.focused  {
@@ -73,7 +83,7 @@ input.dark {
 }
 
 #hint {
-    text-align: left;
+    text-align: right;
     margin-left:5px;
     height:15px;
     color:rgb(255, 41, 41);

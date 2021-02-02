@@ -1,3 +1,9 @@
+#component {
+    display:flex;
+    flex-direction: column;
+    height:100vh;
+}
+
 #top-nav .active-link {
     border-bottom: solid;
 }
@@ -7,19 +13,13 @@
 }
 
 #router-wrapper {
-    overflow: auto;
-    padding:25px;
-    box-sizing: border-box;
-    margin-top: 75px;
-    height:calc(100vh - 75px);
+    flex: 1;
     background-color: rgb(71, 71, 71);
 }
   
 #top-nav {
     background-color: rgb(54, 54, 54);
-    z-index: 99;
-    position:fixed;
-    top:0;
+    z-index: 100;
     width:100%;
     display: flex;
     justify-content: flex-end;

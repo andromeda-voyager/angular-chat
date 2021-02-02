@@ -6,28 +6,27 @@
             <span id="instructions">Select Image</span>
             <input id="file-select" type="file" (change)="onChange($event)">
         </div>
-        <span [ngClass]="{'hidden': !this.file && isValidImage()}" class="hint">Image too large. File size limit is 1
+        <span [ngClass]="{'visible': !isValidImage()}" class="hint">Image too large. File size limit is 1
             MB.</span>
 
-        <app-input-field label="Email" hint="Invalid Email" [(inputValue)]="account.email"
-            [showHint]="!isValidEmail() && account.email.length != 0"></app-input-field>
+        <app-input-field label="Email" [hint]='account.email.length > 0 ? "Invalid Email":"Required"' [(inputValue)]="account.email"
+            [showHint]="showRequired && !isEmailValid()"></app-input-field>
 
         <app-input-field label="Username" hint="Required" [(inputValue)]="account.username"
             [showHint]="showRequired && account.username.length == 0"></app-input-field>
 
-        <app-input-field label="Password" hint="Required" [isPassword]="true" [(inputValue)]="account.password"
+        <app-input-field label="Password" [hint]='account.password.length == 0 ? "Required":"Password too short"' [isPassword]="true" [(inputValue)]="account.password"
             [showHint]="showRequired && 8 > account.password.length"></app-input-field>
 
-        <button mat-button class="submit" (click)=next()>Next</button>
+        <button mat-button (click)=nextOnClick()>Next</button>
     </div>
 
     <div *ngIf="!showFirstCard" class="card">
         <span>Enter the verification code sent to {{account.email}}</span>
-        <mat-form-field appearance="outline">
-            <mat-label>Code</mat-label>
-            <input matInput [(ngModel)]="account.code">
-            <mat-hint *ngIf="!isValidCodeLength()">Required</mat-hint>
-        </mat-form-field>
-        <button mat-button class="submit" (click)=createAccount()>Create Account</button>
+    
+        <app-input-field label="Code" [hint]='account.code.length == 0 ? "Required":"Invalid Code"' [(inputValue)]="account.code"
+        [showHint]="showRequired && !isValidCodeLength()"></app-input-field>
+
+        <button mat-button (click)=createAccountOnClick()>Create Account</button>
     </div>
 </div>

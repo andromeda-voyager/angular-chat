@@ -1,10 +1,11 @@
 enum Permission {
-    FULL = 128,
-    UNUSED2 = 64,
-    UNUSED1 = 32,
-    DELETE_CHANNELS = 16,
-    ADD_CHANNELS= 8,
-    DELETE_POSTS = 4,
+    FULL = 255,
+    MANAGE_SERVER = 128,
+    MANAGE_ROLES = 64,
+    MANAGE_CHANNELS = 32,
+    MANAGE_MEMBERS = 16,
+    MANAGE_MESSAGES = 8,
+    UNUSED = 4,
     INVITE = 2,
     POST = 1,
     NONE = 0
@@ -13,16 +14,16 @@ enum Permission {
 
 export class ServerPermissions {
 
-    permissions:number = 0;
+    permissions: number = 0;
     constructor(permissions: number) {
 
     }
 
-    canInvite() :boolean{
+    canInvite(): boolean {
         return (this.permissions & Permission.INVITE) == Permission.INVITE;
     }
 
-    canPost() :boolean{
+    canPost(): boolean {
         return (this.permissions & Permission.POST) == Permission.POST;
     }
 }

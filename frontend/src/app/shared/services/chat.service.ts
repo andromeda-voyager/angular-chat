@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Server, Invite, ServerRequest } from '../models/server';
 import { Channel } from '../models/channel';
-import { NewPost } from '../models/post';
+import { NewMessage } from '../models/message';
 
 const formOptions = {
   headers: new HttpHeaders({
@@ -61,7 +61,7 @@ export class ChatService {
     return this.http.get<Server>(getPostsURL + "?serverID=" + serverID, jsonOptions);
   }
 
-  post(post: NewPost) {
-    this.http.post(postURL, post, jsonOptions).subscribe();
+  post(message: NewMessage) {
+    this.http.post(postURL, message, jsonOptions).subscribe();
   }
 }
