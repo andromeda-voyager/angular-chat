@@ -24,7 +24,9 @@ export class AddChannelComponent implements OnInit {
 
   addChannel() {
     console.log(this.name);
-    this.chatService.addChannel({ serverID: this.server.id, Channel:{name: this.name, id:0, messages:[] }, Roles:this.server.roles}).subscribe(channel => {
+    this.chatService.addChannel({
+      serverID: this.server.id, channel: { name: this.name, id: 0, messages: [] }, roles: this.server.roles
+    }).subscribe(channel => {
       this.newChannel.emit(channel);
     })
   }

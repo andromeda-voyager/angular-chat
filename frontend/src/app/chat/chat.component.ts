@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChatService } from '../shared/services/chat.service';
-import { Server } from '../shared/models/server';
-import { LoginResponse, User } from '../shared/models/user';
+import { Server, Update } from '../shared/models/server';
+import { User } from '../shared/models/user';
 import { LoginService } from '../shared/services/login.service';
 import { Router } from '@angular/router';
 import { Channel } from '../shared/models/channel';
@@ -22,7 +22,8 @@ enum Dialog {
 export class ChatComponent implements OnInit {
   Dialog = Dialog;
   user!: User;
-  servers: Server[] = []
+  // servers = new Map<number, Server>()
+  servers: Server[] = [];
   selectedServer!: Server;
   selectedChannel!: Channel;
   image: string = "";
@@ -32,20 +33,12 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
-    let loginResponse = this.loginService.getLoginResponse()
-    if (loginResponse != null) {
-      this.user = loginResponse.user;
-      if (loginResponse.servers) {
-        this.servers = loginResponse.servers;
-        this.selectedServer = this.servers[0];
-        if (this.selectedServer.channels) {
-          this.selectedChannel = this.selectedServer.channels[0];
-        }
-      }
-    } else {
-      this.router.navigate(['login']);
-    }
+    this.chatService.getServers().subscribe(servers => {
+      this.servers = servers;
+    });
 
+    // } else {
+    //   this.router.navigate(['login']);
   }
 
   closeDialog() {

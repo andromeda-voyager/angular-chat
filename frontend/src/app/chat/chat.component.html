@@ -9,7 +9,7 @@
         <div id="server-panel" *ngIf="selectedServer">
             <div id="server-control">
                 {{selectedServer.name}}
-                <button id="admin-button" (click)="openDialog(Dialog.ADMIN)">
+                <button id="server-settings-button" (click)="openDialog(Dialog.ADMIN)">
                     <img src="assets/icons/settings-gear.svg">
                 </button>
             </div>

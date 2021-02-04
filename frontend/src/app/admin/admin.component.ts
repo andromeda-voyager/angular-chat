@@ -28,7 +28,7 @@ export class AdminComponent implements OnInit {
   }
   
   deleteServer() {
-    this.chatService.deleteServer(this.server).subscribe();
+    this.chatService.deleteServer(this.server.id).subscribe();
     this.serverDeleted.emit(this.server);
   }
 
