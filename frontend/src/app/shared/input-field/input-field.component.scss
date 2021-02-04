@@ -36,10 +36,13 @@ input {
     background-color: transparent;
     outline:none;
     border:none;
+    padding-left:9px;
+    padding-right:5px;
+    box-sizing: border-box;
 }
 
 input.password {
-    width:calc(100% - 30px);
+    width:calc(100% - 34px);
 }
 
 input.dark {
@@ -47,14 +50,16 @@ input.dark {
 }
 
 .input-wrapper {
-    padding: 0px;
     width:100%;
-    padding:18px 8px 18px 8px;
-    box-sizing: border-box;
     display:flex;
     align-items: center;
     border: 2px solid rgb(184, 184, 184);
     border-radius: 6px;
+}
+
+.input-wrapper>*{
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
 
 .input-wrapper.dark  {
@@ -98,7 +103,7 @@ input.dark {
 .visibility-icon {
   width:25px;
   height:25px;
-  margin-right:5px;
+  margin-right:9px;
   cursor: pointer;
 }
 
