@@ -46,8 +46,9 @@ func Remove(token string) {
 }
 
 // Get .
-func Get(token string) *user.User {
-	return loggedInUsers[token]
+func Get(token string) (*user.User, bool) {
+	user, ok := loggedInUsers[token]
+	return user, ok
 }
 
 // Post .

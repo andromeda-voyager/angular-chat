@@ -80,9 +80,9 @@ func (s *Server) NewRole(name string, ranking int, permissions uint8) Role {
 }
 
 // Delete .
-func (s *Server) Delete() bool {
+func Delete(id int) bool {
 	var args []interface{}
-	args = append(args, s.ID)
+	args = append(args, id)
 	_, err := database.Exec("DELETE FROM Server WHERE id=?", args)
 	if err != nil {
 		return false

@@ -12,6 +12,7 @@ import (
 	"nebula/user"
 	"nebula/util"
 	"net/http"
+	"strconv"
 
 	"golang.org/x/net/websocket"
 )
@@ -24,10 +25,11 @@ type LoginResponse struct {
 
 // ServerRequest .
 type ServerRequest struct {
-	ServerID int            `json:"serverID"`
-	Channel  server.Channel `json:"channel"`
-	Role     server.Role    `json:"role"`
-	Roles    []server.Role  `json:"roles"`
+	ServerID  int            `json:"serverID"`
+	ChannelID int            `json:"channelID"`
+	Channel   server.Channel `json:"channel"`
+	Role      server.Role    `json:"role"`
+	Roles     []server.Role  `json:"roles"`
 }
 
 func socket(ws *websocket.Conn) {
@@ -35,7 +37,7 @@ func socket(ws *websocket.Conn) {
 	if err != nil {
 		defer ws.Close()
 	} else {
-		user := session.Get((cookie.Value))
+		user, _ := session.Get((cookie.Value))
 		servers := getServers(user.ID)
 		loginResponse := &LoginResponse{User: user, Servers: servers}
 		if err := websocket.JSON.Send(ws, loginResponse); err != nil {
@@ -55,7 +57,7 @@ func init() {
 		s.ServeHTTP(w, r)
 	})
 
-	router.Post("/create-account", func(w http.ResponseWriter, r *http.Request) {
+	router.Post("/account", func(w http.ResponseWriter, r *http.Request) {
 		accountStr := []byte(r.FormValue("user"))
 		var a user.Account
 		json.Unmarshal(accountStr, &a)
@@ -83,11 +85,9 @@ func init() {
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 		} else {
-			servers := getServers(user.ID)
-			loginResponse := &LoginResponse{User: user, Servers: servers}
 			cookie := session.Add(user)
 			http.SetCookie(w, cookie)
-			json.NewEncoder(w).Encode(loginResponse)
+			json.NewEncoder(w).Encode(user)
 		}
 	})
 
@@ -98,10 +98,8 @@ func init() {
 		}
 	})
 
-	router.AuthGet("/login-with-cookie", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		servers := getServers(u.ID)
-		loginResponse := &LoginResponse{User: u, Servers: servers}
-		json.NewEncoder(w).Encode(loginResponse)
+	router.AuthGet("/login", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+		json.NewEncoder(w).Encode(u)
 	})
 
 	router.Post("/send-verification-code", func(w http.ResponseWriter, r *http.Request) {
@@ -113,7 +111,12 @@ func init() {
 		user.SendCodeToEmail(a.Email)
 	})
 
-	router.AuthPost("/create-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.AuthGet("/server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+		servers := getServers(u.ID)
+		json.NewEncoder(w).Encode(servers)
+	})
+
+	router.AuthPost("/server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		serverJSON := []byte(r.FormValue("server"))
 		fmt.Println(serverJSON)
 		var serverOwner = &server.Member{AccountID: u.ID, Alias: u.Username, Avatar: u.Avatar}
@@ -121,7 +124,7 @@ func init() {
 		json.NewEncoder(w).Encode(server)
 	})
 
-	router.AuthPost("/add-channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.AuthPost("/channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var sr *ServerRequest
 		if err := json.Unmarshal(resp, &sr); err != nil {
@@ -135,15 +138,12 @@ func init() {
 		}
 	})
 
-	router.AuthPost("/delete-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		resp, _ := ioutil.ReadAll(r.Body)
-		var s *server.Server
-		if err := json.Unmarshal(resp, &s); err != nil {
-			panic(err)
+	router.AuthDelete("/server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+		serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
+		if err != nil {
 		}
-		fmt.Println(u.ID)
-		if u.HasPermission(permissions.Full, s.ID) {
-			ok := s.Delete()
+		if u.HasPermission(permissions.Full, serverID) {
+			ok := server.Delete(serverID)
 			fmt.Println("server deleted?", ok)
 		} else {
 			fmt.Println("no delete permissions")
@@ -172,7 +172,7 @@ func init() {
 
 	})
 
-	router.AuthPost("/post", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.AuthPost("/message", func(w http.ResponseWriter, r *http.Request, u *user.User) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var m server.Message
 		if err := json.Unmarshal(resp, &m); err != nil {
