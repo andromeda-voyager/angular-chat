@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Server, Invite, ServerRequest } from '../models/server';
+import { Server, NewServer, Invite, Update, ServerRequest } from '../models/server';
 import { Channel } from '../models/channel';
 import { NewMessage } from '../models/message';
 
@@ -21,47 +21,68 @@ const jsonOptions = {
   withCredentials: true
 };
 
-const createServerUrl = environment.BaseApiUrl + "/create-server";
-const joinServerUrl = environment.BaseApiUrl + "/join-server";
-const getPostsURL = environment.BaseApiUrl + "/posts";
-const postURL = environment.BaseApiUrl + "/post";
-const deleteServerURL = environment.BaseApiUrl + "/delete-server";
-const addChannelURL = environment.BaseApiUrl + "/add-channel";
+const SERVER_URL = environment.BaseApiUrl + "/server";
+const JOIN_SERVER_URL = environment.BaseApiUrl + "/join-server";
+const POSTS_URL = environment.BaseApiUrl + "/posts";
+const CHANNEL_URL = environment.BaseApiUrl + "/channel";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ChatService {
+
+  socket!: WebSocket;
+
+  private updateSource = new Subject<Update>();
+  update$ = this.updateSource.asObservable();
+
   constructor(private http: HttpClient) { }
 
-  createServer(file: File, server: Server): Observable<Server> {
+  // return new Observable((observer: Observer<ConnectResponse>) => {
+
+  connect(serverID: number) {
+    this.socket = new WebSocket('ws://localhost:8080/ws');
+    // this.socket.addEventListener('open', () => { });
+
+    this.socket.addEventListener('message', (event) => {
+      let update = JSON.parse(event.data);
+      this.updateSource.next(update);
+    });
+
+  }
+
+  disconnect() {
+    this.socket.close();
+  }
+
+  getServers(): Observable<Server[]> {
+    return this.http.get<Server[]>(SERVER_URL, formOptions);
+  }
+
+  createServer(file: File, server: NewServer): Observable<Server> {
     const formData = new FormData();
     if (file) {
       formData.append("image", file, file.name);
     }
     formData.append("server", JSON.stringify(server));
 
-    return this.http.post<Server>(createServerUrl, formData, formOptions);
+    return this.http.post<Server>(SERVER_URL, formData, formOptions);
   }
 
   addChannel(serverRequest: ServerRequest): Observable<Channel> {
-    return this.http.post<Channel>(addChannelURL, serverRequest, formOptions);
+    return this.http.post<Channel>(CHANNEL_URL, serverRequest, formOptions);
   }
 
-  deleteServer(server: Server): Observable<Server> {
-    return this.http.post<Server>(deleteServerURL, server, jsonOptions);
+  deleteServer(serverID: number): Observable<Server> {
+    return this.http.delete<Server>(SERVER_URL + "?serverID=" + serverID, jsonOptions);
   }
 
   joinServer(invite: Invite): Observable<Server> {
-    return this.http.post<Server>(joinServerUrl, invite);
-  }
-
-  getPosts(serverID: number): Observable<Server> {
-    return this.http.get<Server>(getPostsURL + "?serverID=" + serverID, jsonOptions);
+    return this.http.post<Server>(JOIN_SERVER_URL, invite);
   }
 
   post(message: NewMessage) {
-    this.http.post(postURL, message, jsonOptions).subscribe();
+    this.http.post(POSTS_URL, message, jsonOptions).subscribe();
   }
 }
