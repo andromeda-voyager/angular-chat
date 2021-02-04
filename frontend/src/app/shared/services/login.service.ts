@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Account, LoginResponse } from '../models/user';
+import { User } from '../models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -14,49 +14,51 @@ const jsonOptions = {
   withCredentials: true
 };
 
-const loginWithCookieURL = environment.BaseApiUrl + "/login-with-cookie";
-const loginUrl = environment.BaseApiUrl + "/login";
-const logoutURL = environment.BaseApiUrl + "/logout";
+const LOGIN_URL = environment.BaseApiUrl + "/login";
+const LOGOUT_URL = environment.BaseApiUrl + "/logout";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class LoginService {
-  loginResponse!: LoginResponse;
   isUserLoggedIn = false;
-  constructor(private http: HttpClient) {
-  }
+
+  constructor(private http: HttpClient) { }
 
   isLoggedIn(): boolean {
     return this.isUserLoggedIn;
   }
 
-  getLoginResponse(): LoginResponse {
-    return this.loginResponse;
-  }
-
   logout() {
     this.isUserLoggedIn = false;
-    this.http.post(logoutURL, null, jsonOptions).subscribe();
+    this.http.post(LOGOUT_URL, null, jsonOptions).subscribe();
   }
 
-  login(credentials: Credentials): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(loginUrl, credentials, jsonOptions).pipe(tap(loginResponse => {
-      if (loginResponse.user) {
-        this.loginResponse = loginResponse
-        this.isUserLoggedIn = true;
-        //  sessionStorage.setItem("loginData", JSON.stringify(loginResponse))
-      } else console.log("not logged in");
+  login(credentials: Credentials): Observable<User> {
+    console.log("login with credentials");
+    return this.http.post<User>(LOGIN_URL, credentials, jsonOptions).pipe(tap({
+      next: user => {
+        if (user.id) {
+          console.log("logged in with cookie");
+          this.isUserLoggedIn = true;
+        }
+      },
+      error: err => { console.error(err); },
     }));
+
   }
 
-  loginWithCookie(): Observable<LoginResponse> {
-    return this.http.get<LoginResponse>(loginWithCookieURL, jsonOptions).pipe(tap(loginResponse => {
-      if (loginResponse.user) {
-        this.loginResponse = loginResponse;
-        this.isUserLoggedIn = true;
-      }
+  loginWithCookie(): Observable<User> {
+    console.log("tried login with cookie");
+    return this.http.get<User>(LOGIN_URL, jsonOptions).pipe(tap({
+      next: user => {
+        if (user.id) {
+          console.log("logged in with cookie");
+          this.isUserLoggedIn = true;
+        }
+      },
+      error: err => { console.error(err); },
     }));
   }
 }
