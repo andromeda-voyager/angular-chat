@@ -38,26 +38,34 @@ func socket(ws *websocket.Conn) {
 		defer ws.Close()
 	} else {
 		user, _ := session.Get((cookie.Value))
-		servers := getServers(user.ID)
-		loginResponse := &LoginResponse{User: user, Servers: servers}
-		if err := websocket.JSON.Send(ws, loginResponse); err != nil {
-			fmt.Println("unable to send")
-			defer ws.Close()
-		}
+		session.AddConnection(user.ID, ws)
+		// if err := websocket.JSON.Send(ws, loginResponse); err != nil {
+		// 	fmt.Println("unable to send")
+		// 	defer ws.Close()
+		// }
 	}
-	// 	var m server.Message
-	// 	websocket.JSON.Receive(ws, &m)
 
 }
 
 func init() {
 
-	router.AuthPost("/ws", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.Post("/ws", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		s := websocket.Handler(socket)
 		s.ServeHTTP(w, r)
 	})
 
-	router.Post("/account", func(w http.ResponseWriter, r *http.Request) {
+	router.Get("/test-websocket", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
+		session.SendMessage(u.ID, "Lo")
+	})
+
+	router.Get("/channel/:id/connect", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
+		channelID := c.Keys["id"].(int)
+		session.ConnectToChannel(channelID, u.ID)
+	})
+
+	router.Post("/account", false, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		accountStr := []byte(r.FormValue("user"))
 		var a user.Account
 		json.Unmarshal(accountStr, &a)
@@ -75,7 +83,8 @@ func init() {
 		}
 	})
 
-	router.Post("/login", func(w http.ResponseWriter, r *http.Request) {
+	router.Post("/login", false, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		fmt.Println("attempting login")
 		resp, _ := ioutil.ReadAll(r.Body)
 		var credentials user.Credentials
 		if err := json.Unmarshal(resp, &credentials); err != nil {
@@ -91,18 +100,22 @@ func init() {
 		}
 	})
 
-	router.AuthPost("/logout", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.Post("/logout", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		cookie, err := r.Cookie("Auth")
 		if err == nil {
 			session.Remove(cookie.Value)
 		}
 	})
 
-	router.AuthGet("/login", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		json.NewEncoder(w).Encode(u)
+	router.Get("/login", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		fmt.Println("attempting cookie login")
+
+		if u, auth := c.Keys["user"].(*user.User); auth {
+			json.NewEncoder(w).Encode(u)
+		}
 	})
 
-	router.Post("/send-verification-code", func(w http.ResponseWriter, r *http.Request) {
+	router.Post("/send-verification-code", false, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var a user.Account
 		if err := json.Unmarshal(resp, &a); err != nil {
@@ -111,12 +124,22 @@ func init() {
 		user.SendCodeToEmail(a.Email)
 	})
 
-	router.AuthGet("/server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		servers := getServers(u.ID)
-		json.NewEncoder(w).Encode(servers)
+	router.Get("/server", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
+		serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
+		if err != nil { // no valid query, so send all servers
+			servers := getServers(u.ID)
+			json.NewEncoder(w).Encode(servers)
+		} else {
+			s, ok := server.Get(serverID, u.ID)
+			if ok {
+				json.NewEncoder(w).Encode(s)
+			}
+		}
 	})
 
-	router.AuthPost("/server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.Post("/server", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
 		serverJSON := []byte(r.FormValue("server"))
 		fmt.Println(serverJSON)
 		var serverOwner = &server.Member{AccountID: u.ID, Alias: u.Username, Avatar: u.Avatar}
@@ -124,7 +147,8 @@ func init() {
 		json.NewEncoder(w).Encode(server)
 	})
 
-	router.AuthPost("/channel", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.Post("/channel", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
 		var sr *ServerRequest
 		if err := json.Unmarshal(resp, &sr); err != nil {
@@ -138,10 +162,12 @@ func init() {
 		}
 	})
 
-	router.AuthDelete("/server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
-		if err != nil {
-		}
+	router.Delete("/server/:id<int>", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
+		serverID := c.Keys["id"].(int)
+		//		serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
+		// if err != nil {
+		// }
 		if u.HasPermission(permissions.Full, serverID) {
 			ok := server.Delete(serverID)
 			fmt.Println("server deleted?", ok)
@@ -150,29 +176,28 @@ func init() {
 		}
 	})
 
-	router.AuthPost("/join-server", func(w http.ResponseWriter, r *http.Request, u *user.User) {
-		resp, _ := ioutil.ReadAll(r.Body)
-		var invite server.Invite
-		if err := json.Unmarshal(resp, &invite); err != nil {
-			panic(err)
-		}
-		fmt.Println("invite code:", invite.Code)
-		var args []interface{}
-		args = append(args, invite.Code)
-		rows, err := database.Query("SELECT server_id FROM Invite WHERE code=?;", args)
-		if err != nil {
-			panic(err)
-		}
-		defer rows.Close()
+	router.Post("/join-server", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		// resp, _ := ioutil.ReadAll(r.Body)
+		// var invite server.Invite
+		// if err := json.Unmarshal(resp, &invite); err != nil {
+		// 	panic(err)
+		// }
+		// fmt.Println("invite code:", invite.Code)
+		// var args []interface{}
+		// args = append(args, invite.Code)
+		// rows, err := database.Query("SELECT server_id FROM Invite WHERE code=?;", args)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// defer rows.Close()
 
-		if rows.Next() {
-			var serverID int
-			rows.Scan(&serverID)
-		}
-
+		// if rows.Next() {
+		// 	var serverID int
+		// 	rows.Scan(&serverID)
+		// }
 	})
 
-	router.AuthPost("/message", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.Post("/message", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		resp, _ := ioutil.ReadAll(r.Body)
 		var m server.Message
 		if err := json.Unmarshal(resp, &m); err != nil {
@@ -191,7 +216,7 @@ func init() {
 		// }
 	})
 
-	router.AuthGet("/posts", func(w http.ResponseWriter, r *http.Request, u *user.User) {
+	router.Get("/posts", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		queryValues := r.URL.Query()
 		//fmt.Println(queryValues.ServerID)
 		var args []interface{}
