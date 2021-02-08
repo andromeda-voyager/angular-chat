@@ -1,5 +1,18 @@
 import { Channel } from "./channel";
-import { User } from "./user";
+import { Message } from "./message";
+
+export enum UpdateType {
+    MESSAGE = "Message",
+    CHANNEL = "Channel",
+    ROLE = "Role",
+    MEMBER = "Member"
+}
+
+export enum UpdateEvent {
+    DELETE = "Delete",
+    MODIFY = "Modify",
+    NEW = "New",
+}
 
 export interface Server {
     id: number
@@ -9,33 +22,31 @@ export interface Server {
     role: Role
     roles: Role[]
     channels: Channel[]
+    members: Member[]
+}
+
+export interface Member {
+    id: number
+    serverID: number
+    alias: string
+    role: Role
 }
 
 export interface NewServer {
     name:string
     description:string
 }
-    // updateRole(r: Role) {
-    //     let role = this.roles.find(function (role) {
-    //         return role.id == r.id;
-    //     });
-    //     if (role) {
-    //         role = r;
-    //     } else {
-    //         this.roles.push(r);
-    //     }
-    // }
 
 export interface Role {
-    id?: number
+    id: number
     name: string
-    serverPermissions: number
-    ChannelPermissions: ChannelPermissions[]
+    permissions: number
+    channelOverrides: ChannelOverride[]
 }
 
-export interface ChannelPermissions {
+export interface ChannelOverride {
 	channelID: number   
-	value:     number 
+	permissions:     number 
 }
 
 export interface Invite {
@@ -50,9 +61,10 @@ export interface ServerRequest {
 }
 
 export interface Update {
-    servers?: Server[]
-    serverID: number
-    channelID: number;
+    type: UpdateType
+    event: UpdateEvent
+    server?: Server[]
     channel?: Channel
     role?: Role
+    messages?: Message[]
 }

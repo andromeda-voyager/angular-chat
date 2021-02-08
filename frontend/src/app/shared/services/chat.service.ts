@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Observer, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Server, NewServer, Invite, Update, ServerRequest } from '../models/server';
+import { Server, NewServer, Invite, Update } from '../models/server';
 import { Channel } from '../models/channel';
-import { NewMessage } from '../models/message';
+import { Message, NewMessage } from '../models/message';
 
 const formOptions = {
   headers: new HttpHeaders({
@@ -37,12 +37,15 @@ export class ChatService {
   private updateSource = new Subject<Update>();
   update$ = this.updateSource.asObservable();
 
+  private messagesSource = new Subject<Update>();
+  messages$ = this.messagesSource.asObservable();
+
   constructor(private http: HttpClient) { }
 
   // return new Observable((observer: Observer<ConnectResponse>) => {
 
   connect(serverID: number) {
-    this.socket = new WebSocket('ws://localhost:8080/ws');
+    this.socket = new WebSocket('wss://localhost:8080/ws');
     // this.socket.addEventListener('open', () => { });
 
     this.socket.addEventListener('message', (event) => {
@@ -50,6 +53,10 @@ export class ChatService {
       this.updateSource.next(update);
     });
 
+  }
+
+  connectToServer(serverID: number): Observable<Server> {
+    return this.http.get<Server>(SERVER_URL + "/" + serverID + "/connect", formOptions);
   }
 
   disconnect() {
@@ -70,12 +77,12 @@ export class ChatService {
     return this.http.post<Server>(SERVER_URL, formData, formOptions);
   }
 
-  addChannel(serverRequest: ServerRequest): Observable<Channel> {
-    return this.http.post<Channel>(CHANNEL_URL, serverRequest, formOptions);
+  addChannel(channel: Channel): Observable<Channel> {
+    return this.http.post<Channel>(CHANNEL_URL, channel, formOptions);
   }
 
   deleteServer(serverID: number): Observable<Server> {
-    return this.http.delete<Server>(SERVER_URL + "?serverID=" + serverID, jsonOptions);
+    return this.http.delete<Server>(SERVER_URL + "/" + serverID, jsonOptions);
   }
 
   joinServer(invite: Invite): Observable<Server> {

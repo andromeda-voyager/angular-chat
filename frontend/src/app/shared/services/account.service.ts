@@ -4,15 +4,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-const formOptions = {
+const jsonOptions = {
   headers: new HttpHeaders({
+    'Content-Type': 'application/json',
     'accept': 'application/json',
   }), credentials: 'same-origin',
   withCredentials: true
 };
 
+
 const forgotPasswordUrl = environment.BaseApiUrl + "/forgot-password";
-const createAccountUrl = environment.BaseApiUrl + "/create-account";
+const accountUrl = environment.BaseApiUrl + "/account";
 const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
 
 @Injectable({
@@ -29,7 +31,7 @@ export class AccountService {
     }
     formData.append("user", JSON.stringify(account));
 
-    return this.http.post<User>(createAccountUrl, formData);
+    return this.http.post<User>(accountUrl, formData, jsonOptions);
   }
 
   forgotPassword(email: string)  {  

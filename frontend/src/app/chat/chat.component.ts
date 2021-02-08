@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChatService } from '../shared/services/chat.service';
-import { Server, Update } from '../shared/models/server';
+import { Server } from '../shared/models/server';
 import { User } from '../shared/models/user';
 import { LoginService } from '../shared/services/login.service';
 import { Router } from '@angular/router';
@@ -45,8 +45,13 @@ export class ChatComponent implements OnInit {
     this.dialogOption = Dialog.NONE;
   }
 
-  changeServer(index: number) {
-    this.selectedServer = this.servers[index];
+  selectServerOnClick(index: number) {
+    console.log("index", index);
+    this.chatService.connectToServer(this.servers[index].id).subscribe(server => {
+      this.servers[index] = server; // more up to date version
+      this.selectedServer = this.servers[index];
+      console.log(server);
+    })
   }
 
   onNewServer(server: Server) {
@@ -62,6 +67,7 @@ export class ChatComponent implements OnInit {
 
   onNewChannel(channel: Channel) {
     this.selectedServer.channels.push(channel);
+    this.closeDialog();
   }
 
   post() {

@@ -1,13 +1,13 @@
 import { Message } from "./message";
 
 export interface Channel {
+    serverID: number
     id: number
     name: string
-    messages: Message[]
+    overrides: Override[]
 }
 
-export interface ChannelPermissions {
-    channelID: number
+export interface Override {
+    roleID: number
     permissions: number
 }
-

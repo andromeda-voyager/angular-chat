@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Channel } from '../shared/models/channel';
 import { Message } from '../shared/models/message';
+import { MessageService } from '../shared/services/message.service';
 
 @Component({
   selector: 'app-messages',
@@ -8,31 +8,44 @@ import { Message } from '../shared/models/message';
   styleUrls: ['./messages.component.scss']
 })
 export class PostsComponent implements OnInit {
-  socket = new WebSocket('ws://localhost:8080/ws');
-  @Input() channel!: Channel;
+  @Input() channelID: number = 0;
+  @Input() messages: Message[] = []
 
-  constructor() {
+  constructor(private messageService: MessageService) {
   }
 
+  modifyMessage(message: Message) {
+    let index = this.messages.findIndex(function (m) {
+      return m.id == message.id
+    });
+
+    if (index >= 0) {
+      this.messages[index] = message;
+    }
+  }
+
+  deleteMessage(message: Message) {
+    let index = this.messages.findIndex(function (m) {
+      return m.id == message.id
+    });
+
+    if (index >= 0) {
+      this.messages.splice(index, 1);
+    }
+  }
 
   ngOnInit(): void {
-    // Connection opened
-    this.socket.addEventListener('open', () => {
+    this.messageService.newMessage$.subscribe(message => {
+      this.messages.push(message);
     });
 
-    // Listen for messages
-    this.socket.addEventListener('message', (event) => {
-      let message = JSON.parse(event.data)
-      console.log(message);
-      if(!this.channel.messages) {
-        this.channel.messages = []
-      }
-      // var m = {text:"hello there"}
-      // this.socket.send(JSON.stringify(m));
-      this.channel.messages.push(message);
+    this.messageService.modifyMessage$.subscribe(message => {
+      this.modifyMessage(message);
     });
 
-
+    this.messageService.deleteMessage$.subscribe(message => {
+      this.deleteMessage(message);
+    });
   }
 
 

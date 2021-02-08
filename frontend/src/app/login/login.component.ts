@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.loginWithCookie().subscribe(user => {
+    this.loginService.getLogin().subscribe(user => {
 
       this.router.navigate(['chat']);
 
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.loginService.login({ email: this.email, password: this.password }).subscribe(user => {
+    this.loginService.postLogin({ email: this.email, password: this.password }).subscribe(user => {
       console.log(user)
       console.log(":")
       console.log("password correct");

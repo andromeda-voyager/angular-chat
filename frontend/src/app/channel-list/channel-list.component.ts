@@ -16,7 +16,7 @@ export class ChannelListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    if (this.server.channels) {
+    if (this.server.channels.length > 0) {
       this.selectedChannel = this.server.channels[0];
     }
     console.log(this.server.name)

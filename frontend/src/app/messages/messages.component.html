@@ -1,6 +1,6 @@
 <!-- #scroll [scrollTop]="scroll.scrollHeight" -->
 <div id="component" >
-    <div class="post" *ngFor="let message of channel.messages; let i = index">
+    <div class="post" *ngFor="let message of messages; let i = index">
         <!-- [ngClass]="{'left': message.isIncomming,'right': !message.isIncomming}" -->
         <div class="text">{{message.text}}</div>
     </div>
