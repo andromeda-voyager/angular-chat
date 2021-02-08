@@ -55,6 +55,33 @@ func New(m *Member, r *http.Request) Server {
 	return s
 }
 
+func Get(serverID, userID int) (*Server, bool) {
+	var args []interface{}
+	args = append(args, userID, serverID)
+	rows, err := database.Query(
+		`SELECT Server.id, Server.name, Server.image, Server.description, 
+		ServerMember.alias,
+		Role.id, Role.name, Role.permissions
+		FROM Server 
+		INNER JOIN ServerMember ON Server.id = ServerMember.server_id 
+		INNER JOIN Role ON ServerMember.role_id = Role.id 
+		where ServerMember.account_id=? AND Server.id=?;`, args)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	if rows.Next() {
+		var s Server
+		var r Role
+		rows.Scan(&s.ID, &s.Name, &s.Image, &s.Description, &s.Alias, &r.ID, &r.Name, &r.Permissions)
+		s.Role = r
+		s.LoadRoles()
+		s.LoadChannels()
+		return &s, true
+	}
+	return nil, false
+}
+
 // NewMember .
 func (s *Server) NewMember(m *Member) {
 	var args []interface{}
@@ -70,7 +97,7 @@ func (s *Server) NewMember(m *Member) {
 func (s *Server) NewRole(name string, ranking int, permissions uint8) Role {
 	var args []interface{}
 	args = append(args, s.ID, name, ranking, permissions)
-	roleID, err := database.Exec("INSERT INTO Role (server_id, name, ranking, server_permissions) Values (?, ?, ?, ?);", args)
+	roleID, err := database.Exec("INSERT INTO Role (server_id, name, ranking, permissions) Values (?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -103,9 +130,11 @@ func (s *Server) LoadChannels() {
 		panic(err.Error())
 	}
 	defer rows.Close()
+	s.Channels = []Channel{}
 	for rows.Next() {
 		var c Channel
 		rows.Scan(&c.ID, &c.Name)
+		c.LoadOverrides()
 		s.Channels = append(s.Channels, c)
 	}
 }
@@ -115,7 +144,7 @@ func (s *Server) LoadRoles() {
 	var args []interface{}
 	args = append(args, s.ID)
 	rows, err := database.Query(
-		`SELECT id, name, ranking, server_permissions
+		`SELECT id, name, ranking, permissions
 		FROM Role
 		where server_id=?
 		ORDER BY
@@ -124,10 +153,10 @@ func (s *Server) LoadRoles() {
 		panic(err.Error())
 	}
 	defer rows.Close()
+	s.Roles = []Role{}
 	for rows.Next() {
 		var r Role
-		rows.Scan(&r.ID, &r.Name, &r.Ranking, &r.ServerPermissions)
-		r.LoadChannelPermissions()
+		rows.Scan(&r.ID, &r.Name, &r.Ranking, &r.Permissions)
 		s.Roles = append(s.Roles, r)
 	}
 }
