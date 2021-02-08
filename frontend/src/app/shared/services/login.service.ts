@@ -23,7 +23,7 @@ const LOGOUT_URL = environment.BaseApiUrl + "/logout";
 
 export class LoginService {
   isUserLoggedIn = false;
-
+  user!: User;
   constructor(private http: HttpClient) { }
 
   isLoggedIn(): boolean {
@@ -35,13 +35,18 @@ export class LoginService {
     this.http.post(LOGOUT_URL, null, jsonOptions).subscribe();
   }
 
-  login(credentials: Credentials): Observable<User> {
+  login(user: User) {
+    this.isUserLoggedIn = true;
+    this.user = user;
+  }
+
+  postLogin(credentials: Credentials): Observable<User> {
     console.log("login with credentials");
     return this.http.post<User>(LOGIN_URL, credentials, jsonOptions).pipe(tap({
       next: user => {
         if (user.id) {
+          this.login(user)
           console.log("logged in with cookie");
-          this.isUserLoggedIn = true;
         }
       },
       error: err => { console.error(err); },
@@ -49,13 +54,13 @@ export class LoginService {
 
   }
 
-  loginWithCookie(): Observable<User> {
+  getLogin(): Observable<User> {
     console.log("tried login with cookie");
     return this.http.get<User>(LOGIN_URL, jsonOptions).pipe(tap({
       next: user => {
         if (user.id) {
+          this.login(user)
           console.log("logged in with cookie");
-          this.isUserLoggedIn = true;
         }
       },
       error: err => { console.error(err); },

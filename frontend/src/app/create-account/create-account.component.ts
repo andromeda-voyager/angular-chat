@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Account } from '../shared/models/user';
 import { AccountService } from '../shared/services/account.service';
+import { LoginService } from '../shared/services/login.service';
 
 const emailRegex = /.+@.+\..+/; // basic email syntax (not a valid check)
 
@@ -18,7 +19,7 @@ export class CreateAccountComponent implements OnInit {
   avatarURL: string = "assets/default-avatar.jpg"
   showRequired = false;
   showFirstCard = true;
-  constructor(private accountService: AccountService, private router: Router) { }
+  constructor(private accountService: AccountService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -27,6 +28,7 @@ export class CreateAccountComponent implements OnInit {
     if(this.isValidCodeLength()) {
       this.accountService.createAccount(this.file, this.account).subscribe(user => {
         console.log(user);
+        this.loginService.login(user);
         this.router.navigate(['chat']);
       })
     } else this.showRequired = true;
