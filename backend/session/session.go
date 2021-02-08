@@ -3,6 +3,7 @@ package session
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"nebula/random"
 	"nebula/server"
 	"nebula/user"
@@ -12,24 +13,97 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type connection struct {
-	channels map[int]bool
-	ws       *websocket.Conn
-}
+//map(key server id) of map(key userID) of *connection
+var servers map[int]map[int]*connection
+
+//map(key channeld id) of map(key userID) of *connection
+var channels map[int]map[int]*connection
 
 var loggedInUsers map[string]*user.User
-var connections map[int]map[int]*connection
+var connections map[int]*connection
+
+type connection struct {
+	ws        *websocket.Conn
+	userID    int
+	serverID  int
+	channelID int
+}
 
 func init() {
 	loggedInUsers = make(map[string]*user.User)
-	connections = make(map[int]map[int]*connection)
+	servers = make(map[int]map[int]*connection)
+	channels = make(map[int]map[int]*connection)
+	connections = make(map[int]*connection)
 }
 
-// channelID -> map of tokens -> ws
+func ConnectToChannel(channelID, userID int) {
+	c, ok := connections[userID]
+	if ok {
+		if c.serverID != 0 {
+			if c.channelID != 0 {
+				disconnectFromChannel(c.channelID, userID)
+			}
+			c.channelID = channelID
+			_, ok := channels[channelID]
+			if !ok {
+				channels[channelID] = make(map[int]*connection)
+			}
+			channels[channelID][userID] = c
+		}
+	}
 
-//serverID -> map of tokens (for eached user logged into server)-> map of channels
+}
 
-// Add .
+func ConnectToServer(serverID, userID int) {
+	c, ok := connections[userID]
+	if ok {
+		if c.serverID != 0 {
+			if c.channelID != 0 {
+				disconnectFromChannel(c.channelID, userID)
+			}
+			disconnectFromServer(c.serverID, c.channelID, userID)
+		}
+		_, ok := servers[c.serverID]
+		if !ok {
+			servers[c.serverID] = make(map[int]*connection)
+		}
+		servers[c.serverID][userID] = c
+	}
+}
+
+func disconnectFromServer(serverID, channelID, userID int) {
+	server, ok := servers[serverID]
+	if ok {
+		_, ok := server[userID]
+		if ok {
+			delete(server, userID)
+		}
+	}
+}
+
+func disconnectFromChannel(channelID, userID int) {
+	channel, ok := channels[channelID]
+	if ok {
+		_, ok := channel[userID]
+		if ok {
+			delete(channel, userID)
+		}
+	}
+}
+
+func AddConnection(userID int, ws *websocket.Conn) {
+	connections[userID] = &connection{userID: userID, ws: ws, serverID: 0, channelID: 0}
+}
+
+func SendMessage(userID int, message string) {
+	c, ok := connections[userID]
+	if ok {
+		if err := websocket.JSON.Send(c.ws, "LO"); err != nil {
+			fmt.Println("ws message sent to client")
+		}
+	}
+}
+
 func Add(user *user.User) *http.Cookie {
 	token := random.NewSecureString(32)
 	loggedInUsers[token] = user

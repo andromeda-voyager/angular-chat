@@ -56,10 +56,8 @@ func authenticate(r *http.Request) (*user.User, bool) {
 func Handler(w http.ResponseWriter, r *http.Request) {
 	setHeaders(&w, r)
 	if r.Method != "OPTIONS" {
-		fmt.Println(r.URL.String())
-		c := &Context{
-			Keys: make(map[string]interface{}),
-		}
+		fmt.Println(r.URL.Path)
+		c := &Context{Keys: make(map[string]interface{})}
 		u, ok := authenticate(r)
 		if ok {
 			c.Keys["user"] = u

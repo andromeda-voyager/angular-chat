@@ -12,7 +12,6 @@ import (
 	"nebula/user"
 	"nebula/util"
 	"net/http"
-	"strconv"
 
 	"golang.org/x/net/websocket"
 )
@@ -76,8 +75,7 @@ func init() {
 			user := user.Add(a)
 			cookie := session.Add(user)
 			http.SetCookie(w, cookie)
-			loginResponse := &LoginResponse{User: user, Servers: nil}
-			json.NewEncoder(w).Encode(loginResponse)
+			json.NewEncoder(w).Encode(user)
 		} else {
 			fmt.Println("code invalid")
 		}
@@ -124,18 +122,22 @@ func init() {
 		user.SendCodeToEmail(a.Email)
 	})
 
+	router.Get("/server/:id<int>/connect", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		u := c.Keys["user"].(*user.User)
+		serverID := c.Keys["id"].(int)
+		s, ok := server.Get(serverID, u.ID)
+		if ok {
+			json.NewEncoder(w).Encode(s)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+	})
+
 	router.Get("/server", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
-		serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
-		if err != nil { // no valid query, so send all servers
-			servers := getServers(u.ID)
-			json.NewEncoder(w).Encode(servers)
-		} else {
-			s, ok := server.Get(serverID, u.ID)
-			if ok {
-				json.NewEncoder(w).Encode(s)
-			}
-		}
+		//serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
+		servers := getServers(u.ID)
+		json.NewEncoder(w).Encode(servers)
 	})
 
 	router.Post("/server", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
@@ -150,12 +152,12 @@ func init() {
 	router.Post("/channel", true, func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
-		var sr *ServerRequest
-		if err := json.Unmarshal(resp, &sr); err != nil {
+		var channel *server.Channel
+		if err := json.Unmarshal(resp, &channel); err != nil {
 			panic(err)
 		}
-		if u.HasPermission(permissions.ManageChannels, sr.ServerID) {
-			channel := server.NewChannel(sr.Channel, sr.Roles, sr.ServerID)
+		if u.HasPermission(permissions.ManageChannels, channel.ServerID) {
+			server.NewChannel(channel)
 			json.NewEncoder(w).Encode(channel)
 		} else {
 			fmt.Println("can't create channel")

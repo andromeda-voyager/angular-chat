@@ -79,7 +79,7 @@ func (u *User) HasPermission(permission, serverID int) bool {
 	var args []interface{}
 	args = append(args, u.ID)
 	rows, err := database.Query(
-		`SELECT server_permissions
+		`SELECT permissions
 			FROM Role
 			INNER JOIN ServerMember ON Role.id = ServerMember.role_id
 			where ServerMember.account_id=?;`, args)

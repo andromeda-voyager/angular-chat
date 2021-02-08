@@ -13,11 +13,11 @@ import (
 func main() {
 
 	//database.Reset()
-
 	publicFolder, err := filepath.Abs("./public")
 	if err != nil {
 
 	}
+
 	fs := http.FileServer(http.Dir(publicFolder))
 	fmt.Println(publicFolder)
 	http.HandleFunc("/", router.Handler)

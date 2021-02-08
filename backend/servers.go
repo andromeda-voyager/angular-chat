@@ -6,13 +6,13 @@ import (
 )
 
 func getServers(accountID int) []*server.Server {
-	var servers []*server.Server
+	var servers []*server.Server = []*server.Server{}
 	var args []interface{}
 	args = append(args, accountID)
 	rows, err := database.Query(
 		`SELECT Server.id, Server.name, Server.image, Server.description, 
 		ServerMember.alias,
-		Role.id, Role.name, Role.server_permissions
+		Role.id, Role.name, Role.permissions
 		FROM Server 
 		INNER JOIN ServerMember ON Server.id = ServerMember.server_id 
 		INNER JOIN Role ON ServerMember.role_id = Role.id 
@@ -24,8 +24,7 @@ func getServers(accountID int) []*server.Server {
 	for rows.Next() {
 		var s server.Server
 		var r server.Role
-		rows.Scan(&s.ID, &s.Name, &s.Image, &s.Description, &s.Alias, &r.ID, &r.Name, &r.ServerPermissions)
-		r.LoadChannelPermissions()
+		rows.Scan(&s.ID, &s.Name, &s.Image, &s.Description, &s.Alias, &r.ID, &r.Name, &r.Permissions)
 		s.Role = r
 		s.LoadRoles()
 		s.LoadChannels()
