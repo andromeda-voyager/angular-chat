@@ -8,7 +8,7 @@ import (
 func Query(stmt string, args []interface{}) (*sql.Rows, error) {
 	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 	defer db.Close()
 	return db.Query(stmt, args...)
@@ -17,15 +17,15 @@ func Query(stmt string, args []interface{}) (*sql.Rows, error) {
 func Exec(stmt string, args []interface{}) (int, error) {
 	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
 	if err != nil {
-		panic(err.Error())
+		return -1, err
 	}
 	result, err := db.Exec(stmt, args...)
 	if err != nil {
-		panic(err.Error())
+		return -1, err
 	}
 	serverID, err := result.LastInsertId()
 	if err != nil {
-		panic(err.Error())
+		return -1, err
 	}
 	defer db.Close()
 	return int(serverID), nil
