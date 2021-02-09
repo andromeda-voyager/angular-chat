@@ -6,9 +6,11 @@
             +
         </button>
     </div>
-  
+
     <div *ngFor="let channel of server?.channels; let i = index">
-        <button [ngClass]="{'selected': selectedChannel==channel}" class="channel-button">{{channel.name}}</button>
+        <button [ngClass]="{'selected': selectedChannel==channel}" class="channel-button" (click)="selectChannelOnClick(channel)">
+            {{channel.name}}
+        </button>
     </div>
-    
+
 </div>

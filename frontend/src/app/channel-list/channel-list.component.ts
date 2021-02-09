@@ -22,6 +22,10 @@ export class ChannelListComponent implements OnInit {
     console.log(this.server.name)
   }
 
+  selectChannelOnClick(channel: Channel) {
+    this.selectedChannelChange.emit(channel);
+  }
+
 
 
 
