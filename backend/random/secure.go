@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	mrand "math/rand"
+	"strings"
 	"time"
 )
 
@@ -27,13 +28,13 @@ func NewSecureString(n int) string {
 	return base64.RawStdEncoding.EncodeToString(b)
 }
 
-const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+func NewRandomCode(codeLength int) string {
+	var b strings.Builder
+	for i := 0; i < codeLength; i++ {
+		randomIndex := mrand.Intn(len(chars))
+		b.WriteByte(chars[randomIndex])
+	}
+	return b.String()
+}
 
-// // NewString returns a pseudo random alphanumeric string
-// func NewString(n int) string {
-// 	b := make([]byte, n)
-// 	for i := range b {
-// 		b[i] = chars[mrand.Intn(len(chars))]
-// 	}
-// 	return string(b)
-// }
+const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"

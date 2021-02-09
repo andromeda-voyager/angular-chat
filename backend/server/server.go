@@ -21,14 +21,6 @@ type Server struct {
 	Channels    []Channel `json:"channels"`
 }
 
-// Member .
-type Member struct {
-	AccountID int    `json:"accountID"`
-	Alias     string `json:"alias"`
-	Avatar    string `json:"avatar"`
-	Role      Role   `json:"role"`
-}
-
 // Invite .
 type Invite struct {
 	Code     string `json:"code"`
@@ -159,4 +151,34 @@ func (s *Server) LoadRoles() {
 		rows.Scan(&r.ID, &r.Name, &r.Ranking, &r.Permissions)
 		s.Roles = append(s.Roles, r)
 	}
+}
+
+func getServers(accountID int) []*Server {
+	var servers []*Server = []*Server{}
+	var args []interface{}
+	args = append(args, accountID)
+	rows, err := database.Query(
+		`SELECT Server.id, Server.name, Server.image, Server.description, 
+		ServerMember.alias,
+		Role.id, Role.name, Role.permissions
+		FROM Server 
+		INNER JOIN ServerMember ON Server.id = ServerMember.server_id 
+		INNER JOIN Role ON ServerMember.role_id = Role.id 
+		where ServerMember.account_id=?;`, args)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var s Server
+		var r Role
+		rows.Scan(&s.ID, &s.Name, &s.Image, &s.Description, &s.Alias, &r.ID, &r.Name, &r.Permissions)
+		s.Role = r
+		s.LoadRoles()
+		s.LoadChannels()
+		servers = append(servers, &s)
+	}
+
+	return servers
+
 }

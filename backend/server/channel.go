@@ -52,23 +52,27 @@ func (c Channel) LoadOverrides() {
 	}
 }
 
-// getChannels .
-func (c Channel) getPosts() {
-	// var args []interface{}
-	// args = append(args, c.ID)
-	// rows, err := database.Query(
-	// 	`SELECT text, media, time_sent, account_id
-	// 	FROM Message
-	// 	where Message.channel_id=?;`, args)
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-	// defer rows.Close()
-	// for rows.Next() {
-	// 	var m Message
-	// 	rows.Scan(&m.Text, &m.Media, &m.TimePosted, &m.AccountID)
-	// 	c.Messages = append(c.Messages, &m)
-	// }
+// GetMessages .
+func GetMessages(channelID int) []Message {
+	var args []interface{}
+	args = append(args, channelID)
+	rows, err := database.Query(`SELECT 
+		id, account_id, channel_id, media, text, time_posted 
+		FROM Message 
+		WHERE channel_id=?`, args)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	messages := []Message{}
+	for rows.Next() {
+		var m Message
+		rows.Scan(&m.ID, &m.AccountID, &m.ChannelID, &m.Media, &m.Text, &m.TimePosted)
+		member := getMember(m.AccountID)
+		m.Member = member
+		messages = append(messages, m)
+	}
+	return messages
 }
 
 // func validateRoles(rolesWithAccess []Role, serverID int) bool {

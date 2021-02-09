@@ -20,9 +20,11 @@ func main() {
 
 	fs := http.FileServer(http.Dir(publicFolder))
 	fmt.Println(publicFolder)
+
 	http.HandleFunc("/", router.Handler)
 
 	http.Handle("/static/", http.StripPrefix("/static", fs))
+	//http.Handle("/", Auth(router.Handler))
 
 	fmt.Println("Listening on port 8080")
 
