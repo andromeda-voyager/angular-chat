@@ -1,7 +1,8 @@
 <div id="component">
     <div id="border">
         <div id="servers"> <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">Add Server</button>
-            <button class="server" [ngClass]="{'selected':selectedServer == server}" (click)="selectServerOnClick(i)" *ngFor="let server of servers; let i = index">
+            <button class="server" [ngClass]="{'selected':selectedServer == server}" (click)="selectServerOnClick(i)"
+                *ngFor="let server of servers; let i = index">
                 <img [src]="server.image">
             </button>
         </div>
@@ -18,10 +19,7 @@
             </app-channel-list>
         </div>
 
-        <div *ngIf="selectedChannel" id="post-components">
-            <app-messages [channelID]="selectedChannel.id" id="messages"></app-messages>
-            <input (keyup.enter)="post()" isFocused [(ngModel)]="postText" id="post-input">
-        </div>
+        <app-messages *ngIf="selectedChannel" [channel]="selectedChannel" id="messages"></app-messages>
     </div>
 
 </div>
@@ -32,6 +30,7 @@
     </app-add-server>
     <app-admin *ngIf="dialogOption==Dialog.ADMIN" [server]="selectedServer" (serverDeleted)="onServerDeleted($event)"
         class="dialog"></app-admin>
-    <app-add-channel *ngIf="dialogOption==Dialog.ADD_CHANNEL" [server]="selectedServer" (newChannel)="onNewChannel($event)" class="dialog">
+    <app-add-channel *ngIf="dialogOption==Dialog.ADD_CHANNEL" [server]="selectedServer"
+        (newChannel)="onNewChannel($event)" class="dialog">
     </app-add-channel>
 </div>

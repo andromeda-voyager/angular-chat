@@ -28,7 +28,6 @@ export class ChatComponent implements OnInit {
   selectedChannel!: Channel;
   image: string = "";
   dialogOption: Dialog = Dialog.NONE;
-  @Input() postText: string = "";
 
   constructor(private chatService: ChatService, private loginService: LoginService, private router: Router) { }
 
@@ -68,12 +67,6 @@ export class ChatComponent implements OnInit {
   onNewChannel(channel: Channel) {
     this.selectedServer.channels.push(channel);
     this.closeDialog();
-  }
-
-  post() {
-    // this.chatService.post({ serverID: this.currentConnection.serverID, text: this.postText, media: "" });
-    this.postText = "";
-    //  this.socket.send(JSON.stringify(message));
   }
 
   openDialog(option: Dialog) {
