@@ -23,7 +23,6 @@ const jsonOptions = {
 
 const SERVER_URL = environment.BaseApiUrl + "/server";
 const JOIN_SERVER_URL = environment.BaseApiUrl + "/join-server";
-const POSTS_URL = environment.BaseApiUrl + "/posts";
 const CHANNEL_URL = environment.BaseApiUrl + "/channel";
 
 @Injectable({
@@ -89,7 +88,4 @@ export class ChatService {
     return this.http.post<Server>(JOIN_SERVER_URL, invite);
   }
 
-  post(message: NewMessage) {
-    this.http.post(POSTS_URL, message, jsonOptions).subscribe();
-  }
 }

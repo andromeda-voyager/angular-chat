@@ -13,9 +13,9 @@ const jsonOptions = {
 };
 
 
-const forgotPasswordUrl = environment.BaseApiUrl + "/forgot-password";
-const accountUrl = environment.BaseApiUrl + "/account";
-const verificationCodeUrl = environment.BaseApiUrl + "/send-verification-code";
+const forgotPasswordUrl = environment.BaseApiUrl + "/accounts/forgot-password";
+const accountUrl = environment.BaseApiUrl + "/accounts";
+const verificationCodeUrl = environment.BaseApiUrl + "/accounts/send-verification-code";
 
 @Injectable({
   providedIn: 'root'

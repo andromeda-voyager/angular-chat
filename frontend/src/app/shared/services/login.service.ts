@@ -14,8 +14,8 @@ const jsonOptions = {
   withCredentials: true
 };
 
-const LOGIN_URL = environment.BaseApiUrl + "/login";
-const LOGOUT_URL = environment.BaseApiUrl + "/logout";
+const LOGIN_URL = environment.BaseApiUrl + "/accounts/login";
+const LOGOUT_URL = environment.BaseApiUrl + "/accounts/logout";
 
 @Injectable({
   providedIn: 'root'

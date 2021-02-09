@@ -1,8 +1,16 @@
 #component {
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction: column;
+}
+
+#messages {
     overflow-y:scroll;
     display:flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: flex-end;
+    height: calc(100% - 50px);
     width:100%;
     border: 3px solid  rgb(47, 48, 49);
     border-top-right-radius: 10px;
@@ -29,3 +37,16 @@
     font-size: max(1vw, 15px);
     color:white;
 }
+
+#message-input {
+    box-sizing: border-box;
+    width:100%;
+    height:50px;
+    font-size: 18px;
+    border-radius: 1px;
+    color:white;
+    border: 3px solid  rgb(62, 64, 68);
+    background-color: rgb(62, 64, 68);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.356);
+  }
+  

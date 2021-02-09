@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { Channel } from '../shared/models/channel';
 import { Message } from '../shared/models/message';
 import { MessageService } from '../shared/services/message.service';
 
@@ -7,11 +8,27 @@ import { MessageService } from '../shared/services/message.service';
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class PostsComponent implements OnInit {
-  @Input() channelID: number = 0;
+export class PostsComponent implements OnChanges {
+  @Input() channel!: Channel;
   @Input() messages: Message[] = []
+  @Input() messageText: string = "";
 
   constructor(private messageService: MessageService) {
+    // let m: NewMessage = { channelID: 0, text: "hello", media: "none", id: 0, timePosted: new Date() }
+    // this.messages.push(m);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("something changed");
+    this.messageService.getMessages(this.channel.id).subscribe(messages => {
+      this.messages = messages;
+    });
+  }
+
+  sendMessage() {
+    this.messageService.postMessage(
+      { channelID: this.channel.id, text: "hello", media: "none" }
+    )
   }
 
   modifyMessage(message: Message) {

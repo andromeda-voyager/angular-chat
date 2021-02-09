@@ -26,6 +26,7 @@ export class CreateAccountComponent implements OnInit {
 
   createAccountOnClick() {
     if(this.isValidCodeLength()) {
+      console.log(this.account)
       this.accountService.createAccount(this.file, this.account).subscribe(user => {
         console.log(user);
         this.loginService.login(user);

@@ -1,7 +1,12 @@
 <!-- #scroll [scrollTop]="scroll.scrollHeight" -->
-<div id="component" >
-    <div class="post" *ngFor="let message of messages; let i = index">
-        <!-- [ngClass]="{'left': message.isIncomming,'right': !message.isIncomming}" -->
-        <div class="text">{{message.text}}</div>
+<div id="component">
+    <div id="messages">
+        <!-- messages.slice().reverse() -->
+        <div class="post" *ngFor="let message of messages; let i = index">
+            <div class="text">{{message.text}}</div>
+            <span>test</span>
+        </div>
     </div>
+    <input (keyup.enter)="sendMessage()" isFocused [(ngModel)]="messageText" id="message-input">
+
 </div>
