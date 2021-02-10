@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Message, NewMessage } from '../models/message';
 
-const CHANNEL_URL = environment.BaseApiUrl + "/channel";
+const CHANNEL_URL = environment.BaseApiUrl + "/channels";
 
 const credentialsOption = {
   headers: new HttpHeaders({

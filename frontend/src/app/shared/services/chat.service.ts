@@ -4,7 +4,6 @@ import { Observable, Observer, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Server, NewServer, Invite, Update } from '../models/server';
 import { Channel } from '../models/channel';
-import { Message, NewMessage } from '../models/message';
 
 const formOptions = {
   headers: new HttpHeaders({
@@ -21,9 +20,9 @@ const jsonOptions = {
   withCredentials: true
 };
 
-const SERVER_URL = environment.BaseApiUrl + "/server";
-const JOIN_SERVER_URL = environment.BaseApiUrl + "/join-server";
-const CHANNEL_URL = environment.BaseApiUrl + "/channel";
+const SERVER_URL = environment.BaseApiUrl + "/servers";
+const JOIN_SERVER_URL = environment.BaseApiUrl + "/servers/join";
+const CHANNEL_URL = environment.BaseApiUrl + "/channels";
 
 @Injectable({
   providedIn: 'root'

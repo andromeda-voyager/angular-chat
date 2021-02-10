@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+#deprecated
+keep.txt 
+
 # compiled output
 frontend//dist
 frontend//tmp
@@ -8,7 +11,7 @@ frontend//out-tsc
 frontend//bazel-out
 
 # config
-credentials.go
+*/config/credentials.go
 reset.go
 
 #bug reports

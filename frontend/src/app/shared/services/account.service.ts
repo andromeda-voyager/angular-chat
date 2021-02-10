@@ -4,15 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-const jsonOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'accept': 'application/json',
-  }), credentials: 'same-origin',
-  withCredentials: true
-};
-
-
 const forgotPasswordUrl = environment.BaseApiUrl + "/accounts/forgot-password";
 const accountUrl = environment.BaseApiUrl + "/accounts";
 const verificationCodeUrl = environment.BaseApiUrl + "/accounts/send-verification-code";
@@ -31,7 +22,7 @@ export class AccountService {
     }
     formData.append("user", JSON.stringify(account));
 
-    return this.http.post<User>(accountUrl, formData, jsonOptions);
+    return this.http.post<User>(accountUrl, formData);
   }
 
   forgotPassword(email: string)  {  
