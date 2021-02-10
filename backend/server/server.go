@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"nebula/database"
+	"nebula/images"
 	"nebula/permissions"
-	"nebula/util"
 	"net/http"
 )
 
@@ -18,6 +18,7 @@ type Server struct {
 	Role        Role      `json:"role"`
 	Roles       []Role    `json:"roles"`
 	Alias       string    `json:"alias"`
+	Members     []*Member `json:"members"`
 	Channels    []Channel `json:"channels"`
 }
 
@@ -27,12 +28,14 @@ type Invite struct {
 	ServerID string `json:"serverID"`
 }
 
+const DefaultImageUrl = "default-avatar.jpg"
+
 // New .
 func New(m *Member, r *http.Request) Server {
 	serverJSON := r.FormValue("server")
 	var s Server
 	json.Unmarshal([]byte(serverJSON), &s)
-	s.Image = util.SaveImage(r)
+	s.Image = images.Save(r, DefaultImageUrl)
 	var args []interface{}
 	args = append(args, s.Name, s.Image, s.Description)
 	var err error
@@ -40,10 +43,9 @@ func New(m *Member, r *http.Request) Server {
 	if err != nil {
 		fmt.Println("failed to add server")
 	}
-	s.Role = s.NewRole("owner", 0, permissions.Full)
-	s.NewRole("default", 1, permissions.None)
-
-	s.NewMember(m)
+	s.Role = s.AddRole("owner", 0, permissions.Full) // s.Role is the role of the server owner
+	s.AddRole("default", 1, permissions.None)        // default role is created for new members
+	s.AddMember(m)
 	return s
 }
 
@@ -74,19 +76,23 @@ func Get(serverID, userID int) (*Server, bool) {
 	return nil, false
 }
 
-// NewMember .
-func (s *Server) NewMember(m *Member) {
+// AddMember .
+func (s *Server) AddMember(m *Member) {
 	var args []interface{}
 	args = append(args, s.ID, m.AccountID, m.Alias, s.Role.ID)
 	_, err := database.Exec("INSERT INTO ServerMember (server_id, account_id, alias, role_id) Values (?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())
 	}
+	if len(s.Members) == 0 {
+		s.Members = []*Member{}
+	}
 	s.Alias = m.Alias
+	s.Members = append(s.Members, m)
 }
 
-// NewRole .
-func (s *Server) NewRole(name string, ranking int, permissions uint8) Role {
+// AddRole .
+func (s *Server) AddRole(name string, ranking int, permissions uint8) Role {
 	var args []interface{}
 	args = append(args, s.ID, name, ranking, permissions)
 	roleID, err := database.Exec("INSERT INTO Role (server_id, name, ranking, permissions) Values (?, ?, ?, ?);", args)

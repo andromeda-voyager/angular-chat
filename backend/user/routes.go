@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"nebula/images"
 	"nebula/router"
-	"nebula/util"
 	"net/http"
 )
+
+const DefaultImageUrl = "default-avatar.jpg"
 
 func init() {
 
@@ -22,10 +24,8 @@ func init() {
 		if err := json.Unmarshal(accountForm, &a); err != nil {
 			panic(err)
 		}
-		a.Avatar = util.SaveImage(r)
-		fmt.Println(a)
+		a.Avatar = images.Save(r, DefaultImageUrl)
 		if IsCodeValid(a.Code, a.Email) {
-			fmt.Println("added user")
 			u := Add(a)
 			cookie := AddSession(u)
 			http.SetCookie(w, cookie)
@@ -36,7 +36,6 @@ func init() {
 	})
 
 	g.Post("/accounts/login", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		fmt.Println("attempting login")
 		resp, _ := ioutil.ReadAll(r.Body)
 		var credentials Credentials
 		if err := json.Unmarshal(resp, &credentials); err != nil {

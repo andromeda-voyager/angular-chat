@@ -19,7 +19,7 @@ func main() {
 	}
 
 	fs := http.FileServer(http.Dir(publicFolder))
-	fmt.Println(publicFolder)
+	//fmt.Println(publicFolder)
 
 	http.HandleFunc("/", router.Handler)
 

@@ -15,13 +15,13 @@ func init() {
 	authGroup := router.NewGroup()
 	authGroup.Use(user.Authenticate)
 
-	authGroup.Get("/channel/:id/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Get("/channels/:id/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		channelID := c.Keys["id"].(int)
 		ConnectToChannel(channelID, u.ID)
 	})
 
-	authGroup.Get("/server/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Get("/servers/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		serverID := c.Keys["id"].(int)
 		s, ok := Get(serverID, u.ID)
@@ -32,23 +32,21 @@ func init() {
 		}
 	})
 
-	authGroup.Get("/server", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Get("/servers", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		//serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
 		servers := getServers(u.ID)
 		json.NewEncoder(w).Encode(servers)
 	})
 
-	authGroup.Post("/server", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Post("/servers", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
-		serverJSON := []byte(r.FormValue("server"))
-		fmt.Println(serverJSON)
 		var serverOwner = &Member{AccountID: u.ID, Alias: u.Username, Avatar: u.Avatar}
 		server := New(serverOwner, r)
 		json.NewEncoder(w).Encode(server)
 	})
 
-	authGroup.Post("/channel", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Post("/channels", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
 		var channel *Channel
@@ -63,7 +61,7 @@ func init() {
 		}
 	})
 
-	authGroup.Delete("/server/:id<int>", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Delete("/servers/:id<int>", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		serverID := c.Keys["id"].(int)
 		if u.HasPermission(permissions.Full, serverID) {
@@ -74,7 +72,7 @@ func init() {
 		}
 	})
 
-	authGroup.Post("/join-server", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Post("/servers/join", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		// resp, _ := ioutil.ReadAll(r.Body)
 		// var invite server.Invite
 		// if err := json.Unmarshal(resp, &invite); err != nil {
@@ -95,7 +93,7 @@ func init() {
 		// }
 	})
 
-	authGroup.Post("/channel/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Post("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		//u := c.Keys["user"].(*user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
 		var m Message
@@ -106,7 +104,7 @@ func init() {
 		json.NewEncoder(w).Encode(m)
 	})
 
-	authGroup.Get("/channel/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+	authGroup.Get("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		//u := c.Keys["user"].(*user.User)
 		channelID := c.Keys["id"].(int)
 		messages := GetMessages(channelID)

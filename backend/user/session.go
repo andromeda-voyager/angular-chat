@@ -49,7 +49,7 @@ func IsCodeValid(code, email string) bool {
 
 // GenerateCode creates a code and stores it for later validation
 func generateCode(email string) string {
-	code := random.NewRandomCode(5)
+	code := random.NewString(5)
 	codes[email] = code
 	fmt.Println(code)
 	return code
@@ -70,5 +70,3 @@ func Authenticate(w http.ResponseWriter, r *http.Request, c *router.Context) boo
 	w.WriteHeader(http.StatusUnauthorized)
 	return false
 }
-
-const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"

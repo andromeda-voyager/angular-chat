@@ -28,7 +28,7 @@ func NewSecureString(n int) string {
 	return base64.RawStdEncoding.EncodeToString(b)
 }
 
-func NewRandomCode(codeLength int) string {
+func NewString(codeLength int) string {
 	var b strings.Builder
 	for i := 0; i < codeLength; i++ {
 		randomIndex := mrand.Intn(len(chars))

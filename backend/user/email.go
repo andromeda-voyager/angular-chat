@@ -24,7 +24,6 @@ func SendCodeToEmail(email string) {
 		sendEmail([]byte("An account already exists with this email."), email)
 	} else {
 		msg := []byte("Nebula\n\nVerifcation Code:\t" + generateCode(email))
-		fmt.Println(msg)
 		sendEmail(msg, email)
 	}
 }

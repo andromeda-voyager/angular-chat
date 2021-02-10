@@ -3,7 +3,6 @@ package user
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"nebula/database"
 	"nebula/random"
 
@@ -90,7 +89,6 @@ func (u *User) HasPermission(permission, serverID int) bool {
 	if rows.Next() {
 		var p int
 		rows.Scan(&p)
-		fmt.Println(p)
 		return p&permission == permission
 	}
 	return false
