@@ -6,7 +6,7 @@ import (
 )
 
 func Query(stmt string, args []interface{}) (*sql.Rows, error) {
-	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula")
+	db, err := sql.Open("mysql", config.DatabaseUser+":"+config.DatabasePassword+"@tcp(localhost:3306)/nebula?parseTime=true")
 	if err != nil {
 		return nil, err
 	}

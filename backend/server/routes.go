@@ -15,12 +15,6 @@ func init() {
 	authGroup := router.NewGroup()
 	authGroup.Use(user.Authenticate)
 
-	authGroup.Get("/channels/:id/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
-		channelID := c.Keys["id"].(int)
-		ConnectToChannel(channelID, u.ID)
-	})
-
 	authGroup.Get("/servers/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		serverID := c.Keys["id"].(int)
@@ -93,15 +87,25 @@ func init() {
 		// }
 	})
 
-	authGroup.Post("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		//u := c.Keys["user"].(*user.User)
+	authGroup.Post("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) { //TODO check user permissions
+		u := c.Keys["user"].(*user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
 		var m Message
 		if err := json.Unmarshal(resp, &m); err != nil {
 			panic(err)
 		}
-		fmt.Println(m)
+		m.AccountID = u.ID
+		m.Add()
 		json.NewEncoder(w).Encode(m)
+	})
+
+	authGroup.Get("/channels/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		fmt.Println("h")
+		u := c.Keys["user"].(*user.User)
+		channelID := c.Keys["id"].(int)
+		ConnectToChannel(channelID, u.ID)
+		messages := GetMessages(channelID)
+		json.NewEncoder(w).Encode(messages)
 	})
 
 	authGroup.Get("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
