@@ -49,6 +49,7 @@ export class ChatService {
     this.socket.addEventListener('message', (event) => {
       let update = JSON.parse(event.data);
       this.updateSource.next(update);
+      console.log(update);
     });
 
   }

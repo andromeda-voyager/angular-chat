@@ -36,6 +36,10 @@ export class MessageService {
     return this.http.get<Message[]>(CHANNEL_URL + "/" + channelID + "/messages", credentialsOption);
   }
 
+  connectToChannel(channelID: number): Observable<Message[]> {
+    return this.http.get<Message[]>(CHANNEL_URL + "/" + channelID + "/connect", credentialsOption);
+  }
+
   postMessage(message: NewMessage) {
     this.http.post<Message>(CHANNEL_URL + "/" + message.channelID + "/messages", message, credentialsOption).subscribe();
   }

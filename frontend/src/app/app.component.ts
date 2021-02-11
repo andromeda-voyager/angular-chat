@@ -10,7 +10,7 @@ import { LoginService } from './shared/services/login.service';
 export class AppComponent {
   title = 'chat';
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService) { 
 
   }
 

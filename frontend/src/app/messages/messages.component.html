@@ -2,9 +2,17 @@
 <div id="component">
     <div id="messages">
         <!-- messages.slice().reverse() -->
-        <div class="post" *ngFor="let message of messages; let i = index">
-            <div class="text">{{message.text}}</div>
-            <span>test</span>
+        <div class="message" *ngFor="let message of messages; let i = index">
+            <div class="user">
+                <img class="avatar" [src]="message.member.avatar">
+                <div class="alias">{{message.member.alias}}</div>
+            </div>
+            <div class="text-container">
+                <div class="text">{{message.text}}</div>
+                <span class="time">{{formatDate(message)}}</span>
+            </div>
+            
+
         </div>
     </div>
     <input (keyup.enter)="sendMessage()" isFocused [(ngModel)]="messageText" id="message-input">

@@ -8,6 +8,13 @@ const forgotPasswordUrl = environment.BaseApiUrl + "/accounts/forgot-password";
 const accountUrl = environment.BaseApiUrl + "/accounts";
 const verificationCodeUrl = environment.BaseApiUrl + "/accounts/send-verification-code";
 
+const formOptions = { // content-type is left undefined so boundary can be set automatically 
+  headers: new HttpHeaders({
+    'accept': 'application/json',
+  }), credentials: 'same-origin',
+  withCredentials: true
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +29,7 @@ export class AccountService {
     }
     formData.append("user", JSON.stringify(account));
 
-    return this.http.post<User>(accountUrl, formData);
+    return this.http.post<User>(accountUrl, formData, formOptions);
   }
 
   forgotPassword(email: string)  {  

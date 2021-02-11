@@ -59,6 +59,7 @@ export class LoginService {
     return this.http.get<User>(LOGIN_URL, jsonOptions).pipe(tap({
       next: user => {
         if (user.id) {
+          console.log("is logged in");
           this.login(user)
           console.log("logged in with cookie");
         }

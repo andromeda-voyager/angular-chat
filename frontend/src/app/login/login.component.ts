@@ -20,23 +20,18 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.getLogin().subscribe(user => {
-
       this.router.navigate(['chat']);
-
     }, error => { });
   }
 
   login() {
     this.loginService.postLogin({ email: this.email, password: this.password }).subscribe(user => {
-      console.log(user)
-      console.log(":")
-      console.log("password correct");
       this.router.navigate(['chat']);
     }, error => this.handleError(error));
   }
 
   forgotPassword() {
-      this.accountService.forgotPassword(this.email)
+    this.accountService.forgotPassword(this.email)
   }
 
   handleError(error: any) {

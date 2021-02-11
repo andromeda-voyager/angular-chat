@@ -29,6 +29,7 @@ export interface Member {
     id: number
     serverID: number
     alias: string
+    avatar: string
     role: Role
 }
 

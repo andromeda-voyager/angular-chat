@@ -8,7 +8,6 @@ const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'login', component: LoginComponent },
   { path: 'create-account', component: CreateAccountComponent },
-
   { path: '', redirectTo: '/login', pathMatch:'full'}
 ];
 

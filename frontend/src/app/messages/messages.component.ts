@@ -20,15 +20,24 @@ export class PostsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     console.log("something changed");
-    this.messageService.getMessages(this.channel.id).subscribe(messages => {
+    this.messageService.connectToChannel(this.channel.id).subscribe(messages => {
+     if(messages.length > 0) console.log(messages[0].timePosted);
       this.messages = messages;
+      if(messages.length > 0) {
+      }
+
     });
   }
 
   sendMessage() {
     this.messageService.postMessage(
-      { channelID: this.channel.id, text: "hello", media: "none" }
+      { channelID: this.channel.id, text: this.messageText, media: "" }
     )
+    this.messageText = "";
+  }
+
+  formatDate(message: Message) {
+    return new Date(message.timePosted).toDateString()
   }
 
   modifyMessage(message: Message) {

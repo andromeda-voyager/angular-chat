@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../shared/services/chat.service';
 import { Server } from '../shared/models/server';
 import { User } from '../shared/models/user';
@@ -32,12 +32,12 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
+    if(!this.loginService.isLoggedIn()) {
+        this.router.navigate(['login']);
+    }
     this.chatService.getServers().subscribe(servers => {
       this.servers = servers;
     });
-
-    // } else {
-    //   this.router.navigate(['login']);
   }
 
   closeDialog() {
