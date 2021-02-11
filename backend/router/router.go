@@ -16,7 +16,7 @@ type account struct {
 var routes *route
 
 func init() {
-	routes = &route{Name: "/", nestedRoutes: make(map[string]*route)}
+	routes = &route{name: "/", nestedRoutes: make(map[string]*route)}
 }
 
 type routeCallbackFunc func(w http.ResponseWriter, r *http.Request, c *Context)
