@@ -20,7 +20,6 @@ func init() {
 	g.Post("/accounts", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		accountForm := []byte(r.FormValue("user"))
 		var a Account
-
 		if err := json.Unmarshal(accountForm, &a); err != nil {
 			panic(err)
 		}
@@ -59,7 +58,6 @@ func init() {
 	})
 
 	authGroup.Get("/accounts/login", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		fmt.Println("login with cookie")
 		u := c.Keys["user"].(*User)
 		json.NewEncoder(w).Encode(u)
 	})
