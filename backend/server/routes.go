@@ -18,6 +18,7 @@ func init() {
 	authGroup.Get("/servers/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		serverID := c.Keys["id"].(int)
+		ConnectToServer(serverID, u.ID)
 		s, ok := Get(serverID, u.ID)
 		if ok {
 			json.NewEncoder(w).Encode(s)
@@ -96,11 +97,12 @@ func init() {
 		}
 		m.AccountID = u.ID
 		m.Add()
+		update := Update{UpdateType: MESSAGE, Event: NEW, Message: m}
+		SendChannelUpdate(update, u.ID, m.ChannelID)
 		json.NewEncoder(w).Encode(m)
 	})
 
 	authGroup.Get("/channels/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		fmt.Println("h")
 		u := c.Keys["user"].(*user.User)
 		channelID := c.Keys["id"].(int)
 		ConnectToChannel(channelID, u.ID)

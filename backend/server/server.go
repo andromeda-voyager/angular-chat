@@ -41,7 +41,7 @@ func New(m *Member, r *http.Request) Server {
 	var err error
 	s.ID, err = database.Exec("INSERT INTO Server (name, image, description) Values (?, ?, ?);", args)
 	if err != nil {
-		fmt.Println("failed to add server")
+		fmt.Println("failed to add server to database")
 	}
 	s.Role = s.AddRole("owner", 0, permissions.Full) // s.Role is the role of the server owner
 	s.AddRole("default", 1, permissions.None)        // default role is created for new members

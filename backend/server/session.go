@@ -30,19 +30,16 @@ func init() {
 func ConnectToChannel(channelID, userID int) {
 	c, ok := connections[userID]
 	if ok {
-		if c.serverID != 0 {
-			if c.channelID != 0 {
-				disconnectFromChannel(c.channelID, userID)
-			}
-			c.channelID = channelID
-			_, ok := channels[channelID]
-			if !ok {
-				channels[channelID] = make(map[int]*connection)
-			}
-			channels[channelID][userID] = c
+		if c.channelID != 0 {
+			disconnectFromChannel(c.channelID, userID)
 		}
+		c.channelID = channelID
+		_, ok := channels[channelID]
+		if !ok {
+			channels[channelID] = make(map[int]*connection)
+		}
+		channels[channelID][userID] = c
 	}
-
 }
 
 func ConnectToServer(serverID, userID int) {
@@ -88,6 +85,15 @@ func AddConnection(userID int, ws *websocket.Conn) {
 
 func SendMessage(userID int, message string) {
 	c, ok := connections[userID]
+	if ok {
+		if err := websocket.JSON.Send(c.ws, "LO"); err != nil {
+			fmt.Println("ws message sent to client")
+		}
+	}
+}
+
+func SendChannelUpdate(u Update, userID, channelID int) {
+	c, ok := channels[channelID][userID]
 	if ok {
 		if err := websocket.JSON.Send(c.ws, "LO"); err != nil {
 			fmt.Println("ws message sent to client")
