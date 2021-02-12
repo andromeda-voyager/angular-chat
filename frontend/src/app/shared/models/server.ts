@@ -62,10 +62,10 @@ export interface ServerRequest {
 }
 
 export interface Update {
-    type: UpdateType
+    updateType: UpdateType
     event: UpdateEvent
-    server?: Server[]
+    server?: Server
     channel?: Channel
     role?: Role
-    messages?: Message[]
+    message?: Message
 }

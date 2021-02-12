@@ -42,15 +42,20 @@ export class ChatService {
 
   // return new Observable((observer: Observer<ConnectResponse>) => {
 
-  connect(serverID: number) {
-    this.socket = new WebSocket('wss://localhost:8080/ws');
+  connect() {
+    this.socket = new WebSocket('ws://localhost:8080/ws');
     // this.socket.addEventListener('open', () => { });
 
     this.socket.addEventListener('message', (event) => {
+      console.log("message received")
       let update = JSON.parse(event.data);
       this.updateSource.next(update);
       console.log(update);
     });
+
+    this.socket.onclose = function(event){
+      console.log("socket closed")
+    };
 
   }
 

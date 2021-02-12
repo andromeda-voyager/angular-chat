@@ -1,7 +1,6 @@
 #component {
-    display:flex;
-    flex-direction: column;
-    height:100vh;
+    height: auto;
+    width:100%;
 }
 
 #top-nav .active-link {
@@ -13,7 +12,9 @@
 }
 
 #router-wrapper {
-    flex: 1;
+    height: calc(100vh - 75px);
+    overflow: auto;
+    width:100%;
     background-color: rgb(71, 71, 71);
 }
   

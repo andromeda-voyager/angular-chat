@@ -38,6 +38,7 @@ export class ChatComponent implements OnInit {
     this.chatService.getServers().subscribe(servers => {
       this.servers = servers;
     });
+    this.chatService.connect();
   }
 
   closeDialog() {
