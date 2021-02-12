@@ -9,10 +9,11 @@
             </div>
             <div class="text-container">
                 <div class="text">{{message.text}}</div>
-                <span class="time">{{formatDate(message)}}</span>
+                <div class="date-time-container">
+                    <span class="date">{{getDate(message)}}</span>
+                    <span class="time">{{getTime(message)}}</span>
+                </div>
             </div>
-            
-
         </div>
     </div>
     <input (keyup.enter)="sendMessage()" isFocused [(ngModel)]="messageText" id="message-input">

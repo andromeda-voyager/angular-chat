@@ -12,6 +12,7 @@ export class PostsComponent implements OnChanges {
   @Input() channel!: Channel;
   @Input() messages: Message[] = []
   @Input() messageText: string = "";
+  showTime = false;
 
   constructor(private messageService: MessageService) {
     // let m: NewMessage = { channelID: 0, text: "hello", media: "none", id: 0, timePosted: new Date() }
@@ -36,8 +37,12 @@ export class PostsComponent implements OnChanges {
     this.messageText = "";
   }
 
-  formatDate(message: Message) {
+  getDate(message: Message) {
     return new Date(message.timePosted).toDateString()
+  }
+
+  getTime(message:Message) {
+    return new Date(message.timePosted).toLocaleTimeString()
   }
 
   modifyMessage(message: Message) {
