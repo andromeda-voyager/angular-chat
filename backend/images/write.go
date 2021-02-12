@@ -1,7 +1,6 @@
 package images
 
 import (
-	"fmt"
 	"io"
 	"nebula/config"
 	"nebula/random"
@@ -18,13 +17,11 @@ func Save(r *http.Request, defaultUrl string) string {
 	var fileName string
 	imageFile, _, err := r.FormFile("image")
 	if err != nil {
-		fmt.Println("No image provided. Using default image.")
 		fileName = defaultUrl
 	} else {
 		fileName = random.NewString(10) + ".jpg"
 		out, err := os.Create(path.Join(avatarFolder, fileName)) //header.Filename
 		if err != nil {
-			fmt.Println("Dailed to save image. Using default.")
 			return defaultUrl
 		} else {
 			defer out.Close()
