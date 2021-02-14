@@ -1,12 +1,22 @@
 <div id="component">
     <nav id="top-nav">
-        <ng-container *ngIf="isLoggedIn()">
-            <a (click)="logout()" routerLink="/login" routerLinkActive="active-link">Logout</a>
-        </ng-container>
-        <ng-container *ngIf="!isLoggedIn()">
-            <a routerLink="/login" routerLinkActive="active-link">Login</a>
-            <a routerLink="/create-account" routerLinkActive="active-link">Create Account</a>
-        </ng-container>
+        <button id="menu">
+            <svg viewBox="0 0 100 80">
+                <rect width="100" height="14"></rect>
+                <rect y="35" width="100" height="14"></rect>
+                <rect y="70" width="100" height="14"></rect>
+            </svg>
+        </button>
+
+        <div id="right-menu-items-container">
+            <ng-container *ngIf="isLoggedIn()">
+                <a (click)="logout()" routerLink="/login" routerLinkActive="active-link">Logout</a>
+            </ng-container>
+            <ng-container *ngIf="!isLoggedIn()">
+                <a routerLink="/login" routerLinkActive="active-link">Login</a>
+                <a routerLink="/create-account" routerLinkActive="active-link">Create Account</a>
+            </ng-container>
+        </div>
     </nav>
 
     <div id="router-wrapper">
