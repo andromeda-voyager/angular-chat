@@ -1,23 +1,39 @@
 <div id="component">
+    <div id="test">
+        <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">
+            <svg viewBox="0 0 100 100">
+                <line class="line" x1="25" y1="50" x2="75" y2="50" stroke="black" stroke-width="5%" />
+                <line class="line" x1="50" y1="25" x2="50" y2="75" stroke="black" stroke-width="5%" />
+            </svg>
+        </button>
+        <button class="server" [ngClass]="{'selected':selectedServer == server}" (click)="selectServerOnClick(i)"
+            *ngFor="let server of servers; let i = index">
+            <div class="image-wrapper">
+                <img class="avatar" [src]="server.image">
+            </div>
+        </button>
+    </div>
     <div id="border">
-        <div id="servers"> <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">Add Server</button>
+        <div id="servers">
+            <button id="add-server-button" (click)="openDialog(Dialog.ADD_SERVER)">
+                <svg viewBox="0 0 100 100">
+                    <line class="line" x1="25" y1="50" x2="75" y2="50" stroke="black" stroke-width="5%" />
+                    <line class="line" x1="50" y1="25" x2="50" y2="75" stroke="black" stroke-width="5%" />
+                </svg>
+            </button>
             <button class="server" [ngClass]="{'selected':selectedServer == server}" (click)="selectServerOnClick(i)"
                 *ngFor="let server of servers; let i = index">
-                <img [src]="server.image">
+                <div class="image-wrapper">
+                    <img class="avatar" [src]="server.image">
+                </div>
             </button>
         </div>
 
-        <div id="server-panel" *ngIf="selectedServer">
-            <div id="server-control">
-                {{selectedServer.name}}
-                <button id="server-settings-button" (click)="openDialog(Dialog.ADMIN)">
-                    <img src="assets/icons/settings-gear.svg">
-                </button>
-            </div>
-            <app-channel-list *ngIf="selectedServer" [server]="selectedServer" [(selectedChannel)]="selectedChannel"
-                (openChannelDialog)="openDialog(Dialog.ADD_CHANNEL)">
-            </app-channel-list>
-        </div>
+
+        <app-server-panel *ngIf="selectedServer" [server]="selectedServer" [(selectedChannel)]="selectedChannel"
+            (openChannelDialog)="openDialog($event)">
+        </app-server-panel>
+
 
         <app-messages *ngIf="selectedChannel" [channel]="selectedChannel" id="messages"></app-messages>
     </div>

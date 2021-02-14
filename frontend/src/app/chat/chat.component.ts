@@ -6,7 +6,7 @@ import { LoginService } from '../shared/services/login.service';
 import { Router } from '@angular/router';
 import { Channel } from '../shared/models/channel';
 
-enum Dialog {
+export enum Dialog {
   NONE = -1,
   ADMIN = 0,
   ADD_SERVER = 1,

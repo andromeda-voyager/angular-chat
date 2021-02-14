@@ -1,0 +1,22 @@
+<div id="component">
+    <div id="server-control">
+        {{server.name}}
+        <button id="server-settings-button" (click)="openChannelDialog.emit(Dialog.ADMIN)">
+            <img src="assets/icons/settings-gear.svg">
+        </button>
+    </div>
+   <div id="channel-list">
+    <div id="add-channel-container">
+        <span>Channels</span>
+        <button id="add-channel-button" (click)="openChannelDialog.emit(Dialog.ADD_CHANNEL)">
+            +
+        </button>
+    </div>
+
+    <div *ngFor="let channel of server?.channels; let i = index">
+        <button [ngClass]="{'selected': selectedChannel==channel}" class="channel-button" (click)="selectChannelOnClick(channel)">
+            {{channel.name}}
+        </button>
+    </div>
+   </div>
+</div>

@@ -1,10 +1,12 @@
 #component {
   height:100%;
   width: 100%;
-  padding:25px;
   box-sizing: border-box;
   justify-content: center;
   align-items: center;
+  display: flex;
+  padding: 2.5vh 0 2.5vh 0;
+  position: relative;
 }
 
 #border {
@@ -13,7 +15,7 @@
   display:flex;
   // flex: 0 1 auto;
   flex-direction: row;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   position: relative;
   background-color: rgba(46, 48, 48, 0.212);
   border-radius: 10px;
@@ -32,7 +34,7 @@
   justify-content: space-between;
   align-items: center;
   padding:10px;
-  font-size:x-large;
+  font-size:min(3.5vw, 25px);
   color:white;
   background-color: rgb(29, 35, 37);
   border-bottom: 1.5px solid rgba(15, 139, 177, 0.849);
@@ -49,6 +51,8 @@ app-messages {
 }
 
 #servers {
+  width:12%;
+  max-width:90px;
   display:flex;
   flex-direction: column;
   align-items: center; 
@@ -62,12 +66,25 @@ app-messages {
   border:none;
   background-color: transparent;
   cursor: pointer;
-  display:flex;
-  justify-content: center;
-  margin-bottom:20px;
-  height:65px;
-  width:65px;
+  margin-bottom:15px;
+  width:80%;
+  padding-top:80%;
   outline: none;
+  position:relative;
+}
+
+// .button-wrapper {
+//   width:50%;
+// }
+
+.image-wrapper {
+  height:100%;
+  width:100%;
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
 }
 
 .server:hover:not(.selected) img{
@@ -76,30 +93,31 @@ app-messages {
 }
 
 .server.selected  {
-  transform: scale(1.2);
+  // transform: scale(1.2);
   pointer-events: none;
 }
 
-.server img {
+.avatar {
   height:100%;
-  width:auto;
-  object-fit: contain;
+  width:100%;
   border-radius: 50%;
   box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.103);
-  object-fit: contain;
 }
 
-.server.selected img {
+.server.selected .avatar {
   border-radius: 20%;
+}
+svg line {
+  stroke:rgb(116, 136, 167);
 }
 
 #add-server-button {
+  width:90%;
+  display: flex;
   outline: none;
   cursor: pointer;
-  margin:0 auto 25px auto;
-  color:white;
-  padding:12px;
-  border-radius: 6px;
+  margin:0 auto 20px auto;
+  border-radius: 8px;
   border: 3px solid  rgb(55, 58, 61);
   background-color:  rgb(55, 58, 61);
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
@@ -132,21 +150,31 @@ app-messages {
   height:100%;
 }
 
-#server-settings-button {
-  width:45px;
-  height:45px;
-  background-color: transparent;
-  border:none;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-#server-settings-button img {
-  width:100%;
-  height:100%;
-}
-
 .dialog {
   margin: auto;
   z-index: 2;
+}
+
+#test {
+  display: none;
+}
+
+@media screen and (max-width: 700px) {
+  #test {
+    display: block;
+    position:relative;
+      height:100%;
+      width:15%;
+
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      background-color: green; 
+      display:flex;
+  flex-direction: column;
+  align-items: center; 
+  box-sizing: border-box;
+  }
+  #top-nav {
+      justify-content: space-between;
+  }
 }

@@ -1,0 +1,118 @@
+#component {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(43, 45, 46);
+    height:100%;
+}
+
+#add-channel-button {
+    outline: none;
+    background-color: transparent;
+    border-style: none;
+    cursor: pointer;
+    font-size: x-large;
+    color:rgb(170, 170, 170);
+}
+
+#add-channel-container {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+    font-weight: 450;
+    font-size: larger;
+}
+
+#component span {
+    color:rgb(122, 122, 122);
+    font-weight: 450;
+}
+  
+#add-channel-button:hover {
+    color:rgb(255, 255, 255);
+}
+
+.overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.664);
+}
+  
+.dialog-container {
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    top:0;
+    left:0;
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+.channel-button {
+    cursor: pointer;
+    width: 95%;
+    text-align: left;
+    font-size: large;
+    border:none;
+    color:rgb(122, 122, 122);
+    padding:10px;
+    margin: 0 2.5% 0 2.5%;
+    background-color: transparent;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+
+.channel-button:hover {
+    background-color: rgb(87, 87, 87);
+}
+
+.channel-button.selected {
+    color:rgb(87, 119, 145);
+}
+
+.channel-button.selected:hover {
+    background-color: transparent;
+}
+
+
+#server-panel {
+    width:auto;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+}
+  
+#server-control {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+    font-size:min(3.5vw, 25px);
+    color:white;
+    background-color: rgb(29, 35, 37);
+    border-bottom: 1.5px solid rgba(15, 139, 177, 0.849);
+}
+  
+#channel-list {
+    flex-grow:1;
+    width:100%;
+}
+
+  #server-settings-button {
+    width:45px;
+    height:45px;
+    background-color: transparent;
+    border:none;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  #server-settings-button img {
+    width:100%;
+    height:100%;
+  }
