@@ -6,18 +6,23 @@
     padding-bottom:5px;
 }
 
-#messages {
-    display:flex;
-    flex-direction: column;
-    flex: 1 1 1px;
-    width:100%;
+#messages-wrapper {
+    height:100%;
     border: 3px solid  rgb(47, 48, 49);
     border-top-right-radius: 10px;
     background-color:  rgb(47, 48, 49);
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
     box-sizing: border-box;
     white-space: nowrap;
-    overflow-y:auto;
+    overflow-y:scroll;
+    display: flex;
+    flex-direction: column-reverse;
+    width:100%;
+}
+
+#messages {
+    width:100%;
+    margin-top:auto;
 }
 
 #component::-webkit-scrollbar {
@@ -78,6 +83,7 @@
     font-size: max(1vw, 18px);
     color:white;
     margin-top:5px;
+    min-height:35px;
 }
 
 .date-time-container {
