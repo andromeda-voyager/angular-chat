@@ -1,0 +1,14 @@
+<div id="component">
+    <button id="add-server-button" (click)="openChannelDialog.emit(Dialog.ADD_SERVER)">
+        <svg viewBox="0 0 100 100">
+            <line class="line" x1="25" y1="50" x2="75" y2="50" stroke="black" stroke-width="5%" />
+            <line class="line" x1="50" y1="25" x2="50" y2="75" stroke="black" stroke-width="5%" />
+        </svg>
+    </button>
+    <button class="server" [ngClass]="{'selected':selectedServer == server}" (click)="selectServerOnClick(server)"
+        *ngFor="let server of servers; let i = index">
+        <div class="image-wrapper">
+            <img class="server-image" [src]="server.image">
+        </div>
+    </button>
+</div>

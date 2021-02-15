@@ -1,0 +1,73 @@
+
+  #component {
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction: column;
+    align-items: center; 
+    box-sizing: border-box;
+    padding:5px;
+  }
+  
+  svg line {
+  stroke:rgb(116, 136, 167);
+}
+  .server {
+    border:none;
+    background-color: transparent;
+    cursor: pointer;
+    margin-bottom:15px;
+    width:80%;
+    padding-top:80%;
+    outline: none;
+    position:relative;
+  }
+  
+  .image-wrapper {
+    height:100%;
+    width:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+  }
+  
+  .server:hover:not(.selected) img{
+    transform: scale(1.1);
+    transition: all 0.18s ease-in;
+  }
+  
+  .server.selected  {
+    // transform: scale(1.2);
+    pointer-events: none;
+  }
+  
+  .server-image {
+    height:100%;
+    width:100%;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.103);
+  }
+  
+  .server.selected .server-image {
+    border-radius: 20%;
+  }
+
+  #add-server-button {
+    width:90%;
+    display: flex;
+    outline: none;
+    cursor: pointer;
+    margin:0 auto 20px auto;
+    border-radius: 8px;
+    border: 3px solid  rgb(55, 58, 61);
+    background-color:  rgb(55, 58, 61);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.356);
+  }
+  
+  #add-server-button:hover {
+    opacity: .7;
+    transition: all 0.18s ease-in;
+    box-shadow:  0px 0px 5px 5px rgba(15, 139, 177, 0.849);
+  }

@@ -28,7 +28,7 @@ export class ChatComponent implements OnInit {
   selectedChannel!: Channel;
   image: string = "";
   dialogOption: Dialog = Dialog.NONE;
-
+  isMessagesActive = true;
   constructor(private chatService: ChatService, private loginService: LoginService, private router: Router) { }
 
   ngOnInit(): void {
