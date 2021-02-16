@@ -1,19 +1,6 @@
 import { Channel } from "./channel";
 import { Message } from "./message";
 
-export enum UpdateType {
-    MESSAGE = "Message",
-    CHANNEL = "Channel",
-    ROLE = "Role",
-    MEMBER = "Member"
-}
-
-export enum UpdateEvent {
-    DELETE = "Delete",
-    MODIFY = "Modify",
-    NEW = "New",
-}
-
 export interface Server {
     id: number
     name: string
@@ -59,13 +46,4 @@ export interface ServerRequest {
     channel?: Channel
     role?: Role
     roles?: Role[]
-}
-
-export interface Update {
-    updateType: UpdateType
-    event: UpdateEvent
-    server?: Server
-    channel?: Channel
-    role?: Role
-    message?: Message
 }

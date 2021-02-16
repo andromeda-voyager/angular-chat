@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Observer, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Server, NewServer, Invite, Update } from '../models/server';
+import { Server, NewServer, Invite } from '../models/server';
+import { Update, UpdateEvent } from '../models/update';
 import { Channel } from '../models/channel';
+import { MessageService } from './message.service';
 
 const formOptions = {
   headers: new HttpHeaders({
@@ -35,25 +37,27 @@ export class ChatService {
   private updateSource = new Subject<Update>();
   update$ = this.updateSource.asObservable();
 
-  private messagesSource = new Subject<Update>();
-  messages$ = this.messagesSource.asObservable();
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private messageService: MessageService) { }
 
   // return new Observable((observer: Observer<ConnectResponse>) => {
 
   connect() {
     this.socket = new WebSocket('ws://localhost:8080/ws');
-    // this.socket.addEventListener('open', () => { });
-
+    
     this.socket.addEventListener('message', (event) => {
-      console.log("message received")
-      let update = JSON.parse(event.data);
-      this.updateSource.next(update);
-      console.log(update);
+      let update: Update = JSON.parse(event.data);
+      switch (update.event) {
+        case UpdateEvent.MESSAGE:
+          this.messageService.newUpdate(update);
+          break;
+        case UpdateEvent.CHANNEL:
+          break;
+        case UpdateEvent.ROLE:
+          break;
+      }
     });
 
-    this.socket.onclose = function(event){
+    this.socket.onclose = function (event) {
       console.log("socket closed")
     };
 

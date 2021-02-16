@@ -3,6 +3,7 @@ import { Observable, Observer, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Message, NewMessage } from '../models/message';
+import { Update, UpdateType } from '../models/update';
 
 const CHANNEL_URL = environment.BaseApiUrl + "/channels";
 
@@ -32,6 +33,18 @@ export class MessageService {
   constructor(private http: HttpClient) { }
 
 
+  newUpdate(update: Update) {
+    switch (update.type) {
+      case UpdateType.NEW:
+        this.newMessageSource.next(update.message);
+        break;
+      case UpdateType.DELETE:
+        break;
+      case UpdateType.MODIFY:
+        break;
+    }
+
+  }
   getMessages(channelID: number): Observable<Message[]> {
     return this.http.get<Message[]>(CHANNEL_URL + "/" + channelID + "/messages", credentialsOption);
   }
