@@ -49,7 +49,7 @@ func init() {
 			panic(err)
 		}
 		if u.HasPermission(permissions.ManageChannels, channel.ServerID) {
-			NewChannel(channel)
+			channel.Add()
 			json.NewEncoder(w).Encode(channel)
 		} else {
 			fmt.Println("can't create channel")
@@ -95,9 +95,8 @@ func init() {
 		if err := json.Unmarshal(resp, &m); err != nil {
 			panic(err)
 		}
-		m.AccountID = u.ID
-		m.Add()
-		update := Update{UpdateType: MESSAGE, Event: NEW, Message: m}
+		m.Add(u.ID)
+		update := MessageUpdate{Type: NEW, Event: MESSAGE, Message: m}
 		SendChannelUpdate(update, u.ID, m.ChannelID)
 		json.NewEncoder(w).Encode(m)
 	})

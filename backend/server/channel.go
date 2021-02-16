@@ -19,8 +19,8 @@ type Override struct {
 	Permissions uint8 `json:"permissions"`
 }
 
-// NewChannel .
-func NewChannel(c *Channel) {
+// Add .
+func (c *Channel) Add() {
 	var args []interface{}
 	args = append(args, c.ServerID, c.Name)
 	channelID, err := database.Exec("INSERT INTO Channel (server_id, name) Values (?, ?);", args)
@@ -32,7 +32,7 @@ func NewChannel(c *Channel) {
 
 }
 
-// LoadChannelOverrides .
+// LoadOverrides .
 func (c Channel) LoadOverrides() {
 	var args []interface{}
 	args = append(args, c.ID)
@@ -67,8 +67,9 @@ func GetMessages(channelID int) []Message {
 	messages := []Message{}
 	for rows.Next() {
 		var m Message
-		rows.Scan(&m.ID, &m.AccountID, &m.ChannelID, &m.Media, &m.Text, &m.TimePosted)
-		member := getMember(m.AccountID)
+		var id int
+		rows.Scan(&m.ID, &id, &m.ChannelID, &m.Media, &m.Text, &m.TimePosted)
+		member := getMember(id)
 		m.Member = member
 		messages = append(messages, m)
 	}
@@ -89,7 +90,7 @@ func GetMessages(channelID int) []Message {
 // 	return true
 // }
 
-// AddPermissions .
+// AddOverrides .
 func (c *Channel) AddOverrides() {
 	for _, r := range c.Overrides {
 		var args []interface{}

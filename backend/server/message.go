@@ -5,10 +5,9 @@ import (
 	"time"
 )
 
-// Post .
+// Message .
 type Message struct {
 	ID         int       `json:"id"`
-	AccountID  int       `json:"AccountID"`
 	ChannelID  int       `json:"channelID"`
 	Text       string    `json:"text"`
 	Media      string    `json:"Media"`
@@ -16,10 +15,11 @@ type Message struct {
 	Member     Member    `json:"member"`
 }
 
-func (m *Message) Add() {
+func (m *Message) Add(senderID int) {
 	var args []interface{}
 	m.TimePosted = time.Now().UTC()
-	args = append(args, m.AccountID, m.ChannelID, m.Text, m.Media, m.TimePosted)
+	m.Member = getMember(senderID)
+	args = append(args, m.Member.AccountID, m.ChannelID, m.Text, m.Media, m.TimePosted)
 	id, err := database.Exec("INSERT INTO Message (account_id, channel_id, text, media, time_posted) Values (?, ?, ?, ?, ?);", args)
 	if err != nil {
 		panic(err.Error())

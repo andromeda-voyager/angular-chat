@@ -43,9 +43,9 @@ func New(m *Member, r *http.Request) Server {
 	if err != nil {
 		fmt.Println("failed to add server to database")
 	}
-	s.Role = s.AddRole("owner", 0, permissions.Full) // s.Role is the role of the server owner
-	s.AddRole("default", 1, permissions.None)        // default role is created for new members
-	s.AddMember(m)
+	s.Role = s.NewRole("owner", 0, permissions.Full) // s.Role is the role of the server owner
+	s.NewRole("default", 1, permissions.None)        // default role is created for new members
+	s.NewMember(m)
 	return s
 }
 
@@ -76,8 +76,8 @@ func Get(serverID, userID int) (*Server, bool) {
 	return nil, false
 }
 
-// AddMember .
-func (s *Server) AddMember(m *Member) {
+// NewMember .
+func (s *Server) NewMember(m *Member) {
 	var args []interface{}
 	args = append(args, s.ID, m.AccountID, m.Alias, s.Role.ID)
 	_, err := database.Exec("INSERT INTO ServerMember (server_id, account_id, alias, role_id) Values (?, ?, ?, ?);", args)
@@ -91,8 +91,8 @@ func (s *Server) AddMember(m *Member) {
 	s.Members = append(s.Members, m)
 }
 
-// AddRole .
-func (s *Server) AddRole(name string, ranking int, permissions uint8) Role {
+// NewRole .
+func (s *Server) NewRole(name string, ranking int, permissions uint8) Role {
 	var args []interface{}
 	args = append(args, s.ID, name, ranking, permissions)
 	roleID, err := database.Exec("INSERT INTO Role (server_id, name, ranking, permissions) Values (?, ?, ?, ?);", args)
