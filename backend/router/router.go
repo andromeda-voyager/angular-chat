@@ -37,6 +37,11 @@ func (g *Group) Get(path string, callback routeCallbackFunc) {
 	routes.build(splitPath(path, "GET"), callback, g)
 }
 
+// Put registers the provided callback and group that calls it with a PUT route
+func (g *Group) Put(path string, callback routeCallbackFunc) {
+	routes.build(splitPath(path, "PUT"), callback, g)
+}
+
 // Handler is called by http.HandleFunc. The match function is called on the root route object
 // to find the route assoicated with the req url path.
 func Handler(w http.ResponseWriter, req *http.Request) {
