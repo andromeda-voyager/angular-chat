@@ -13,7 +13,10 @@ export class PostsComponent implements OnChanges {
   @Input() messages: Message[] = []
   @Input() messageText: string = "";
   showTime = false;
-
+  selectedMessage!: Message;
+  top = 0;
+  left = 0;
+  showMessageMenu = false;
   constructor(private messageService: MessageService) {
     // let m: NewMessage = { channelID: 0, text: "hello", media: "none", id: 0, timePosted: new Date() }
     // this.messages.push(m);
@@ -76,6 +79,12 @@ export class PostsComponent implements OnChanges {
     if (index >= 0) {
       this.messages.splice(index, 1);
     }
+  }
+
+  openMessageMenuOnClick(event: MouseEvent) {
+    this.top = event.pageY -5;
+    this.left = event.pageX -5;
+    this.showMessageMenu = true;
   }
 
 
