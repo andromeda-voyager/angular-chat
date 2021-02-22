@@ -101,6 +101,17 @@ func init() {
 		json.NewEncoder(w).Encode(m)
 	})
 
+	authGroup.Delete("/channels/:cID<int>/messages/:mID<int>", func(w http.ResponseWriter, r *http.Request, c *router.Context) { //TODO check user permissions
+		u := c.Keys["user"].(*user.User)
+		messageID := c.Keys["mID"].(int)
+		channelID := c.Keys["cID"].(int)
+
+		deleteMessage(messageID)
+		update := MessageUpdate{Type: DELETE, Event: MESSAGE, Message: Message{ID: messageID}}
+		SendChannelUpdate(update, u.ID, channelID)
+		json.NewEncoder(w).Encode("ok")
+	})
+
 	authGroup.Get("/channels/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
 		u := c.Keys["user"].(*user.User)
 		channelID := c.Keys["id"].(int)

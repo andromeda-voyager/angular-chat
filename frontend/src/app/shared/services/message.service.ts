@@ -39,8 +39,10 @@ export class MessageService {
         this.newMessageSource.next(update.message);
         break;
       case UpdateType.DELETE:
+        this.deleteMessageSource.next(update.message);
         break;
       case UpdateType.MODIFY:
+        this.modifyMessageSource.next(update.message);
         break;
     }
 
@@ -55,6 +57,10 @@ export class MessageService {
 
   postMessage(message: NewMessage) {
     this.http.post<Message>(CHANNEL_URL + "/" + message.channelID + "/messages", message, credentialsOption).subscribe();
+  }
+
+  deleteMessage(message: Message) {
+    this.http.delete<Message>(CHANNEL_URL + "/" + message.channelID + "/messages/" + message.id, credentialsOption).subscribe();
   }
 
 }

@@ -12,7 +12,7 @@ type Member struct {
 	Role      Role   `json:"role"`
 }
 
-func getMember(accountID int) Member {
+func GetMember(accountID int) Member {
 
 	var args []interface{}
 	args = append(args, accountID)

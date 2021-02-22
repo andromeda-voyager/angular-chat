@@ -136,18 +136,22 @@ button {
     border: none;
 }
 
-#message-menu {
+.message-menu {
     background-color: rgb(204, 204, 204);
     display: flex;
     flex-direction: column;
-    position: fixed;
+    position: absolute;
     z-index:100;
 }
 
-#message-menu button {
+.message-menu button {
     padding:10px;
 }
 
-#message-menu button:hover {
+.message-menu button:hover {
     background-color: grey;
+}
+
+.message-options-container {
+    position: relative;
 }

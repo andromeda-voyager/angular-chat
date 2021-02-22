@@ -1,15 +1,6 @@
 <div id="component">
-
-    <div *ngIf="showMessageMenu" (mouseleave)="showMessageMenu=false" [style.top.px]="top" [style.left.px]="left" id="message-menu">
-        <button>Edit</button>
-        <button>Reply</button>
-        <button>Delete</button>
-    </div>
-
     <div id="messages-wrapper">
-
         <div id="messages">
-
             <div class="message" *ngFor="let message of messages; let i = index">
                 <div class="user">
                     <img class="avatar" [src]="message.member.avatar">
@@ -20,13 +11,21 @@
                     <div class="message-bottom-container">
                         <span class="date">{{getDate(message)}}</span>
                         <span class="time">{{getTime(message)}}</span>
-                        <button class="message-options" (click)="openMessageMenuOnClick($event)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black">
-                                <path d="M0 0h24v24H0z" fill="none" />
-                                <path
-                                    d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                            </svg>
-                        </button>
+                        <div class="message-options-container">
+                            <button class="message-options" (click)="openMessageMenuOnClick($event, message)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                </svg>
+                            </button>
+                            <div *ngIf="showMessageMenu && selectedMessage==message" (mouseleave)="showMessageMenu=false" [style.top.px]="top" [style.left.px]="left" class="message-menu">
+                                <button>Edit</button>
+                                <button>Reply</button>
+                                <button (click)="deleteMessageOnClick()">Delete</button>
+                            </div>
+                        </div>
+                       
                     </div>
                 </div>
             </div>

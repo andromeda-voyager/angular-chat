@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+type MessageUpdate struct {
+	Type    string  `json:"type"`
+	Event   string  `json:"event"`
+	Message Message `json:"message"`
+}
+
 // Message .
 type Message struct {
 	ID         int       `json:"id"`
@@ -15,14 +21,24 @@ type Message struct {
 	Member     Member    `json:"member"`
 }
 
-func (m *Message) Add(senderID int) {
+func (m *Message) Add(senderID int) (bool, error) {
 	var args []interface{}
 	m.TimePosted = time.Now().UTC()
-	m.Member = getMember(senderID)
+	m.Member = GetMember(senderID)
 	args = append(args, m.Member.AccountID, m.ChannelID, m.Text, m.Media, m.TimePosted)
-	id, err := database.Exec("INSERT INTO Message (account_id, channel_id, text, media, time_posted) Values (?, ?, ?, ?, ?);", args)
+	_, err := database.Exec("INSERT INTO Message (account_id, channel_id, text, media, time_posted) Values (?, ?, ?, ?, ?);", args)
 	if err != nil {
-		panic(err.Error())
+		return false, err
 	}
-	m.ID = id
+	return true, err
+}
+
+func deleteMessage(messageID int) (bool, error) {
+	var args []interface{}
+	args = append(args, messageID)
+	_, err := database.Exec("DELETE FROM Message WHERE id=?", args)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

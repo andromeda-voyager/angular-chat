@@ -13,14 +13,8 @@ const (
 type Update struct {
 	Type    string  `json:"type"`
 	Event   string  `json:"event"`
-	Server  Server  `json:"server,omitempty"`
-	Channel Channel `json:"channel,omitempty"`
-	Role    Role    `json:"role,omitempty"`
-	Message Message `json:"message,omitempty"`
-}
-
-type MessageUpdate struct {
-	Type    string  `json:"type"`
-	Event   string  `json:"event"`
+	Server  Server  `json:"server"`
+	Channel Channel `json:"channel"`
+	Role    Role    `json:"role"`
 	Message Message `json:"message"`
 }

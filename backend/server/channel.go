@@ -69,7 +69,7 @@ func GetMessages(channelID int) []Message {
 		var m Message
 		var id int
 		rows.Scan(&m.ID, &id, &m.ChannelID, &m.Media, &m.Text, &m.TimePosted)
-		member := getMember(id)
+		member := GetMember(id)
 		m.Member = member
 		messages = append(messages, m)
 	}

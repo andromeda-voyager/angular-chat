@@ -18,8 +18,6 @@ export class PostsComponent implements OnChanges {
   left = 0;
   showMessageMenu = false;
   constructor(private messageService: MessageService) {
-    // let m: NewMessage = { channelID: 0, text: "hello", media: "none", id: 0, timePosted: new Date() }
-    // this.messages.push(m);
   }
 
   ngOnInit(): void {
@@ -81,10 +79,16 @@ export class PostsComponent implements OnChanges {
     }
   }
 
-  openMessageMenuOnClick(event: MouseEvent) {
-    this.top = event.pageY -5;
-    this.left = event.pageX -5;
+  deleteMessageOnClick() {
+    this.messageService.deleteMessage(this.selectedMessage);
+    this.showMessageMenu=false;
+  }
+
+  openMessageMenuOnClick(event: MouseEvent, message: Message) {
+    // this.top = event.pageY -5;
+    // this.left = event.pageX -5;
     this.showMessageMenu = true;
+    this.selectedMessage = message;
   }
 
 
