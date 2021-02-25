@@ -7,22 +7,22 @@
                     <div class="alias">{{message.member.alias}}</div>
                 </div>
                 <div class="text-container">
-                    <div class="text">{{message.text}}</div>
+                    <span  [isFocused]="message.isEditable" (keydown.enter)="$event.preventDefault()" (keyup.enter)="modifyMessage($event, message)" [attr.contenteditable]="message.isEditable" class="text"[ngClass]="{'editable':message.isEditable}" [textContent]="message.text"></span>
                     <div class="message-bottom-container">
                         <span class="date">{{getDate(message)}}</span>
                         <span class="time">{{getTime(message)}}</span>
                         <div class="message-options-container">
-                            <button class="message-options" (click)="openMessageMenuOnClick($event, message)">
+                            <button class="message-options" (click)="selectedMessage = message">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black">
                                     <path d="M0 0h24v24H0z" fill="none" />
                                     <path
                                         d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                                 </svg>
                             </button>
-                            <div *ngIf="showMessageMenu && selectedMessage==message" (mouseleave)="showMessageMenu=false" [style.top.px]="top" [style.left.px]="left" class="message-menu">
-                                <button>Edit</button>
+                            <div *ngIf="selectedMessage==message" (mouseleave)="selectedMessage=undefined" class="message-menu">
+                                <button (click)="editMessageOnClick(message)">Edit</button>
                                 <button>Reply</button>
-                                <button (click)="deleteMessageOnClick()">Delete</button>
+                                <button (click)="deleteMessageOnClick(message)">Delete</button>
                             </div>
                         </div>
                        
@@ -31,6 +31,8 @@
             </div>
         </div>
     </div>
-    <input (keyup.enter)="sendMessage()" isFocused [(ngModel)]="messageText" id="message-input">
+    <input (keyup.enter)="sendMessage()" [isFocused]="true" [(ngModel)]="messageText" id="message-input">
 
 </div>
+
+<!-- [style.top.px]="top" [style.left.px]="left"  -->

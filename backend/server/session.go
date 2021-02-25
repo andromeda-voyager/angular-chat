@@ -92,11 +92,14 @@ func SendMessage(userID int, message string) {
 	}
 }
 
-func SendChannelUpdate(u interface{}, userID, channelID int) {
-	c, ok := channels[channelID][userID]
+func SendChannelUpdate(u interface{}, channelID int) {
+	connections, ok := channels[channelID]
 	if ok {
-		if err := websocket.JSON.Send(c.ws, u); err != nil {
-			fmt.Println("ws message sent to client")
+		for _, c := range connections {
+			if err := websocket.JSON.Send(c.ws, u); err != nil {
+				fmt.Println("ws message sent to client")
+				// TODO remove connection
+			}
 		}
 	}
 }

@@ -1,15 +1,18 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges } from '@angular/core';
 
 @Directive({
   selector: '[isFocused]'
 })
-export class IsFocusedDirective {
+export class IsFocusedDirective implements OnChanges{
 
+  @Input('isFocused') isFocused:boolean = false;
   constructor(private element: ElementRef) { }
 
   //ngAfterViewInit() {
-    ngOnInit() {
-    this.element.nativeElement.focus();
+    ngOnChanges() {
+      if(this.isFocused) {
+        this.element.nativeElement.focus();
+      }
   }
 
 }

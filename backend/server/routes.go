@@ -97,18 +97,18 @@ func init() {
 		}
 		m.Add(u.ID)
 		update := MessageUpdate{Type: NEW, Event: MESSAGE, Message: m}
-		SendChannelUpdate(update, u.ID, m.ChannelID)
+		SendChannelUpdate(update, m.ChannelID)
 		json.NewEncoder(w).Encode(m)
 	})
 
 	authGroup.Delete("/channels/:cID<int>/messages/:mID<int>", func(w http.ResponseWriter, r *http.Request, c *router.Context) { //TODO check user permissions
-		u := c.Keys["user"].(*user.User)
+		// u := c.Keys["user"].(*user.User)
 		messageID := c.Keys["mID"].(int)
 		channelID := c.Keys["cID"].(int)
 
 		deleteMessage(messageID)
 		update := MessageUpdate{Type: DELETE, Event: MESSAGE, Message: Message{ID: messageID}}
-		SendChannelUpdate(update, u.ID, channelID)
+		SendChannelUpdate(update, channelID)
 		json.NewEncoder(w).Encode("ok")
 	})
 
@@ -125,6 +125,21 @@ func init() {
 		channelID := c.Keys["id"].(int)
 		messages := GetMessages(channelID)
 		json.NewEncoder(w).Encode(messages)
+	})
+
+	authGroup.Put("/channels/:cID<int>/messages/id", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		// u := c.Keys["user"].(*user.User)
+		channelID := c.Keys["cID"].(int)
+		// messageID := c.Keys["mID"].(int)
+		var m Message
+		resp, _ := ioutil.ReadAll(r.Body)
+		if err := json.Unmarshal(resp, &m); err != nil {
+			panic(err)
+		}
+		editMessage(m)
+		update := MessageUpdate{Type: MODIFY, Event: MESSAGE, Message: m}
+		SendChannelUpdate(update, channelID)
+		json.NewEncoder(w).Encode("ok")
 	})
 
 }

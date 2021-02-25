@@ -19,6 +19,8 @@ type Message struct {
 	Media      string    `json:"Media"`
 	TimePosted time.Time `json:"timePosted"`
 	Member     Member    `json:"member"`
+	ParentID   int       `json:"parentID"`
+	IsEdited   bool      `json:"isEdited"`
 }
 
 func (m *Message) Add(senderID int) (bool, error) {
@@ -37,6 +39,16 @@ func deleteMessage(messageID int) (bool, error) {
 	var args []interface{}
 	args = append(args, messageID)
 	_, err := database.Exec("DELETE FROM Message WHERE id=?", args)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func editMessage(message Message) (bool, error) {
+	var args []interface{}
+	args = append(args, message.Text, message.Media, message.ID)
+	_, err := database.Exec("UPDATE Message SET text = ?, media = ? WHERE id=?", args)
 	if err != nil {
 		return false, err
 	}

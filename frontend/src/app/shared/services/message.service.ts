@@ -59,6 +59,10 @@ export class MessageService {
     this.http.post<Message>(CHANNEL_URL + "/" + message.channelID + "/messages", message, credentialsOption).subscribe();
   }
 
+  putMessage(message: Message) {
+    this.http.put<Message>(CHANNEL_URL + "/" + message.channelID + "/messages/" + message.id, message, credentialsOption).subscribe();
+  }
+
   deleteMessage(message: Message) {
     this.http.delete<Message>(CHANNEL_URL + "/" + message.channelID + "/messages/" + message.id, credentialsOption).subscribe();
   }

@@ -81,11 +81,11 @@
 }
 
 .text {
+    outline: none;
     word-wrap: break-word;
     font-size: max(1vw, 18px);
     color:white;
-    margin-top:5px;
-    min-height:35px;
+    padding:10px 5px 10px 5px;
 }
 
 .message-bottom-container {
@@ -154,4 +154,8 @@ button {
 
 .message-options-container {
     position: relative;
+}
+
+.editable {
+    background-color: grey;
 }
