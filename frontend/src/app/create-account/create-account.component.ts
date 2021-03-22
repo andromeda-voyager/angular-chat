@@ -16,7 +16,7 @@ export class CreateAccountComponent implements OnInit {
   @Input() account: Account = { password: "", email: "", username: "", code:""}
   hide = false;
   file: File = null!;
-  avatarURL: string = "assets/default-avatar.jpg"
+  avatarURL: string = "http://localhost:8080/static/images/default-avatar.jpg"
   showRequired = false;
   showFirstCard = true;
   constructor(private accountService: AccountService, private loginService: LoginService, private router: Router) { }
