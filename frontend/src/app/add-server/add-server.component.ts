@@ -12,7 +12,7 @@ export class AddServerComponent implements OnInit {
   @Input() invite: Invite = { code: "" }
   @Output() newServer = new EventEmitter<Server>();
   file: File = null!;
-  serverImageUrl: string = "assets/default-avatar.jpg"
+  serverImageUrl: string = "http://localhost:8080/static/images/default-avatar.jpg";
   showRequired = false;
   showCreateServer = false;
   showAddServer = false;
