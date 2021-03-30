@@ -51,3 +51,7 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 		routes.match(splitPath(req.URL.Path, req.Method), w, req, c)
 	}
 }
+
+func PrintRoutes() {
+	routes.print()
+}

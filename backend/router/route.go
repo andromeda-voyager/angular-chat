@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -33,7 +34,10 @@ func (r *route) build(pathSegments []string, fn routeCallbackFunc, g *Group) {
 		r.callback = fn
 		r.group = g
 	} else {
-		nestedRoute, ok := r.getNestedRoute(pathSegments[0])
+		nestedRoute, ok := r.nestedRoutes[pathSegments[0]]
+		if strings.HasPrefix(pathSegments[0], ":") {
+			nestedRoute, ok = r.nestedRoutes["param"]
+		}
 		if ok {
 			nestedRoute.build(pathSegments[1:], fn, g)
 		} else {
@@ -48,6 +52,22 @@ func (r *route) build(pathSegments []string, fn routeCallbackFunc, g *Group) {
 			nestedRoute.build(pathSegments[1:], fn, g)
 			r.nestedRoutes[nestedRoute.name] = nestedRoute
 		}
+	}
+}
+
+func (r *route) print() {
+	for x, nr := range r.nestedRoutes {
+		if nr.callback != nil {
+			if x == "param" {
+				fmt.Println(nr.paramName)
+			} else {
+				fmt.Println(x)
+			}
+			for s, _ := range nr.nestedRoutes {
+				fmt.Println("---", s)
+			}
+		}
+		nr.print()
 	}
 }
 
