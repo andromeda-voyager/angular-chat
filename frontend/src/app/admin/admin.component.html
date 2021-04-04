@@ -4,7 +4,7 @@
         <button (click)="menuIndex=Menu.GENERAL">General</button>
         <button (click)="menuIndex=Menu.ROLES">Roles</button>
         <button (click)="menuIndex=Menu.MEMBERS">Members</button>
-
+        <button (click)="menuIndex=Menu.INVITES">Invites</button>
     </div>
 
     <div id="view">
@@ -26,6 +26,16 @@
         </div>
         <div class="menuSection" *ngIf="menuIndex==Menu.GENERAL">
             <button mat-raised-button id="delete-server-button" (click)="deleteServer()">Delete Server</button>
+        </div>
+
+        <div id="invites" *ngIf="menuIndex==Menu.INVITES">
+            <button (click)="createInviteCode()">
+                Create Invite Code
+            </button>
+
+            <div *ngFor="let invite of server.invites">
+                {{invite.code}}
+            </div>
         </div>
     </div>
 </div>

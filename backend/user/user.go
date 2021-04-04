@@ -25,7 +25,7 @@ type User struct {
 }
 
 // Get .
-func Get(credentials Credentials) (*User, error) {
+func Get(credentials Credentials) (User, error) {
 
 	var args []interface{}
 	args = append(args, credentials.Email)
@@ -34,15 +34,15 @@ func Get(credentials Credentials) (*User, error) {
 		panic(err.Error())
 	}
 	defer rows.Close()
+	var u User
 	if rows.Next() {
-		var u User
 		rows.Scan(&u.ID, &u.Email, &u.Username, &u.Avatar, &u.hashedPassword, &u.salt)
 		defer u.clearPassword()
 		if u.isPasswordCorrect(credentials.Password) {
-			return &u, nil
+			return u, nil
 		}
 	}
-	return nil, errors.New("Failed to get user Information")
+	return u, errors.New("Failed to get user Information")
 }
 
 func (u *User) clearPassword() {
@@ -60,7 +60,7 @@ func (u *User) isPasswordCorrect(passwordAttempt string) bool {
 }
 
 // Add adds an account to the database
-func Add(a Account) *User {
+func Add(a Account) User {
 	salt := random.GetSecureBytes(32)
 	hashedPassword := argon2.IDKey([]byte(a.Password), salt, 4, 32*1024, 4, 32)
 	var args []interface{}
@@ -70,7 +70,7 @@ func Add(a Account) *User {
 		panic(err.Error())
 	}
 	defer rows.Close()
-	return &User{Username: a.Username, Email: a.Email, Avatar: a.Avatar}
+	return User{Username: a.Username, Email: a.Email, Avatar: a.Avatar}
 }
 
 // HasPermission .

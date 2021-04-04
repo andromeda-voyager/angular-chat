@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ChatService } from '../shared/services/chat.service';
-import { Role, Server } from '../shared/models/server';
+import { Invite, Role, Server } from '../shared/models/server';
 
 enum Menu {
+  INVITES = 3,
   ROLES = 1,
   MEMBERS = 2,
   GENERAL = 0
@@ -25,11 +26,20 @@ export class AdminComponent implements OnInit {
   constructor(private chatService:ChatService) { }
 
   ngOnInit(): void {
+    console.log(this.server);
   }
   
   deleteServer() {
     this.chatService.deleteServer(this.server.id).subscribe();
     this.serverDeleted.emit(this.server);
+  }
+
+  createInviteCode() {
+    let invite: Invite = {code:"", expires:false, expiration:new Date()}
+    this.chatService.createInviteCode(this.server.id, invite).subscribe({
+      next: invite => {console.log(invite)}, //{this.server.invites.push(invite)},
+      error: () => {console.log("error")}
+    });
   }
 
 }

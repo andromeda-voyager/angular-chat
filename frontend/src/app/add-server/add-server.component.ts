@@ -9,7 +9,7 @@ import { Server, NewServer, Invite } from '../shared/models/server';
 })
 export class AddServerComponent implements OnInit {
   @Input() server: NewServer = {name: "", description: ""}
-  @Input() invite: Invite = { code: "" }
+  @Input() inviteCode = "";
   @Output() newServer = new EventEmitter<Server>();
   file: File = null!;
   serverImageUrl: string = "http://localhost:8080/static/images/default-avatar.jpg";
@@ -23,14 +23,12 @@ export class AddServerComponent implements OnInit {
   }
 
   joinServer() {
-    if (this.invite.code.length > 7) {
-      this.chatService.joinServer(this.invite).subscribe(connection => {
-      //  this.newConnection.emit(connection);
+    
+      this.chatService.joinServer({code:this.inviteCode, expires:false}).subscribe(server => {
+        this.newServer.emit(server);
       })
-    }
-    else {
-      this.showRequired = true;
-    }
+    
+    
 
   }
 

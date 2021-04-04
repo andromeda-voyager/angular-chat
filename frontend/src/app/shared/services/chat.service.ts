@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Observer, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Server, NewServer, Invite } from '../models/server';
 import { Update, UpdateEvent } from '../models/update';
@@ -93,8 +93,13 @@ export class ChatService {
     return this.http.delete<Server>(SERVER_URL + "/" + serverID, jsonOptions);
   }
 
+  createInviteCode(serverID: number, invite: Invite): Observable<Invite> {
+    console.log("creatin code");
+    return this.http.post<Invite>(SERVER_URL + "/" + serverID + "/invite", invite, jsonOptions);
+  }
+
   joinServer(invite: Invite): Observable<Server> {
-    return this.http.post<Server>(JOIN_SERVER_URL, invite);
+    return this.http.post<Server>(JOIN_SERVER_URL, invite, jsonOptions);
   }
 
 }

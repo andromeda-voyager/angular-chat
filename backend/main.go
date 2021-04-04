@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"nebula/router"
 	"net/http"
 	"path/filepath"
 
+	router "github.com/andromeda-voyager/go-router"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -27,6 +27,6 @@ func main() {
 	//http.Handle("/", Auth(router.Handler))
 
 	fmt.Println("Listening on port 8080")
-
+	//	router.PrintRoutes()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

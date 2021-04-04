@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"nebula/permissions"
-	"nebula/router"
 	"nebula/user"
 	"net/http"
+
+	router "github.com/andromeda-voyager/go-router"
 )
 
 func init() {
@@ -16,7 +17,7 @@ func init() {
 	authGroup.Use(user.Authenticate)
 
 	authGroup.Get("/servers/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
+		u := c.Keys["user"].(user.User)
 		serverID := c.Keys["id"].(int)
 		ConnectToServer(serverID, u.ID)
 		s, ok := Get(serverID, u.ID)
@@ -27,22 +28,33 @@ func init() {
 		}
 	})
 
+	authGroup.Post("/servers/:id<int>/invite", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
+		// u := c.Keys["user"].(user.User)
+		fmt.Println("creating code")
+		serverID := c.Keys["id"].(int)
+		invite := NewInvite(serverID)
+		// if ok {
+		json.NewEncoder(w).Encode(invite)
+		// } else {
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// }
+	})
+
 	authGroup.Get("/servers", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
+		u := c.Keys["user"].(user.User)
 		//serverID, err := strconv.Atoi(r.URL.Query().Get("serverID"))
 		servers := getServers(u.ID)
 		json.NewEncoder(w).Encode(servers)
 	})
 
 	authGroup.Post("/servers", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
-		var serverOwner = &Member{AccountID: u.ID, Alias: u.Username, Avatar: u.Avatar}
-		server := New(serverOwner, r)
+		u := c.Keys["user"].(user.User)
+		server := New(u, r)
 		json.NewEncoder(w).Encode(server)
 	})
 
 	authGroup.Post("/channels", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
+		u := c.Keys["user"].(user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
 		var channel *Channel
 		if err := json.Unmarshal(resp, &channel); err != nil {
@@ -57,7 +69,7 @@ func init() {
 	})
 
 	authGroup.Delete("/servers/:id<int>", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
+		u := c.Keys["user"].(user.User)
 		serverID := c.Keys["id"].(int)
 		if u.HasPermission(permissions.Full, serverID) {
 			ok := Delete(serverID)
@@ -68,28 +80,20 @@ func init() {
 	})
 
 	authGroup.Post("/servers/join", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		// resp, _ := ioutil.ReadAll(r.Body)
-		// var invite server.Invite
-		// if err := json.Unmarshal(resp, &invite); err != nil {
-		// 	panic(err)
-		// }
-		// fmt.Println("invite code:", invite.Code)
-		// var args []interface{}
-		// args = append(args, invite.Code)
-		// rows, err := database.Query("SELECT server_id FROM Invite WHERE code=?;", args)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// defer rows.Close()
-
-		// if rows.Next() {
-		// 	var serverID int
-		// 	rows.Scan(&serverID)
-		// }
+		u := c.Keys["user"].(user.User)
+		resp, _ := ioutil.ReadAll(r.Body)
+		var invite Invite
+		if err := json.Unmarshal(resp, &invite); err != nil {
+			panic(err)
+		}
+		s, ok := Join(u, invite)
+		if ok {
+			json.NewEncoder(w).Encode(s)
+		}
 	})
 
 	authGroup.Post("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) { //TODO check user permissions
-		u := c.Keys["user"].(*user.User)
+		u := c.Keys["user"].(user.User)
 		resp, _ := ioutil.ReadAll(r.Body)
 		var m Message
 		if err := json.Unmarshal(resp, &m); err != nil {
@@ -102,7 +106,7 @@ func init() {
 	})
 
 	authGroup.Delete("/channels/:cID<int>/messages/:mID<int>", func(w http.ResponseWriter, r *http.Request, c *router.Context) { //TODO check user permissions
-		// u := c.Keys["user"].(*user.User)
+		// u := c.Keys["user"].(user.User)
 		messageID := c.Keys["mID"].(int)
 		channelID := c.Keys["cID"].(int)
 
@@ -113,7 +117,7 @@ func init() {
 	})
 
 	authGroup.Get("/channels/:id<int>/connect", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*user.User)
+		u := c.Keys["user"].(user.User)
 		channelID := c.Keys["id"].(int)
 		ConnectToChannel(channelID, u.ID)
 		messages := GetMessages(channelID)
@@ -121,14 +125,14 @@ func init() {
 	})
 
 	authGroup.Get("/channels/:id<int>/messages", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		//u := c.Keys["user"].(*user.User)
+		//u := c.Keys["user"].(user.User)
 		channelID := c.Keys["id"].(int)
 		messages := GetMessages(channelID)
 		json.NewEncoder(w).Encode(messages)
 	})
 
 	authGroup.Put("/channels/:cID<int>/messages/id", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		// u := c.Keys["user"].(*user.User)
+		// u := c.Keys["user"].(user.User)
 		channelID := c.Keys["cID"].(int)
 		// messageID := c.Keys["mID"].(int)
 		var m Message

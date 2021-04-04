@@ -6,6 +6,7 @@ import (
 	"nebula/database"
 	"nebula/images"
 	"nebula/permissions"
+	"nebula/user"
 	"net/http"
 )
 
@@ -18,20 +19,15 @@ type Server struct {
 	Role        Role      `json:"role"`
 	Roles       []Role    `json:"roles"`
 	Alias       string    `json:"alias"`
-	Members     []*Member `json:"members"`
+	Members     []Member  `json:"members"`
 	Channels    []Channel `json:"channels"`
-}
-
-// Invite .
-type Invite struct {
-	Code     string `json:"code"`
-	ServerID string `json:"serverID"`
+	Invites     []Invite  `json:"invites"`
 }
 
 const DefaultImageUrl = "default-avatar.jpg"
 
 // New .
-func New(m *Member, r *http.Request) Server {
+func New(owner user.User, r *http.Request) Server {
 	serverJSON := r.FormValue("server")
 	var s Server
 	json.Unmarshal([]byte(serverJSON), &s)
@@ -43,13 +39,17 @@ func New(m *Member, r *http.Request) Server {
 	if err != nil {
 		fmt.Println("failed to add server to database")
 	}
-	s.Role = s.NewRole("owner", 0, permissions.Full) // s.Role is the role of the server owner
-	s.NewRole("default", 1, permissions.None)        // default role is created for new members
-	s.NewMember(m)
+	ownerRole := NewRole(s.ID, "owner", 0, permissions.Full)
+	s.Roles = append(s.Roles, ownerRole)
+	s.Roles = append(s.Roles, NewRole(s.ID, "default", 1, permissions.None)) // default role is created for new members
+	m := NewMember(s.ID, owner, ownerRole)
+	//s.Members = []Member{}
+	s.Alias = owner.Username
+	s.Members = append(s.Members, m)
 	return s
 }
 
-func Get(serverID, userID int) (*Server, bool) {
+func Get(serverID int, userID int) (*Server, bool) {
 	var args []interface{}
 	args = append(args, userID, serverID)
 	rows, err := database.Query(
@@ -71,37 +71,39 @@ func Get(serverID, userID int) (*Server, bool) {
 		s.Role = r
 		s.LoadRoles()
 		s.LoadChannels()
+
+		s.LoadInvites()
 		return &s, true
 	}
 	return nil, false
 }
 
-// NewMember .
-func (s *Server) NewMember(m *Member) {
+// Join .
+func Join(u user.User, invite Invite) (*Server, bool) {
 	var args []interface{}
-	args = append(args, s.ID, m.AccountID, m.Alias, s.Role.ID)
-	_, err := database.Exec("INSERT INTO ServerMember (server_id, account_id, alias, role_id) Values (?, ?, ?, ?);", args)
+	args = append(args, invite.Code, "default")
+	rows, err := database.Query(`SELECT Invite.server_id, Role.id, Role.ranking, Role.name, Role.permissions
+		FROM Invite
+		INNER JOIN Role ON Invite.server_id = Role.server_id
+		WHERE Invite.code=? and Role.name=?;`, args)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
-	if len(s.Members) == 0 {
-		s.Members = []*Member{}
-	}
-	s.Alias = m.Alias
-	s.Members = append(s.Members, m)
-}
+	defer rows.Close()
 
-// NewRole .
-func (s *Server) NewRole(name string, ranking int, permissions uint8) Role {
-	var args []interface{}
-	args = append(args, s.ID, name, ranking, permissions)
-	roleID, err := database.Exec("INSERT INTO Role (server_id, name, ranking, permissions) Values (?, ?, ?, ?);", args)
-	if err != nil {
-		panic(err.Error())
+	if rows.Next() {
+		var serverID int
+		var r Role
+		rows.Scan(&serverID, &r.ID, &r.Ranking, &r.Name, &r.Permissions)
+
+		m := NewMember(serverID, u, r)
+		s, ok := Get(serverID, m.AccountID)
+		if ok {
+			return s, true
+		}
+
 	}
-	r := Role{ID: roleID, Name: name}
-	s.Roles = append(s.Roles, r)
-	return r
+	return nil, false
 }
 
 // Delete .
@@ -159,6 +161,26 @@ func (s *Server) LoadRoles() {
 	}
 }
 
+// LoadInvites .
+func (s *Server) LoadInvites() {
+	var args []interface{}
+	args = append(args, s.ID)
+	rows, err := database.Query(
+		`SELECT code
+		FROM Invite
+		where server_id=?`, args)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer rows.Close()
+	s.Invites = []Invite{}
+	for rows.Next() {
+		var i Invite
+		rows.Scan(&i.Code)
+		s.Invites = append(s.Invites, i)
+	}
+}
+
 func getServers(accountID int) []*Server {
 	var servers []*Server = []*Server{}
 	var args []interface{}
@@ -182,6 +204,7 @@ func getServers(accountID int) []*Server {
 		s.Role = r
 		s.LoadRoles()
 		s.LoadChannels()
+		s.LoadInvites()
 		servers = append(servers, &s)
 	}
 

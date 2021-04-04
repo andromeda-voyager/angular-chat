@@ -22,8 +22,8 @@
 
     <ng-container *ngIf="showAddServer">
 
-        <app-input-field label="Invite Code" [isDark]="true" hint="Required" [(inputValue)]="invite.code"
-            [showHint]="showRequired && invite.code.length < 5"></app-input-field>
+        <app-input-field label="Invite Code" [isDark]="true" hint="Required" [(inputValue)]="inviteCode"
+            [showHint]="showRequired && inviteCode.length < 5"></app-input-field>
         <button mat-button class="submit" (click)="joinServer()">Join</button>
         
     </ng-container>

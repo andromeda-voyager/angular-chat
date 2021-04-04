@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-var loggedInUsers map[string]*User
+var loggedInUsers map[string]User
 var codes map[string]string
 
 func init() {
-	loggedInUsers = make(map[string]*User)
+	loggedInUsers = make(map[string]User)
 	codes = make(map[string]string)
 
 }
 
-func AddSession(user *User) *http.Cookie {
+func AddSession(user User) *http.Cookie {
 	token := random.NewSecureString(32)
 	loggedInUsers[token] = user
 	cookie := &http.Cookie{Name: "Auth", Value: token, Path: "/", Expires: time.Now().Add(24 * time.Hour)}
@@ -32,7 +32,7 @@ func RemoveSession(token string) {
 }
 
 // GetSession .
-func GetSession(token string) (*User, bool) {
+func GetSession(token string) (User, bool) {
 	user, ok := loggedInUsers[token]
 	return user, ok
 }

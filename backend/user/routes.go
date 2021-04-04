@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"nebula/images"
-	"nebula/router"
 	"net/http"
+
+	router "github.com/andromeda-voyager/go-router"
 )
 
 const DefaultImageUrl = "default-avatar.jpg"
@@ -58,7 +59,7 @@ func init() {
 	})
 
 	authGroup.Get("/accounts/login", func(w http.ResponseWriter, r *http.Request, c *router.Context) {
-		u := c.Keys["user"].(*User)
+		u := c.Keys["user"].(User)
 		json.NewEncoder(w).Encode(u)
 	})
 

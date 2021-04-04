@@ -8,6 +8,7 @@ export interface Server {
     description: string 
     role: Role
     roles: Role[]
+    invites: Invite[]
     channels: Channel[]
     members: Member[]
 }
@@ -18,6 +19,12 @@ export interface Member {
     alias: string
     avatar: string
     role: Role
+}
+
+export interface Invite {
+    code: string
+    expiration?: Date
+    expires: boolean
 }
 
 export interface NewServer {

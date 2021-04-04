@@ -2,6 +2,7 @@ package server
 
 import (
 	"nebula/database"
+	"nebula/user"
 )
 
 // Member .
@@ -32,4 +33,15 @@ func GetMember(accountID int) Member {
 		rows.Scan(&m.Alias, &m.Avatar, &r.ID, &r.Ranking, &r.Name, &r.Permissions)
 	}
 	return m
+}
+
+// NewMember .
+func NewMember(serverID int, u user.User, r Role) Member {
+	var args []interface{}
+	args = append(args, serverID, u.ID, u.Username, r.ID)
+	_, err := database.Exec("INSERT INTO ServerMember (server_id, account_id, alias, role_id) Values (?, ?, ?, ?);", args)
+	if err != nil {
+		panic(err.Error())
+	}
+	return Member{AccountID: u.ID, Alias: u.Username, Role: r, Avatar: u.Avatar}
 }

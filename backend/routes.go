@@ -1,11 +1,11 @@
 package main
 
 import (
-	"nebula/router"
 	"nebula/server"
 	"nebula/user"
 	"net/http"
 
+	router "github.com/andromeda-voyager/go-router"
 	"golang.org/x/net/websocket"
 )
 

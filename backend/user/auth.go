@@ -1,8 +1,9 @@
 package user
 
 import (
-	"nebula/router"
 	"net/http"
+
+	router "github.com/andromeda-voyager/go-router"
 )
 
 // Authenticate .
