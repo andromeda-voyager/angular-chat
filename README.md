@@ -1,2 +1,3 @@
 # Nebula
-Chat application written in Go (backend) and Typescript (frontend)
+
+See the README in the frontend and backend folders. 
